@@ -1,0 +1,11 @@
+set(dir "${CMAKE_CURRENT_SOURCE_DIR}")
+
+file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
+
+add_subdirectory(API)
+
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+
+if(ENABLE_FORTRAN)
+  set(SOURCES_Fortran ${SOURCES_Fortran} PARENT_SCOPE)
+endif()

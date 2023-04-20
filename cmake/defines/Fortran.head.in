@@ -1,0 +1,6 @@
+module tagarray_defines
+  use, intrinsic :: iso_c_binding, only: c_char, c_int32_t, c_int64_t
+  implicit none
+  private
+! character type for library usage
+  integer(c_int32_t), parameter, public :: TAGARRAY_CHAR = c_char

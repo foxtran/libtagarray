@@ -1,0 +1,5 @@
+set(dir "${CMAKE_CURRENT_SOURCE_DIR}")
+
+file(GLOB SOURCES_Fortran CONFIGURE_DEPENDS "*.f90")
+
+set(SOURCES_Fortran ${SOURCES_Fortran} PARENT_SCOPE)
