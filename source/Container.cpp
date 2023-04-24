@@ -4,11 +4,11 @@
 
 namespace tagarray {
 
-Container::~Container() {
+Container::~Container() noexcept {
   this->records.clear();
 }
 
-void Container::add_record(const std::string &tag, Record &record) {
+void Container::add_record(const std::string &tag, Record &record) noexcept {
   this->find_record(tag);
   if (this->status == TAGARRAY_OK) {
     this->status = TAGARRAY_CONTAINER_RECORD_EXISTS;
@@ -18,7 +18,7 @@ void Container::add_record(const std::string &tag, Record &record) {
   this->status = TAGARRAY_OK;
 }
 
-int32_t Container::find_record(const std::string &tag) {
+int32_t Container::find_record(const std::string &tag) noexcept {
   if (auto search = this->records.find(tag); search != this->records.end()) {
     this->status = TAGARRAY_OK;
   } else {
@@ -27,7 +27,7 @@ int32_t Container::find_record(const std::string &tag) {
   return this->status;
 }
 
-void Container::remove_record(const std::string &tag) {
+void Container::remove_record(const std::string &tag) noexcept {
   this->find_record(tag);
   if (this->status != TAGARRAY_OK) return;
   delete this->records[tag];
@@ -35,27 +35,27 @@ void Container::remove_record(const std::string &tag) {
   this->status = TAGARRAY_OK;
 }
 
-Record *Container::get_record(const std::string &tag) {
+Record *Container::get_record(const std::string &tag) noexcept {
   this->find_record(tag);
   if (this->status != TAGARRAY_OK) return nullptr;
   return this->records[tag];
 }
 
-void Container::save(const std::string &filename) {
+void Container::save(const std::string &filename) noexcept {
   this->status = TAGARRAY_NOT_IMPLEMENTED;
 }
-void Container::save(const std::u32string &filename) {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
-}
-
-void Container::load(const std::string &filename) {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
-}
-void Container::load(const std::u32string &filename) {
+void Container::save(const std::u32string &filename) noexcept {
   this->status = TAGARRAY_NOT_IMPLEMENTED;
 }
 
-void Container::dump(const int32_t level) const {
+void Container::load(const std::string &filename) noexcept {
+  this->status = TAGARRAY_NOT_IMPLEMENTED;
+}
+void Container::load(const std::u32string &filename) noexcept {
+  this->status = TAGARRAY_NOT_IMPLEMENTED;
+}
+
+void Container::dump(const int32_t level) const noexcept {
   std::cout << "Container v" << this->version << std::endl;
   std::cout << "  Comment len = " << this->comment.length() << std::endl;
   std::cout << "  Comment `";

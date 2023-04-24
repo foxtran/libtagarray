@@ -10,7 +10,7 @@ Record::Record(const uint32_t type_id,
                const uint64_t data_length,
                const uint64_t dimensions_ptr[TAGARRAY_DIMENSIONS_LENGTH],
                const int64_t options_ptr[TAGARRAY_OPTIONS_LENGTH],
-               const char *const comment_ptr) :
+               const char *const comment_ptr) noexcept :
                  type_id(type_id), n_dimensions(n_dimensions) {
   this->data_length = data_length;
   this->data_size = sizeof(uint8_t) * this->data_length;
@@ -40,7 +40,7 @@ Record::Record(const uint32_t type_id,
                const uint64_t data_length,
                const std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> &dimensions,
                const std::array<int64_t, TAGARRAY_OPTIONS_LENGTH> &options,
-               const std::string &comment)
+               const std::string &comment) noexcept
     : type_id(type_id), n_dimensions(n_dimensions), data_length(data_length),
       dimensions(dimensions), options(options), comment(comment) {
   this->data_size = sizeof(uint8_t) * this->data_length;
@@ -57,9 +57,9 @@ Record::Record(const uint32_t type_id,
   this->status = TAGARRAY_OK;
 }
 
-Record::~Record() { if(this->data != nullptr) delete[] this->data; }
+Record::~Record() noexcept { if(this->data != nullptr) delete[] this->data; }
 
-void Record::set_data(const int8_t *&data, uint64_t data_length) {
+void Record::set_data(const int8_t *&data, uint64_t data_length) noexcept {
   if (this->data != nullptr)
     delete[] this->data;
   this->data_size = sizeof(uint8_t) * this->data_length;
@@ -76,7 +76,7 @@ void Record::set_data(const int8_t *&data, uint64_t data_length) {
   this->status = TAGARRAY_OK;
 }
 
-void Record::dump(const int32_t level) const {
+void Record::dump(const int32_t level) const noexcept {
   std::cout << "    type id: " << type_id << std::endl;
   std::cout << "    Dimensions: " << n_dimensions << std::endl;
   std::cout << "    Data length: " << data_length << std::endl;
