@@ -62,6 +62,7 @@ Record::~Record() noexcept { if(this->data != nullptr) delete[] this->data; }
 void Record::set_data(const int8_t *&data, const uint64_t data_length) noexcept {
   if (this->data != nullptr)
     delete[] this->data;
+  this->data_length = data_length;
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
   if (this->data == nullptr) {
