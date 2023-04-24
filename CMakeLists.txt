@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(tagarray
-  VERSION 0.0.1
+  VERSION 0.0.2
   LANGUAGES CXX)
 
 if(ENABLE_FORTRAN)
