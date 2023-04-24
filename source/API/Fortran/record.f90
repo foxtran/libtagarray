@@ -23,24 +23,24 @@ contains
     integer(c_int64_t),                             intent(in) :: data_el_size
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
-    integer(c_int64_t),                   optional, intent(in) :: options(TAGARRAY_OPTIONS_LENGTH)
-    character(kind=TAGARRAY_CHAR, len=*), optional, intent(in) :: comment
+    integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
+    character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     !
-    integer(c_int64_t) :: data_length, options_(TAGARRAY_OPTIONS_LENGTH), dimensions_(TAGARRAY_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: data_length, options_(TA_OPTIONS_LENGTH), dimensions_(TA_DIMENSIONS_LENGTH)
     integer(c_int32_t) :: n_dimensions
-    character(kind=TAGARRAY_CHAR, len=:), allocatable :: Ccomment
+    character(kind=TA_CHAR, len=:), allocatable :: Ccomment
     if (present(array_shape)) then
       n_dimensions = size(array_shape)
     else
       n_dimensions = 1
     end if
-    data_length = array_size * data_el_size ! storage_size(data, kind=8) / TAGARRAY_BITS_IN_BYTE
+    data_length = array_size * data_el_size ! storage_size(data, kind=8) / TA_BITS_IN_BYTE
     if (present(options)) then
       options_ = options
     else
-      options_ = TAGARRAY_OPTIONS_ZERO
+      options_ = TA_OPTIONS_ZERO
     end if
-    dimensions_ = TAGARRAY_DIMENSIONS_ZERO
+    dimensions_ = TA_DIMENSIONS_ZERO
     if (n_dimensions > 1) then
       dimensions_(1:n_dimensions) = array_shape
     else
@@ -49,21 +49,21 @@ contains
     if (present(comment)) then
       Ccomment = to_Cstring(comment)
     else
-      Ccomment = to_Cstring(TAGARRAY_CHAR_"")
+      Ccomment = to_Cstring(TA_CHAR_"")
     end if
-    this%record_ptr = TAGARRAY_new_record(type_id, n_dimensions, data_ptr, data_length, dimensions_, options_, Ccomment)
+    this%record_ptr = TA_new_record(type_id, n_dimensions, data_ptr, data_length, dimensions_, options_, Ccomment)
   end subroutine record_t_new
   subroutine record_t_reserve(this, datatype, array_size, array_shape, options, comment)
     class(record_t), intent(inout) :: this
     integer(c_int32_t),                             intent(in) :: datatype
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
-    integer(c_int64_t),                   optional, intent(in) :: options(TAGARRAY_OPTIONS_LENGTH)
-    character(kind=TAGARRAY_CHAR, len=*), optional, intent(in) :: comment
+    integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
+    character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     !
-    integer(c_int64_t) :: data_length, options_(TAGARRAY_OPTIONS_LENGTH), dimensions_(TAGARRAY_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: data_length, options_(TA_OPTIONS_LENGTH), dimensions_(TA_DIMENSIONS_LENGTH)
     integer(c_int32_t) :: n_dimensions
-    character(kind=TAGARRAY_CHAR, len=:), allocatable :: Ccomment
+    character(kind=TA_CHAR, len=:), allocatable :: Ccomment
     if (present(array_shape)) then
       n_dimensions = size(array_shape)
     else
@@ -73,9 +73,9 @@ contains
     if (present(options)) then
       options_ = options
     else
-      options_ = TAGARRAY_OPTIONS_ZERO
+      options_ = TA_OPTIONS_ZERO
     end if
-    dimensions_ = TAGARRAY_DIMENSIONS_ZERO
+    dimensions_ = TA_DIMENSIONS_ZERO
     if (n_dimensions > 1) then
       dimensions_(1:n_dimensions) = array_shape
     else
@@ -84,21 +84,21 @@ contains
     if (present(comment)) then
       Ccomment = to_Cstring(comment)
     else
-      Ccomment = to_Cstring(TAGARRAY_CHAR_"")
+      Ccomment = to_Cstring(TA_CHAR_"")
     end if
-    this%record_ptr = TAGARRAY_new_record(datatype, n_dimensions, c_null_ptr, data_length, dimensions_, options_, Ccomment)
+    this%record_ptr = TA_new_record(datatype, n_dimensions, c_null_ptr, data_length, dimensions_, options_, Ccomment)
   end subroutine record_t_reserve
   type(RecordInfo_t) function get_info(this) result(recordinfo)
     class(record_t), intent(inout) :: this
-    recordinfo = TAGARRAY_get_record_info(this%record_ptr)
+    recordinfo = TA_get_record_info(this%record_ptr)
   end function get_info
   integer(c_int32_t) function get_status(this) result(status)
     class(record_t), intent(inout) :: this
-    status = TAGARRAY_get_record_status(this%record_ptr)
+    status = TA_get_record_status(this%record_ptr)
   end function get_status
   subroutine record_t_delete(this)
     class(record_t), intent(inout) :: this
-    call TAGARRAY_delete_record(this%record_ptr)
+    call TA_delete_record(this%record_ptr)
     this%record_ptr = c_null_ptr
   end subroutine record_t_delete
 end module tagarray_record

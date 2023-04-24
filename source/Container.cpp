@@ -10,49 +10,49 @@ Container::~Container() noexcept {
 
 void Container::add_record(const std::string &tag, Record &record) noexcept {
   this->find_record(tag);
-  if (this->status == TAGARRAY_OK) {
-    this->status = TAGARRAY_CONTAINER_RECORD_EXISTS;
+  if (this->status == TA_OK) {
+    this->status = TA_CONTAINER_RECORD_EXISTS;
     return;
   }
   this->records.insert({tag, &record});
-  this->status = TAGARRAY_OK;
+  this->status = TA_OK;
 }
 
 int32_t Container::find_record(const std::string &tag) noexcept {
   if (auto search = this->records.find(tag); search != this->records.end()) {
-    this->status = TAGARRAY_OK;
+    this->status = TA_OK;
   } else {
-    this->status = TAGARRAY_CONTAINER_RECORD_NOT_FOUND;
+    this->status = TA_CONTAINER_RECORD_NOT_FOUND;
   }
   return this->status;
 }
 
 void Container::remove_record(const std::string &tag) noexcept {
   this->find_record(tag);
-  if (this->status != TAGARRAY_OK) return;
+  if (this->status != TA_OK) return;
   delete this->records[tag];
   this->records.erase(tag);
-  this->status = TAGARRAY_OK;
+  this->status = TA_OK;
 }
 
 Record *Container::get_record(const std::string &tag) noexcept {
   this->find_record(tag);
-  if (this->status != TAGARRAY_OK) return nullptr;
+  if (this->status != TA_OK) return nullptr;
   return this->records[tag];
 }
 
 void Container::save(const std::string &filename) noexcept {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
+  this->status = TA_NOT_IMPLEMENTED;
 }
 void Container::save(const std::u32string &filename) noexcept {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
+  this->status = TA_NOT_IMPLEMENTED;
 }
 
 void Container::load(const std::string &filename) noexcept {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
+  this->status = TA_NOT_IMPLEMENTED;
 }
 void Container::load(const std::u32string &filename) noexcept {
-  this->status = TAGARRAY_NOT_IMPLEMENTED;
+  this->status = TA_NOT_IMPLEMENTED;
 }
 
 void Container::dump(const int32_t level) const noexcept {

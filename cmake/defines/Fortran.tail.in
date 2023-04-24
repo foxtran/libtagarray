@@ -1,4 +1,4 @@
 ! zero-filled arrays
-  integer(c_int64_t), parameter, public :: TAGARRAY_OPTIONS_ZERO(TAGARRAY_OPTIONS_LENGTH) = 0
-  integer(c_int64_t), parameter, public :: TAGARRAY_DIMENSIONS_ZERO(TAGARRAY_DIMENSIONS_LENGTH) = 1
+  integer(c_int64_t), parameter, public :: TA_OPTIONS_ZERO(TA_OPTIONS_LENGTH) = 0
+  integer(c_int64_t), parameter, public :: TA_DIMENSIONS_ZERO(TA_DIMENSIONS_LENGTH) = 1
 end module tagarray_defines

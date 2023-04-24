@@ -3,4 +3,4 @@ module tagarray_defines
   implicit none
   private
 ! character type for library usage
-  integer(c_int32_t), parameter, public :: TAGARRAY_CHAR = c_char
+  integer(c_int32_t), parameter, public :: TA_CHAR = c_char

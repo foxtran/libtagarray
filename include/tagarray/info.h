@@ -1,5 +1,5 @@
-#ifndef _TAGARRAY_INFO_H
-#define _TAGARRAY_INFO_H
+#ifndef _TA_INFO_H
+#define _TA_INFO_H
 
 #include "tagarray/defines.h"
 
@@ -21,7 +21,7 @@ typedef struct {
   int32_t n_dimensions;
   void *data;
   int64_t data_length;
-  int64_t dimensions[TAGARRAY_DIMENSIONS_LENGTH];
+  int64_t dimensions[TA_DIMENSIONS_LENGTH];
 } RecordInfo;
 
 #ifdef __cplusplus

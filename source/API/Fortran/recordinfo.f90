@@ -8,14 +8,14 @@ module tagarray_recordinfo
     integer(c_int32_t) :: n_dimensions
     type(c_ptr)        :: data
     integer(c_int64_t) :: data_length
-    integer(c_int64_t) :: dimensions(TAGARRAY_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: dimensions(TA_DIMENSIONS_LENGTH)
   end type C_RecordInfo_t
   type :: RecordInfo_t
     integer(c_int32_t) :: type_id
     integer(c_int32_t) :: n_dimensions
     type(c_ptr)        :: data
     integer(c_int64_t) :: data_length
-    integer(c_int64_t) :: dimensions(TAGARRAY_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: dimensions(TA_DIMENSIONS_LENGTH)
   contains
     procedure, private :: recordinfo_assign
     procedure, public  :: get_status
@@ -40,23 +40,23 @@ contains
     integer(c_int32_t), intent(in) :: ext_type_id, ext_ndim
     integer(c_int32_t), parameter :: WRONG_TYPE_ID     =   1
     integer(c_int32_t), parameter :: WRONG_DIMENSIONS  =  10
-    if (ext_ndim > TAGARRAY_DIMENSIONS_LENGTH) then
-      status = TAGARRAY_DATA_TOO_MANY_DIMENSIONS
+    if (ext_ndim > TA_DIMENSIONS_LENGTH) then
+      status = TA_DATA_TOO_MANY_DIMENSIONS
       return
     end if
     if (any(this%dimensions == 0)) then
-      status = TAGARRAY_DATA_ZERO_LENGTH
+      status = TA_DATA_ZERO_LENGTH
       return
     end if
-    status = TAGARRAY_OK
+    status = TA_OK
     if (this%type_id /= ext_type_id) status = status + WRONG_TYPE_ID
     if (this%n_dimensions /= ext_ndim) status = status + WRONG_DIMENSIONS
     if (status == WRONG_TYPE_ID) then
-      status = TAGARRAY_DATA_INCORRECT_TYPE
+      status = TA_DATA_INCORRECT_TYPE
     else if (status == WRONG_DIMENSIONS) then
-      status = TAGARRAY_DATA_INCORRECT_DIMENSIONS
-    else if (status /= TAGARRAY_OK) then
-      status = TAGARRAY_DATA_INCORRECT
+      status = TA_DATA_INCORRECT_DIMENSIONS
+    else if (status /= TA_OK) then
+      status = TA_DATA_INCORRECT
     end if
   end function get_status
 end module tagarray_recordinfo

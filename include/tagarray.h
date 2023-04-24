@@ -1,5 +1,5 @@
-#ifndef _TAGARRAY_H
-#define _TAGARRAY_H
+#ifndef _TA_H
+#define _TA_H
 
 #include "tagarray/defines.h"
 #include "tagarray/info.h"
@@ -37,8 +37,8 @@ void delete_container(void *const container) TA_NOEXCEPT;
 void *new_record(const uint32_t type_id,
                  const uint32_t n_dimensions, const uint8_t *data,
                  const uint64_t data_length,
-                 const uint64_t dimensions[TAGARRAY_DIMENSIONS_LENGTH],
-                 const int64_t options[TAGARRAY_OPTIONS_LENGTH],
+                 const uint64_t dimensions[TA_DIMENSIONS_LENGTH],
+                 const int64_t options[TA_OPTIONS_LENGTH],
                  const char *const comment) TA_NOEXCEPT;
 
 int32_t get_record_status(const void *const record) TA_NOEXCEPT;

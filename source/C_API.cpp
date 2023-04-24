@@ -42,8 +42,8 @@ extern "C" void *
 new_record(const uint32_t type_id,
            const uint32_t n_dimensions, const uint8_t *const data,
            const uint64_t data_length,
-           const uint64_t dimensions[TAGARRAY_DIMENSIONS_LENGTH],
-           const int64_t options[TAGARRAY_OPTIONS_LENGTH],
+           const uint64_t dimensions[TA_DIMENSIONS_LENGTH],
+           const int64_t options[TA_OPTIONS_LENGTH],
            const char *const comment) noexcept {
   return reinterpret_cast<void *>(new Record(type_id, n_dimensions, data, data_length, dimensions, options, comment));
 }

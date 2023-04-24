@@ -14,19 +14,19 @@ module tagarray_utils
   public to_Cstring, get_type_id, get_storage_size
 contains
   function str_to_Cstr(string) result(Cstring)
-    character(kind=TAGARRAY_CHAR, len=*), intent(in) :: string
-    character(kind=TAGARRAY_CHAR, len=:), allocatable :: Cstring
+    character(kind=TA_CHAR, len=*), intent(in) :: string
+    character(kind=TA_CHAR, len=:), allocatable :: Cstring
     integer :: last
     Cstring = trim(adjustl(string))
     last = len(Cstring)
     if (last == 0) then
       deallocate(Cstring)
-      allocate(character(kind=TAGARRAY_CHAR, len=1) :: Cstring)
-      Cstring(1:1) = char(0, kind=TAGARRAY_CHAR)
+      allocate(character(kind=TA_CHAR, len=1) :: Cstring)
+      Cstring(1:1) = char(0, kind=TA_CHAR)
       last = 1
     end if
-    if (Cstring(last:last) /= char(0, kind=TAGARRAY_CHAR)) then
-      Cstring = Cstring // char(0, kind=TAGARRAY_CHAR)
+    if (Cstring(last:last) /= char(0, kind=TA_CHAR)) then
+      Cstring = Cstring // char(0, kind=TA_CHAR)
     end if
   end function str_to_Cstr
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
@@ -37,58 +37,58 @@ contains
   end function get_type_id_array
   integer(c_int32_t) function get_type_id_scalar(value) result(type_id)
     class(*), target, intent(in) :: value
-    type_id = TAGARRAY_TYPE_UNKNOWN
+    type_id = TA_TYPE_UNKNOWN
     select type (value)
       type is (integer(c_int8_t))
-        type_id = TAGARRAY_TYPE_INT8
+        type_id = TA_TYPE_INT8
       type is (integer(c_int16_t))
-        type_id = TAGARRAY_TYPE_INT16
+        type_id = TA_TYPE_INT16
       type is (integer(c_int32_t))
-        type_id = TAGARRAY_TYPE_INT32
+        type_id = TA_TYPE_INT32
       type is (integer(c_int64_t))
-        type_id = TAGARRAY_TYPE_INT64
+        type_id = TA_TYPE_INT64
       type is (real(c_float))
-        type_id = TAGARRAY_TYPE_REAL32
+        type_id = TA_TYPE_REAL32
       type is (real(c_double))
-        type_id = TAGARRAY_TYPE_REAL64
+        type_id = TA_TYPE_REAL64
       type is (complex(c_float_complex))
-        type_id = TAGARRAY_TYPE_CMPLX32
+        type_id = TA_TYPE_CMPLX32
       type is (complex(c_double_complex))
-        type_id = TAGARRAY_TYPE_CMPLX64
-      type is (character(kind=TAGARRAY_CHAR, len=*))
-        type_id = TAGARRAY_TYPE_CHAR8
+        type_id = TA_TYPE_CMPLX64
+      type is (character(kind=TA_CHAR, len=*))
+        type_id = TA_TYPE_CHAR8
       class default
-        type_id = TAGARRAY_TYPE_UNKNOWN
+        type_id = TA_TYPE_UNKNOWN
     end select
   end function get_type_id_scalar
   integer(c_int64_t) function get_storage_size(datatype) result(size)
     integer(c_int32_t) :: datatype
     select case(datatype)
-      case (TAGARRAY_TYPE_UNKNOWN)
+      case (TA_TYPE_UNKNOWN)
         size = 1
-      case (TAGARRAY_TYPE_INT8)
+      case (TA_TYPE_INT8)
         size = 1
-      case (TAGARRAY_TYPE_INT16)
+      case (TA_TYPE_INT16)
         size = 2
-      case (TAGARRAY_TYPE_INT32)
+      case (TA_TYPE_INT32)
         size = 4
-      case (TAGARRAY_TYPE_INT64)
+      case (TA_TYPE_INT64)
         size = 8
-      case (TAGARRAY_TYPE_UINT8)
+      case (TA_TYPE_UINT8)
         size = 1
-      case (TAGARRAY_TYPE_UINT16)
+      case (TA_TYPE_UINT16)
         size = 2
-      case (TAGARRAY_TYPE_UINT32)
+      case (TA_TYPE_UINT32)
         size = 4
-      case (TAGARRAY_TYPE_UINT64)
+      case (TA_TYPE_UINT64)
         size = 8
-      case (TAGARRAY_TYPE_REAL32)
+      case (TA_TYPE_REAL32)
         size = 4
-      case (TAGARRAY_TYPE_REAL64)
+      case (TA_TYPE_REAL64)
         size = 8
-      case (TAGARRAY_TYPE_CMPLX32)
+      case (TA_TYPE_CMPLX32)
         size = 8
-      case (TAGARRAY_TYPE_CMPLX64)
+      case (TA_TYPE_CMPLX64)
         size = 16
       case default
         size = 1

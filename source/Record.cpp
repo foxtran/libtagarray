@@ -8,15 +8,15 @@ namespace tagarray {
 Record::Record(const uint32_t type_id,
                const uint32_t n_dimensions, const uint8_t *data,
                const uint64_t data_length,
-               const uint64_t dimensions_ptr[TAGARRAY_DIMENSIONS_LENGTH],
-               const int64_t options_ptr[TAGARRAY_OPTIONS_LENGTH],
+               const uint64_t dimensions_ptr[TA_DIMENSIONS_LENGTH],
+               const int64_t options_ptr[TA_OPTIONS_LENGTH],
                const char *const comment_ptr) noexcept :
                  type_id(type_id), n_dimensions(n_dimensions) {
   this->data_length = data_length;
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
   if (this->data == nullptr) {
-    this->status = TAGARRAY_MEMORY_ALLOCATION_ERROR;
+    this->status = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -32,21 +32,21 @@ Record::Record(const uint32_t type_id,
   }
   if (comment_ptr != nullptr)
     this->comment = std::string(comment_ptr);
-  this->status = TAGARRAY_OK;
+  this->status = TA_OK;
 }
 
 Record::Record(const uint32_t type_id,
                const uint32_t n_dimensions, const uint8_t *&data,
                const uint64_t data_length,
-               const std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> &dimensions,
-               const std::array<int64_t, TAGARRAY_OPTIONS_LENGTH> &options,
+               const std::array<uint64_t, TA_DIMENSIONS_LENGTH> &dimensions,
+               const std::array<int64_t, TA_OPTIONS_LENGTH> &options,
                const std::string &comment) noexcept
     : type_id(type_id), n_dimensions(n_dimensions), data_length(data_length),
       dimensions(dimensions), options(options), comment(comment) {
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
   if (this->data == nullptr) {
-    this->status = TAGARRAY_MEMORY_ALLOCATION_ERROR;
+    this->status = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -54,7 +54,7 @@ Record::Record(const uint32_t type_id,
   } else {
     std::copy(data, data + this->data_size, this->data);
   }
-  this->status = TAGARRAY_OK;
+  this->status = TA_OK;
 }
 
 Record::~Record() noexcept { if(this->data != nullptr) delete[] this->data; }
@@ -65,7 +65,7 @@ void Record::set_data(const int8_t *&data, const uint64_t data_length) noexcept 
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
   if (this->data == nullptr) {
-    this->status = TAGARRAY_MEMORY_ALLOCATION_ERROR;
+    this->status = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -73,7 +73,7 @@ void Record::set_data(const int8_t *&data, const uint64_t data_length) noexcept 
   } else {
     std::copy(data, data + this->data_size, this->data);
   }
-  this->status = TAGARRAY_OK;
+  this->status = TA_OK;
 }
 
 void Record::dump(const int32_t level) const noexcept {

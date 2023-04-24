@@ -1,5 +1,5 @@
-#ifndef _TAGARRAY_CONTAINER_HPP
-#define _TAGARRAY_CONTAINER_HPP
+#ifndef _TA_CONTAINER_HPP
+#define _TA_CONTAINER_HPP
 
 #include <array>
 #include <cstdint>
@@ -19,9 +19,9 @@ private:
   std::map<std::string, Record *> records;
 
 public:
-  inline Container() noexcept : version(TAGARRAY_CONTAINER_VERSION), status(TAGARRAY_OK) {};
-  inline Container(std::string &comment) noexcept : version(TAGARRAY_CONTAINER_VERSION), status(TAGARRAY_OK), comment(comment) {};
-  inline Container(const char *const comment_ptr) noexcept : version(TAGARRAY_CONTAINER_VERSION), status(TAGARRAY_OK) {
+  inline Container() noexcept : version(TA_CONTAINER_VERSION), status(TA_OK) {};
+  inline Container(std::string &comment) noexcept : version(TA_CONTAINER_VERSION), status(TA_OK), comment(comment) {};
+  inline Container(const char *const comment_ptr) noexcept : version(TA_CONTAINER_VERSION), status(TA_OK) {
     update_comment(comment_ptr);
   }
   ~Container() noexcept;
@@ -40,14 +40,14 @@ public:
   }
   inline void update_comment(const std::string &comment) noexcept {
     this->comment = comment;
-    this->status = TAGARRAY_OK;
+    this->status = TA_OK;
   }
 
   void add_record(const std::string &tag, Record &record) noexcept;
   inline void add_record(const char *const tag, Record &record) noexcept {
     if (tag == nullptr)
     {
-      this->status = TAGARRAY_EMPTY_TAG;
+      this->status = TA_EMPTY_TAG;
       return;
     }
     add_record(std::string(tag), record);
@@ -57,8 +57,8 @@ public:
   inline int32_t find_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {
-      this->status = TAGARRAY_EMPTY_TAG;
-      return TAGARRAY_CONTAINER_RECORD_NOT_FOUND;
+      this->status = TA_EMPTY_TAG;
+      return TA_CONTAINER_RECORD_NOT_FOUND;
     }
     return find_record(std::string(tag));
   }
@@ -67,7 +67,7 @@ public:
   inline void remove_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {
-      this->status = TAGARRAY_EMPTY_TAG;
+      this->status = TA_EMPTY_TAG;
       return;
     }
     remove_record(std::string(tag));
@@ -77,7 +77,7 @@ public:
   inline Record *get_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {
-      this->status = TAGARRAY_EMPTY_TAG;
+      this->status = TA_EMPTY_TAG;
       return nullptr;
     }
     return get_record(std::string(tag));
@@ -87,14 +87,14 @@ public:
   void save(const std::u32string &filename) noexcept;
   inline void save(const char *const filename_ptr) noexcept {
     if (filename_ptr == nullptr) {
-      this->status = TAGARRAY_FILENAME_NULLPTR;
+      this->status = TA_FILENAME_NULLPTR;
       return;
     }
     save(std::string(filename_ptr));
   }
   inline void save(const char32_t *const filename_ptr) noexcept {
     if (filename_ptr == nullptr) {
-      this->status = TAGARRAY_FILENAME_NULLPTR;
+      this->status = TA_FILENAME_NULLPTR;
       return;
     }
     save(std::u32string(filename_ptr));
@@ -104,14 +104,14 @@ public:
   void load(const std::u32string &filename) noexcept;
   inline void load(const char *const filename_ptr) noexcept {
     if (filename_ptr == nullptr) {
-      this->status = TAGARRAY_FILENAME_NULLPTR;
+      this->status = TA_FILENAME_NULLPTR;
       return;
     }
     load(std::string(filename_ptr));
   }
   inline void load(const char32_t *const filename_ptr) noexcept {
     if (filename_ptr == nullptr) {
-      this->status = TAGARRAY_FILENAME_NULLPTR;
+      this->status = TA_FILENAME_NULLPTR;
       return;
     }
     load(std::u32string(filename_ptr));
