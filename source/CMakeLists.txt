@@ -1,6 +1,10 @@
 set(dir "${CMAKE_CURRENT_SOURCE_DIR}")
 
-file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
+list(APPEND SOURCES
+  ${dir}/C_API.cpp
+  ${dir}/Container.cpp
+  ${dir}/Record.cpp
+)
 
 add_subdirectory(API)
 
