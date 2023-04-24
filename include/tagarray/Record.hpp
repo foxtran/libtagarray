@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "tagarray/defines.h"
 #include "tagarray/info.h"
@@ -130,9 +131,7 @@ public:
 
   inline RecordInfo get_info() const noexcept {
     RecordInfo recordInfo = {this->type_id, this->n_dimensions, this->data, this->data_length, {0}};
-    for(size_t i = 0; i < this->dimensions.size(); i++) {
-      recordInfo.dimensions[i] = this->dimensions[i];
-    }
+    std::copy(std::begin(this->dimensions), std::end(this->dimensions), std::begin(recordInfo.dimensions));
     return recordInfo;
   }
 

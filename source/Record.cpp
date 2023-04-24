@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 
 #include "tagarray/Record.hpp"
@@ -24,12 +23,8 @@ Record::Record(const uint32_t type_id,
   } else {
     std::copy(data, data + this->data_size, this->data);
   }
-  for (size_t i = 0; i < this->dimensions.size(); i++) {
-    this->dimensions[i] = dimensions_ptr[i];
-  }
-  for (size_t i = 0; i < this->options.size(); i++) {
-    this->options[i] = options_ptr[i];
-  }
+  std::copy(dimensions_ptr, dimensions_ptr + this->dimensions.size(), this->dimensions.begin());
+  std::copy(options_ptr, options_ptr + this->options.size(), this->options.begin());
   if (comment_ptr != nullptr)
     this->comment = std::string(comment_ptr);
   this->status = TA_OK;

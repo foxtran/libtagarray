@@ -50,7 +50,7 @@ target_sources(${PN}
     FILE_SET HEADERS BASE_DIRS ${CMAKE_BINARY_DIR}/include   FILES ${CMAKE_BINARY_DIR}/include/${PN}/defines.h
 )
 target_include_directories(${PN} PRIVATE "${CMAKE_SOURCE_DIR}/include" "${CMAKE_BINARY_DIR}/include")
-target_compile_features(${PN} PRIVATE cxx_std_14)
+target_compile_features(${PN} PRIVATE cxx_std_17)
 target_compile_check_add_flags(${PN} PRIVATE CXX     ${${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS})
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
   target_compile_options(${PN} PRIVATE
@@ -74,6 +74,7 @@ install(TARGETS ${PN}
 
 if(ENABLE_FORTRAN)
   add_library(${PN}_f ${SOURCES_Fortran} "${CMAKE_BINARY_DIR}/defines.f90")
+  target_compile_features(${PN} PRIVATE cxx_std_17)
   add_dependencies(${PN}_f ${PN}_Fortran_defines)
   target_link_libraries(${PN}_f ${PN})
   target_sources(${PN}_f
