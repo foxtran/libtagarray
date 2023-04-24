@@ -32,7 +32,7 @@ void save_container_c32(void *container, const char32_t *const filename);
 
 void delete_container(void *container);
 
-void *new_record(const char *const tag, const uint32_t type_id,
+void *new_record(const uint32_t type_id,
                  const uint32_t n_dimensions, const uint8_t *data,
                  const uint64_t data_length,
                  const uint64_t dimensions[TAGARRAY_DIMENSIONS_LENGTH],
@@ -45,7 +45,7 @@ void dump_record(const void *const record, const int32_t level);
 
 void delete_record(void *record);
 
-void add_record(void *container, void *record);
+void add_record(void *container, const char *const tag, void *record);
 
 void *get_record(void *const container, const char *const tag);
 

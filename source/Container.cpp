@@ -5,54 +5,40 @@
 namespace tagarray {
 
 Container::~Container() {
-  for (auto record : this->records) {
-    delete record;
-  }
+  this->records.clear();
 }
 
-void Container::add_record(Record &record) {
-  ssize_t index = this->find_record(record.get_tag());
-  if (this->status != TAGARRAY_CONTAINER_RECORD_NOT_FOUND) {
+void Container::add_record(const std::string &tag, Record &record) {
+  this->find_record(tag);
+  if (this->status == TAGARRAY_OK) {
     this->status = TAGARRAY_CONTAINER_RECORD_EXISTS;
     return;
   }
-  this->records.push_back(&record);
+  this->records.insert({tag, &record});
   this->status = TAGARRAY_OK;
 }
 
-ssize_t Container::find_record(const std::string &tag) {
-  for (ssize_t index = 0; index < static_cast<ssize_t>(this->records.size());
-       index++) {
-    if (this->records[index]->get_tag() == tag) {
-      this->status = TAGARRAY_OK;
-      return index;
-    }
+int32_t Container::find_record(const std::string &tag) {
+  if (auto search = this->records.find(tag); search != this->records.end()) {
+    this->status = TAGARRAY_OK;
+  } else {
+    this->status = TAGARRAY_CONTAINER_RECORD_NOT_FOUND;
   }
-  this->status = TAGARRAY_CONTAINER_RECORD_NOT_FOUND;
-  return TAGARRAY_CONTAINER_RECORD_NOT_FOUND;
+  return this->status;
 }
 
 void Container::remove_record(const std::string &tag) {
-  ssize_t index = this->find_record(tag);
-  if (this->status != TAGARRAY_OK) {
-    return;
-  }
-  for (auto it = this->records.begin(); it != this->records.end(); ++it) {
-    if ((it - this->records.begin()) == index) {
-      it = this->records.erase(it);
-      break;
-    }
-  }
+  this->find_record(tag);
+  if (this->status != TAGARRAY_OK) return;
+  delete this->records[tag];
+  this->records.erase(tag);
   this->status = TAGARRAY_OK;
-  return;
 }
 
 Record *Container::get_record(const std::string &tag) {
-  ssize_t index = this->find_record(tag);
-  if (this->status != TAGARRAY_OK) {
-    return nullptr;
-  }
-  return this->records[index];
+  this->find_record(tag);
+  if (this->status != TAGARRAY_OK) return nullptr;
+  return this->records[tag];
 }
 
 void Container::save(const std::string &filename) {
@@ -77,13 +63,9 @@ void Container::dump(const int32_t level) const {
     std::cout << static_cast<char>(c);
   std::cout << "`" << std::endl;
   std::cout << "  Number of records: " << this->records.size() << std::endl;
-  if (level > 0) {
-    int i = 0;
-    for (const auto& record: this->records) {
-      i++;
-      std::cout << "  Record = " << i << std::endl;
-      record->dump(level-1);
-    }
+  for (const auto& pair: this->records) {
+    std::cout << "  Record tag: `" << pair.first << "`" << std::endl;
+    if (level > 0) pair.second->dump(level-1);
   }
 }
 

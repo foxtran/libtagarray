@@ -28,18 +28,18 @@
     call CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TAGARRAY_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
   end block
 
-#define TAGARRAY_RECORD_NEW(RECORD, TAG, DATA) \
+#define TAGARRAY_RECORD_NEW(RECORD, DATA) \
   block; \
     use tagarray, only: get_type_id, TAGARRAY_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(TAG, get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TAGARRAY_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+    call RECORD%new(get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TAGARRAY_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
   end block
 
-#define TAGARRAY_RECORD_NEW_OPTIONAL(RECORD, TAG, DATA, __VA_ARGS__) \
+#define TAGARRAY_RECORD_NEW_OPTIONAL(RECORD, DATA, __VA_ARGS__) \
   block; \
     use tagarray, only: get_type_id, TAGARRAY_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(TAG, get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TAGARRAY_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+    call RECORD%new(get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TAGARRAY_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
   end block
 
 #define TAGARRAY_GET_CONTAINER_DATA(CONTAINER, TAG, DATA, STATUS) \
@@ -55,12 +55,12 @@
     end if; \
   end block
 
-#define TAGARRAY_GET_RECORD_DATA(RECORD, TAG, DATA, STATUS) \
+#define TAGARRAY_GET_RECORD_DATA(RECORD, DATA, STATUS) \
   block; \
     use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
     use tagarray, only: recordinfo_t, get_type_id; \
     type(recordinfo_t) :: record_info; \
-    record_info = RECORD%get_info(TAG); \
+    record_info = RECORD%get_info(); \
     STATUS = record_info%get_status(get_type_id(DATA), size(shape(DATA), c_int32_t)); \
     call c_f_pointer(record_info%data, DATA, record_info%dimensions(1:size(shape(DATA)))); \
   end block
@@ -78,12 +78,12 @@
     end if; \
   end block
 
-#define TAGARRAY_GET_RECORD_VALUE(RECORD, TAG, VALUE, STATUS) \
+#define TAGARRAY_GET_RECORD_VALUE(RECORD, VALUE, STATUS) \
   block; \
     use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
     use tagarray, only: recordinfo_t, get_type_id; \
     type(recordinfo_t) :: record_info; \
-    record_info = RECORD%get_info(TAG); \
+    record_info = RECORD%get_info(); \
     STATUS = record_info%get_status(get_type_id(VALUE), 1_c_int32_t); \
     call c_f_pointer(record_info%data, VALUE); \
   end block

@@ -5,19 +5,13 @@
 
 namespace tagarray {
 
-Record::Record(const char *const tag_ptr,
-               const uint32_t type_id,
+Record::Record(const uint32_t type_id,
                const uint32_t n_dimensions, const uint8_t *data,
                const uint64_t data_length,
                const uint64_t dimensions_ptr[TAGARRAY_DIMENSIONS_LENGTH],
                const int64_t options_ptr[TAGARRAY_OPTIONS_LENGTH],
                const char *const comment_ptr) :
                  type_id(type_id), n_dimensions(n_dimensions) {
-  if (tag_ptr == nullptr) {
-    this->status = TAGARRAY_EMPTY_TAG;
-    return;
-  }
-  this->tag = std::string(tag_ptr);
   this->data_length = data_length;
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
@@ -41,15 +35,14 @@ Record::Record(const char *const tag_ptr,
   this->status = TAGARRAY_OK;
 }
 
-Record::Record(const std::string &tag,
-               const uint32_t type_id,
+Record::Record(const uint32_t type_id,
                const uint32_t n_dimensions, const uint8_t *&data,
                const uint64_t data_length,
                const std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> &dimensions,
                const std::array<int64_t, TAGARRAY_OPTIONS_LENGTH> &options,
                const std::string &comment)
     : type_id(type_id), n_dimensions(n_dimensions), data_length(data_length),
-      tag(tag), dimensions(dimensions), options(options), comment(comment) {
+      dimensions(dimensions), options(options), comment(comment) {
   this->data_size = sizeof(uint8_t) * this->data_length;
   this->data = new (std::nothrow) uint8_t[this->data_size];
   if (this->data == nullptr) {
@@ -87,7 +80,7 @@ void Record::dump(const int32_t level) const {
   std::cout << "    type id: " << type_id << std::endl;
   std::cout << "    Dimensions: " << n_dimensions << std::endl;
   std::cout << "    Data length: " << data_length << std::endl;
-  std::cout << "    Comment len = " << this->comment.length() << std::endl << "    tag  = `" << this->tag << "`";
+  std::cout << "    Comment len = " << this->comment.length();
   std::cout << std::endl << "    dims = ";
   for (const auto& d: this->dimensions)
     std::cout << d << " ";

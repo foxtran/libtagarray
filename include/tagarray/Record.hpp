@@ -19,21 +19,18 @@ private:
   uint64_t data_size;
   uint8_t *data;
   int32_t status;
-  std::string tag;
   std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> dimensions;
   std::array<int64_t, TAGARRAY_OPTIONS_LENGTH> options;
   std::string comment;
 
 public:
-  Record(const char *const tag,
-         const uint32_t type_id,
+  Record(const uint32_t type_id,
          const uint32_t n_dimensions, const uint8_t *data,
          const uint64_t data_length,
          const uint64_t dimensions[TAGARRAY_DIMENSIONS_LENGTH],
          const int64_t options[TAGARRAY_OPTIONS_LENGTH],
          const char *const comment);
-  Record(const std::string &tag,
-         const uint32_t type_id,
+  Record(const uint32_t type_id,
          const uint32_t n_dimensions, const uint8_t *&data,
          const uint64_t data_length,
          const std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> &dimensions,
@@ -41,10 +38,6 @@ public:
          const std::string &comment);
 
   ~Record();
-
-  inline const std::string &get_tag() const {
-    return this->tag;
-  }
 
   inline uint32_t get_type_id() const { return this->type_id; }
 

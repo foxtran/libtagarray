@@ -24,11 +24,10 @@ module tagarray_CAPI
       implicit none
       type(c_ptr),        value, intent(in) :: container
     end subroutine TAGARRAY_delete_container
-    type(C_ptr) function TAGARRAY_new_record(Ctag, type_id, n_dimensions, data, data_length, dimensions, options, Ccomment) &
+    type(C_ptr) function TAGARRAY_new_record(type_id, n_dimensions, data, data_length, dimensions, options, Ccomment) &
                                                                                                           bind(C, name="new_record")
       import
       implicit none
-      character(kind=TAGARRAY_CHAR), intent(in) :: Ctag(*)
       integer(c_int32_t), value,     intent(in) :: type_id
       integer(c_int32_t), value,     intent(in) :: n_dimensions
       type(c_ptr),        value,     intent(in) :: data
@@ -52,10 +51,11 @@ module tagarray_CAPI
       implicit none
       type(c_ptr),        value, intent(in) :: record
     end subroutine TAGARRAY_delete_record
-    subroutine TAGARRAY_add_record(container, record) bind(C, name="add_record")
+    subroutine TAGARRAY_add_record(container, Ctag, record) bind(C, name="add_record")
       import
       implicit none
       type(c_ptr), value, intent(in) :: container
+      character(kind=TAGARRAY_CHAR), intent(in) :: Ctag(*)
       type(c_ptr), value, intent(in) :: record
     end subroutine TAGARRAY_add_record
     type(C_ptr) function TAGARRAY_get_record(container, Ctag) bind(C, name="get_record")

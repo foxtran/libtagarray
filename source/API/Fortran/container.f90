@@ -35,10 +35,13 @@ contains
     ptr = TAGARRAY_new_container(C_comment)
     this%container_ptr = ptr
   end subroutine container_t_new
-  subroutine add_record(this, record)
+  subroutine add_record(this, tag, record)
     class(container_t), intent(inout) :: this
+    character(kind=TAGARRAY_CHAR, len=*), intent(in) :: tag
     type(record_t), intent(in) :: record
-    call TAGARRAY_add_record(this%container_ptr, record%record_ptr)
+    character(kind=TAGARRAY_CHAR, len=:), allocatable :: Ctag
+    Ctag = to_Cstring(tag)
+    call TAGARRAY_add_record(this%container_ptr, Ctag, record%record_ptr)
   end subroutine add_record
   subroutine add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
     class(container_t), intent(inout) :: this
@@ -54,8 +57,8 @@ contains
     type(record_t) :: record
     character(kind=TAGARRAY_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call record%new(Ctag, type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
-    call this%add_record(record)
+    call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
+    call this%add_record(Ctag, record)
   end subroutine add_record_data
   subroutine reserve_data(this, tag, datatype, array_size, array_shape, options, comment)
     class(container_t), intent(inout) :: this
@@ -69,8 +72,8 @@ contains
     type(record_t) :: record
     character(kind=TAGARRAY_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call record%reserve(Ctag, datatype, array_size, array_shape, options, comment)
-    call this%add_record(record)
+    call record%reserve(datatype, array_size, array_shape, options, comment)
+    call this%add_record(Ctag, record)
   end subroutine reserve_data
   type(record_t) function get_record(this, tag) result(record)
     class(container_t),                   intent(inout) :: this

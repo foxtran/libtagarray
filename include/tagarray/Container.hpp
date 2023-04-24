@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 #include <string>
-#include <vector>
+#include <map>
 
 #include "tagarray/defines.h"
 #include "tagarray/Record.hpp"
@@ -16,7 +16,7 @@ private:
   uint32_t version;
   int32_t status;
   std::string comment;
-  std::vector<Record *> records;
+  std::map<std::string, Record *> records;
 
 public:
   inline Container() : version(TAGARRAY_CONTAINER_VERSION), status(TAGARRAY_OK) {};
@@ -43,10 +43,18 @@ public:
     this->status = TAGARRAY_OK;
   }
 
-  void add_record(Record &record);
+  void add_record(const std::string &tag, Record &record);
+  inline void add_record(const char *const tag, Record &record) {
+    if (tag == nullptr)
+    {
+      this->status = TAGARRAY_EMPTY_TAG;
+      return;
+    }
+    add_record(std::string(tag), record);
+  }
 
-  ssize_t find_record(const std::string &tag);
-  inline ssize_t find_record(const char *const tag) {
+  int32_t find_record(const std::string &tag);
+  inline int32_t find_record(const char *const tag) {
     if (tag == nullptr)
     {
       this->status = TAGARRAY_EMPTY_TAG;
