@@ -82,9 +82,7 @@ public:
   inline void
   set_data(const int8_t *&data, const uint64_t data_length,
            const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->_dimensions.size(); i++) {
-      this->_dimensions[i] = dimensions[i];
-    }
+    std::copy(dimensions, dimensions + this->_dimensions.size(), this->_dimensions.begin());
     set_data(data, data_length);
   }
 
@@ -102,9 +100,7 @@ public:
   }
   inline void
   set_shape(const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->_dimensions.size(); i++) {
-      this->_dimensions[i] = dimensions[i];
-    }
+    std::copy(dimensions, dimensions + this->_dimensions.size(), this->_dimensions.begin());
     this->_status = TA_OK;
   }
 
@@ -123,9 +119,7 @@ public:
   }
   inline void
   set_options(const int64_t (&options)[TA_OPTIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->_options.size(); i++) {
-      this->_options[i] = options[i];
-    }
+    std::copy(options, options + this->_options.size(), this->_options.begin());
     this->_status = TA_OK;
   }
 
