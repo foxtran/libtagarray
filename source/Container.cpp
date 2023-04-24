@@ -58,14 +58,11 @@ void Container::load(const std::u32string &filename) noexcept {
 void Container::dump(const int32_t level) const noexcept {
   std::cout << "Container v" << this->version << std::endl;
   std::cout << "  Comment len = " << this->comment.length() << std::endl;
-  std::cout << "  Comment `";
-  for (const auto& c: this->comment)
-    std::cout << static_cast<char>(c);
-  std::cout << "`" << std::endl;
+  std::cout << "  Comment `" << this->comment << "`" << std::endl;
   std::cout << "  Number of records: " << this->records.size() << std::endl;
-  for (const auto& pair: this->records) {
-    std::cout << "  Record tag: `" << pair.first << "`" << std::endl;
-    if (level > 0) pair.second->dump(level-1);
+  for (const auto& [key, value] : this->records) {
+    std::cout << "  Record tag: `" << key << "`" << std::endl;
+    if (level > 0) value->dump(level-1);
   }
 }
 
