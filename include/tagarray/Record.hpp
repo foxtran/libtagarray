@@ -129,7 +129,7 @@ public:
   }
 
   inline RecordInfo get_info() const noexcept {
-    RecordInfo recordInfo = {this->type_id, this->n_dimensions, this->data, this->data_length};
+    RecordInfo recordInfo = {this->type_id, this->n_dimensions, this->data, this->data_length, {0}};
     for(size_t i = 0; i < this->dimensions.size(); i++) {
       recordInfo.dimensions[i] = this->dimensions[i];
     }
