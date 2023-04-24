@@ -72,15 +72,15 @@ public:
 
   inline uint8_t *get_data() const noexcept { return this->data; }
 
-  void set_data(const int8_t *&data, uint64_t data_length) noexcept;
+  void set_data(const int8_t *&data, const uint64_t data_length) noexcept;
   inline void
-  set_data(const int8_t *&data, uint64_t data_length,
+  set_data(const int8_t *&data, const uint64_t data_length,
            const std::array<uint64_t, TAGARRAY_DIMENSIONS_LENGTH> &dimensions) noexcept {
     this->dimensions = dimensions;
     this->set_data(data, data_length);
   }
   inline void
-  set_data(const int8_t *&data, uint64_t data_length,
+  set_data(const int8_t *&data, const uint64_t data_length,
            const int64_t (&dimensions)[TAGARRAY_DIMENSIONS_LENGTH]) noexcept {
     for(size_t i = 0; i < this->dimensions.size(); i++) {
       this->dimensions[i] = dimensions[i];
@@ -108,7 +108,7 @@ public:
     this->status = TAGARRAY_OK;
   }
 
-  inline void set_option(uint32_t index, int64_t option_value) noexcept {
+  inline void set_option(const uint32_t index, const int64_t option_value) noexcept {
     if (index >= TAGARRAY_OPTIONS_LENGTH) {
       this->status = TAGARRAY_RECORD_OPTION_DOES_NOT_EXIST;
       return;

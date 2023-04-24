@@ -24,18 +24,18 @@ extern "C" void *load_container_c32(const char32_t *const filename) noexcept {
   return nullptr;
 }
 
-extern "C" void save_container_c8(void *container,
+extern "C" void save_container_c8(void *const container,
                                   const char *const filename) noexcept {
   reinterpret_cast<Container *const>(container)->save(filename);
 }
 
-extern "C" void save_container_c32(void *container,
+extern "C" void save_container_c32(void *const container,
                                   const char32_t *const filename) noexcept {
   reinterpret_cast<Container *const>(container)->save(filename);
 }
 
-extern "C" void delete_container(void *container) noexcept {
-  delete reinterpret_cast<Container *>(container);
+extern "C" void delete_container(void *const container) noexcept {
+  delete reinterpret_cast<Container *const>(container);
 }
 
 extern "C" void *
@@ -56,19 +56,19 @@ extern "C" void dump_record(const void *const record, const int32_t level) noexc
   reinterpret_cast<const Record *const>(record)->dump(level);
 }
 
-extern "C" void delete_record(void *record) noexcept {
-  delete reinterpret_cast<Record *>(record);
+extern "C" void delete_record(void *const record) noexcept {
+  delete reinterpret_cast<Record *const>(record);
 }
 
-extern "C" void add_record(void *container, const char *const tag, void *record) noexcept {
-  reinterpret_cast<Container *>(container)->add_record(tag, *reinterpret_cast<Record *>(record));
+extern "C" void add_record(void *const container, const char *const tag, void *const record) noexcept {
+  reinterpret_cast<Container *const>(container)->add_record(tag, *reinterpret_cast<Record *const>(record));
 }
 
 extern "C" void *get_record(void *const container, const char *const tag) noexcept {
   return reinterpret_cast<Container *const>(container)->get_record(tag);
 }
 
-extern "C" void container_remove_record(void *container, const char *const tag) noexcept {
+extern "C" void container_remove_record(void *const container, const char *const tag) noexcept {
   return reinterpret_cast<Container *const>(container)->remove_record(tag);
 }
 

@@ -29,10 +29,10 @@ void dump_container(const void *const container, const int32_t level) TA_NOEXCEP
 void *load_container_c8(const char *const filename) TA_NOEXCEPT;
 void *load_container_c32(const char32_t *const filename) TA_NOEXCEPT;
 
-void save_container_c8(void *container, const char *const filename) TA_NOEXCEPT;
-void save_container_c32(void *container, const char32_t *const filename) TA_NOEXCEPT;
+void save_container_c8(void *const container, const char *const filename) TA_NOEXCEPT;
+void save_container_c32(void *const container, const char32_t *const filename) TA_NOEXCEPT;
 
-void delete_container(void *container) TA_NOEXCEPT;
+void delete_container(void *const container) TA_NOEXCEPT;
 
 void *new_record(const uint32_t type_id,
                  const uint32_t n_dimensions, const uint8_t *data,
@@ -45,9 +45,9 @@ int32_t get_record_status(const void *const record) TA_NOEXCEPT;
 
 void dump_record(const void *const record, const int32_t level) TA_NOEXCEPT;
 
-void delete_record(void *record) TA_NOEXCEPT;
+void delete_record(void *const record) TA_NOEXCEPT;
 
-void add_record(void *container, const char *const tag, void *record) TA_NOEXCEPT;
+void add_record(void *const container, const char *const tag, void *const record) TA_NOEXCEPT;
 
 void *get_record(void *const container, const char *const tag) TA_NOEXCEPT;
 
