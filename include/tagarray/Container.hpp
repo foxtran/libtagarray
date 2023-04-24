@@ -1,5 +1,4 @@
-#ifndef _TA_CONTAINER_HPP
-#define _TA_CONTAINER_HPP
+#pragma once
 
 #include <array>
 #include <cstdint>
@@ -121,5 +120,3 @@ public:
 };
 
 } // namespace tagarray
-
-#endif

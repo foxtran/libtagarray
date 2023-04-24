@@ -1,5 +1,4 @@
-#ifndef _TA_INFO_H
-#define _TA_INFO_H
+#pragma once
 
 #include "tagarray/defines.h"
 
@@ -27,6 +26,4 @@ typedef struct {
 #ifdef __cplusplus
 }
 }
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef _TA_H
-#define _TA_H
+#pragma once
 
 #include "tagarray/defines.h"
 #include "tagarray/info.h"
@@ -59,6 +58,4 @@ RecordInfo get_record_info(const void* const record) TA_NOEXCEPT;
 }
 }
 }
-#endif
-
 #endif
