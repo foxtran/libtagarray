@@ -52,7 +52,12 @@ public:
     add_record(std::string(tag), record);
   }
 
-  int32_t find_record(const std::string &tag) noexcept;
+  inline int32_t find_record(const std::string &tag) noexcept {
+    this->status = TA_CONTAINER_RECORD_NOT_FOUND;
+    if (auto search = this->records.find(tag); search != this->records.end())
+      this->status = TA_OK;
+    return this->status;
+  }
   inline int32_t find_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {
@@ -62,7 +67,13 @@ public:
     return find_record(std::string(tag));
   }
 
-  void remove_record(const std::string &tag) noexcept;
+  inline void remove_record(const std::string &tag) noexcept {
+    this->find_record(tag);
+    if (this->status != TA_OK) return;
+    delete this->records[tag];
+    this->records.erase(tag);
+    this->status = TA_OK;
+  }
   inline void remove_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {
@@ -72,7 +83,11 @@ public:
     remove_record(std::string(tag));
   }
 
-  Record *get_record(const std::string &tag) noexcept;
+  inline Record *get_record(const std::string &tag) noexcept {
+    this->find_record(tag);
+    if (this->status != TA_OK) return nullptr;
+    return this->records[tag];
+  }
   inline Record *get_record(const char *const tag) noexcept {
     if (tag == nullptr)
     {

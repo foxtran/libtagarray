@@ -18,29 +18,6 @@ void Container::add_record(const std::string &tag, Record &record) noexcept {
   this->status = TA_OK;
 }
 
-int32_t Container::find_record(const std::string &tag) noexcept {
-  if (auto search = this->records.find(tag); search != this->records.end()) {
-    this->status = TA_OK;
-  } else {
-    this->status = TA_CONTAINER_RECORD_NOT_FOUND;
-  }
-  return this->status;
-}
-
-void Container::remove_record(const std::string &tag) noexcept {
-  this->find_record(tag);
-  if (this->status != TA_OK) return;
-  delete this->records[tag];
-  this->records.erase(tag);
-  this->status = TA_OK;
-}
-
-Record *Container::get_record(const std::string &tag) noexcept {
-  this->find_record(tag);
-  if (this->status != TA_OK) return nullptr;
-  return this->records[tag];
-}
-
 void Container::save(const std::string &filename) noexcept {
   this->status = TA_NOT_IMPLEMENTED;
 }
