@@ -13,15 +13,15 @@ namespace tagarray {
 
 class Record {
 private:
-  const int32_t type_id;
-  const int32_t n_dimensions;
-  int64_t data_length;
-  uint64_t data_size;
-  uint8_t *data;
-  int32_t status;
-  std::array<uint64_t, TA_DIMENSIONS_LENGTH> dimensions;
-  std::array<int64_t, TA_OPTIONS_LENGTH> options;
-  std::string comment;
+  const int32_t _type_id;
+  const int32_t _n_dimensions;
+  int64_t _data_length;
+  int64_t _data_size;
+  uint8_t *_data;
+  int32_t _status;
+  std::array<uint64_t, TA_DIMENSIONS_LENGTH> _dimensions;
+  std::array<int64_t, TA_OPTIONS_LENGTH> _options;
+  std::string _comment;
 
 public:
   Record(const uint32_t type_id,
@@ -39,27 +39,27 @@ public:
 
   ~Record() noexcept;
 
-  inline uint32_t get_type_id() const noexcept { return this->type_id; }
+  inline uint32_t get_type_id() const noexcept { return this->_type_id; }
 
-  inline uint32_t get_n_dimensions() const noexcept { return this->n_dimensions; }
+  inline uint32_t get_n_dimensions() const noexcept { return this->_n_dimensions; }
 
-  inline int32_t get_status() const noexcept { return this->status; }
+  inline int32_t get_status() const noexcept { return this->_status; }
 
   inline const std::array<uint64_t, TA_DIMENSIONS_LENGTH> &
   get_dimensions() const noexcept {
-    return this->dimensions;
+    return this->_dimensions;
   }
 
   inline const std::array<int64_t, TA_OPTIONS_LENGTH> &
   get_options() const noexcept {
-    return this->options;
+    return this->_options;
   }
 
-  inline const std::string &get_comment() const noexcept { return this->comment; }
+  inline const std::string &get_comment() const noexcept { return this->_comment; }
 
   inline void update_comment(const std::string &comment) noexcept {
-    this->comment = comment;
-    this->status = TA_OK;
+    this->_comment = comment;
+    this->_status = TA_OK;
   }
   inline void update_comment(const char *const comment_ptr) noexcept {
     std::string comment = std::string();
@@ -68,70 +68,70 @@ public:
     update_comment(comment);
   }
 
-  inline uint64_t get_data_length() const noexcept { return this->data_length; }
+  inline uint64_t get_data_length() const noexcept { return this->_data_length; }
 
-  inline uint8_t *get_data() const noexcept { return this->data; }
+  inline uint8_t *get_data() const noexcept { return this->_data; }
 
   void set_data(const int8_t *&data, const uint64_t data_length) noexcept;
   inline void
   set_data(const int8_t *&data, const uint64_t data_length,
            const std::array<uint64_t, TA_DIMENSIONS_LENGTH> &dimensions) noexcept {
-    this->dimensions = dimensions;
+    this->_dimensions = dimensions;
     this->set_data(data, data_length);
   }
   inline void
   set_data(const int8_t *&data, const uint64_t data_length,
            const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->dimensions.size(); i++) {
-      this->dimensions[i] = dimensions[i];
+    for(size_t i = 0; i < this->_dimensions.size(); i++) {
+      this->_dimensions[i] = dimensions[i];
     }
     set_data(data, data_length);
   }
 
   inline void free_data() noexcept {
-    if (this->data != nullptr)
-      delete[] this->data;
-    this->data = nullptr;
-    this->status = TA_OK;
+    if (this->_data != nullptr)
+      delete[] this->_data;
+    this->_data = nullptr;
+    this->_status = TA_OK;
   }
 
   inline void
   set_shape(const std::array<uint64_t, TA_DIMENSIONS_LENGTH> &dimensions) noexcept {
-    this->dimensions = dimensions;
-    this->status = TA_OK;
+    this->_dimensions = dimensions;
+    this->_status = TA_OK;
   }
   inline void
   set_shape(const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->dimensions.size(); i++) {
-      this->dimensions[i] = dimensions[i];
+    for(size_t i = 0; i < this->_dimensions.size(); i++) {
+      this->_dimensions[i] = dimensions[i];
     }
-    this->status = TA_OK;
+    this->_status = TA_OK;
   }
 
   inline void set_option(const uint32_t index, const int64_t option_value) noexcept {
     if (index >= TA_OPTIONS_LENGTH) {
-      this->status = TA_RECORD_OPTION_DOES_NOT_EXIST;
+      this->_status = TA_RECORD_OPTION_DOES_NOT_EXIST;
       return;
     }
-    this->options[index] = option_value;
-    this->status = TA_OK;
+    this->_options[index] = option_value;
+    this->_status = TA_OK;
   }
   inline void
   set_options(const std::array<int64_t, TA_OPTIONS_LENGTH> &options) noexcept {
-    this->options = options;
-    this->status = TA_OK;
+    this->_options = options;
+    this->_status = TA_OK;
   }
   inline void
   set_options(const int64_t (&options)[TA_OPTIONS_LENGTH]) noexcept {
-    for(size_t i = 0; i < this->options.size(); i++) {
-      this->options[i] = options[i];
+    for(size_t i = 0; i < this->_options.size(); i++) {
+      this->_options[i] = options[i];
     }
-    this->status = TA_OK;
+    this->_status = TA_OK;
   }
 
   inline RecordInfo get_info() const noexcept {
-    RecordInfo recordInfo = {this->type_id, this->n_dimensions, this->data, this->data_length, {0}};
-    std::copy(std::begin(this->dimensions), std::end(this->dimensions), std::begin(recordInfo.dimensions));
+    RecordInfo recordInfo = {this->_type_id, this->_n_dimensions, this->_data, this->_data_length, {0}};
+    std::copy(std::begin(this->_dimensions), std::end(this->_dimensions), std::begin(recordInfo.dimensions));
     return recordInfo;
   }
 

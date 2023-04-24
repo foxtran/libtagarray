@@ -52,11 +52,6 @@ target_sources(${PN}
 target_include_directories(${PN} PRIVATE "${CMAKE_SOURCE_DIR}/include" "${CMAKE_BINARY_DIR}/include")
 target_compile_features(${PN} PRIVATE cxx_std_17)
 target_compile_check_add_flags(${PN} PRIVATE CXX     ${${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS})
-if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
-  target_compile_options(${PN} PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-Wno-shadow>
-  )
-endif()
 set_target_properties(${PN} PROPERTIES VERSION ${PROJECT_VERSION}
                                        SOVERSION 1)
 if(IPO_AVAILABLE)
