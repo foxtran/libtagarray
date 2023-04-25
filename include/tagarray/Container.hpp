@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 #include "tagarray/defines.h"
 #include "tagarray/Record.hpp"
@@ -15,7 +15,7 @@ private:
   int32_t _version;
   int32_t _status;
   std::string _comment;
-  std::map<std::string, Record *> _records;
+  std::unordered_map<std::string, Record *> _records;
 
 public:
   inline Container() noexcept : _version(TA_CONTAINER_VERSION), _status(TA_OK) {};
