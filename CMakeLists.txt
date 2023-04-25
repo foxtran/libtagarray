@@ -75,6 +75,8 @@ if(ENABLE_FORTRAN)
   target_sources(${PN}_f
     PUBLIC
       FILE_SET HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES include/${PN}.fh
+                                                                     include/${PN}/${PN}_v1.fh
+                                                                     include/${PN}/${PN}_v2.fh
 #      FILE_SET HEADERS BASE_DIRS ${CMAKE_BINARY_DIR}/include   FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray.mod
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_defines.mod
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_capi.mod

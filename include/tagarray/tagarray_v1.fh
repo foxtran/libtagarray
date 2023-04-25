@@ -1,0 +1,89 @@
+#pragma once
+
+#define TA_CONTAINER_ADD_DATA(CONTAINER, TAG, TYPE, DATA) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+  end block
+
+#define TA_CONTAINER_ADD_DATA_OPTIONAL(CONTAINER, TAG, TYPE, DATA, __VA_ARGS__) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+  end block
+
+#define TA_CONTAINER_ADD_VALUE(CONTAINER, TAG, TYPE, VALUE) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t); \
+  end block
+
+#define TA_CONTAINER_ADD_VALUE_OPTIONAL(CONTAINER, TAG, TYPE, VALUE, __VA_ARGS__) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
+  end block
+
+#define TA_RECORD_NEW(RECORD, TYPE, DATA) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call RECORD%new(TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+  end block
+
+#define TA_RECORD_NEW_OPTIONAL(RECORD, TYPE, DATA, __VA_ARGS__) \
+  block; \
+    use tagarray, only: TA_BITS_IN_BYTE; \
+    use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
+    call RECORD%new(TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+  end block
+
+#define TA_GET_CONTAINER_DATA(CONTAINER, TAG, TYPE, DATA, STATUS) \
+  block; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use tagarray, only: recordinfo_t, TA_OK; \
+    type(recordinfo_t) :: record_info; \
+    record_info = CONTAINER%get_record_info(TAG); \
+    STATUS = CONTAINER%get_status(); \
+    if (STATUS == TA_OK) then; \
+      STATUS = record_info%get_status(TYPE, size(shape(DATA), kind=c_int32_t)); \
+      call c_f_pointer(record_info%data, DATA, record_info%dimensions(1:size(shape(DATA)))); \
+    end if; \
+  end block
+
+#define TA_GET_RECORD_DATA(RECORD, TYPE, DATA, STATUS) \
+  block; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use tagarray, only: recordinfo_t; \
+    type(recordinfo_t) :: record_info; \
+    record_info = RECORD%get_info(); \
+    STATUS = record_info%get_status(TYPE, size(shape(DATA), c_int32_t)); \
+    call c_f_pointer(record_info%data, DATA, record_info%dimensions(1:size(shape(DATA)))); \
+  end block
+
+#define TA_GET_CONTAINER_VALUE(CONTAINER, TAG, TYPE, VALUE, STATUS) \
+  block; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use tagarray, only: recordinfo_t, TA_OK; \
+    type(recordinfo_t) :: record_info; \
+    record_info = CONTAINER%get_record_info(TAG); \
+    STATUS = CONTAINER%get_status(); \
+    if (STATUS == TA_OK) then; \
+      STATUS = record_info%get_status(TYPE, 1_c_int32_t); \
+      call c_f_pointer(record_info%data, VALUE); \
+    end if; \
+  end block
+
+#define TA_GET_RECORD_VALUE(RECORD, TYPE, VALUE, STATUS) \
+  block; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use tagarray, only: recordinfo_t; \
+    type(recordinfo_t) :: record_info; \
+    record_info = RECORD%get_info(); \
+    STATUS = record_info%get_status(TYPE, 1_c_int32_t); \
+    call c_f_pointer(record_info%data, VALUE); \
+  end block
