@@ -9,7 +9,10 @@ module tagarray_utils
     module procedure :: str_to_Cstr
   end interface to_Cstring
   interface get_type_id
-    module procedure :: get_type_id_scalar, get_type_id_array
+    module procedure :: get_type_id_scalar
+#if TA_FORTRAN_API_VERSION >= 2
+    module procedure :: get_type_id_array
+#endif
   end interface get_type_id
   public to_Cstring, get_type_id, get_storage_size
 contains
@@ -29,12 +32,14 @@ contains
       Cstring = Cstring // char(0, kind=TA_CHAR)
     end if
   end function str_to_Cstr
+#if TA_FORTRAN_API_VERSION >= 2
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
     class(*), target, intent(in) :: values(*)
     class(*), pointer :: value
     value => values(1)
     type_id = get_type_id_scalar(value)
   end function get_type_id_array
+#endif
   integer(c_int32_t) function get_type_id_scalar(value) result(type_id)
     class(*), target, intent(in) :: value
     type_id = TA_TYPE_UNKNOWN

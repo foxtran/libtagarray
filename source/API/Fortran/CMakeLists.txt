@@ -6,7 +6,7 @@ list(APPEND SOURCES_Fortran
   ${dir}/record.f90
   ${dir}/recordinfo.f90
   ${dir}/tagarray.f90
-  ${dir}/utils.f90
+  ${dir}/utils.F90
 )
 
 set(SOURCES_Fortran ${SOURCES_Fortran} PARENT_SCOPE)
