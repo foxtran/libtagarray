@@ -10,7 +10,7 @@ module tagarray_utils
   end interface to_Cstring
   interface get_type_id
     module procedure :: get_type_id_scalar
-#if TA_FORTRAN_API_VERSION >= 2
+#if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
     module procedure :: get_type_id_array
 #endif
   end interface get_type_id
@@ -32,7 +32,7 @@ contains
       Cstring = Cstring // char(0, kind=TA_CHAR)
     end if
   end function str_to_Cstr
-#if TA_FORTRAN_API_VERSION >= 2
+#if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
     class(*), target, intent(in) :: values(*)
     class(*), pointer :: value

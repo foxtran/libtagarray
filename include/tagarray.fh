@@ -8,6 +8,8 @@
 #include "tagarray/tagarray_v1.fh"
 #elif TA_FORTRAN_API_VERSION == 2
 #include "tagarray/tagarray_v2.fh"
+#elif TA_FORTRAN_API_VERSION == 3
+#include "tagarray/tagarray_v3.fh"
 #else
 #error "Unsupported API version"
 #endif
