@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(tagarray
-  VERSION 0.0.3
+  VERSION 0.0.4
   LANGUAGES CXX)
 
 if(ENABLE_FORTRAN)
@@ -15,13 +15,13 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(CheckIPOSupported)
 
+check_ipo_supported(RESULT IPO_AVAILABLE)
+
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(defines)
 include(CompilerFlagsSets)
 include(TargetCompileCheckAddFlags)
-
-
-check_ipo_supported(RESULT IPO_AVAILABLE)
 
 generate_header("C" "${CMAKE_SOURCE_DIR}/defines.csv" "${CMAKE_BINARY_DIR}/include/${PN}/defines.h")
 if(ENABLE_FORTRAN)
@@ -30,7 +30,6 @@ endif()
 
 
 set(SOURCES)
-
 if(ENABLE_FORTRAN)
   set(SOURCES_Fortran)
 endif()
