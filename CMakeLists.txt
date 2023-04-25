@@ -93,7 +93,7 @@ if(ENABLE_FORTRAN)
     set_target_properties(${PN}_f PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
   endif()
   try_compile(assumed_size_polymorphic_objects
-    SOURCE_FROM_FILE assumed_size_polymorphic_objects.f90 ${PROJECT_SOURCE_DIR}/cmake/try_source/assumed_size_polymorphic_objects.f90)
+    SOURCE_FROM_CONTENT assumed_size_polymorphic_objects.f90 "program test\ncontains\n  subroutine UP(arr)\n    class(*) :: arr(*)\n  end subroutine UP\nend program test")
   if(assumed_size_polymorphic_objects)
     target_compile_definitions(${PN}_f PUBLIC TA_FORTRAN_API_VERSION_AVAILABLE=2)
   endif()
