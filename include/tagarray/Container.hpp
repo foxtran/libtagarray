@@ -5,8 +5,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "tagarray/defines.h"
 #include "tagarray/Record.hpp"
+#include "tagarray/defines.h"
 
 namespace tagarray {
 
@@ -18,9 +18,12 @@ private:
   std::unordered_map<std::string, Record *> _records;
 
 public:
-  inline Container() noexcept : _version(TA_CONTAINER_VERSION), _status(TA_OK) {};
-  inline Container(std::string &comment) noexcept : _version(TA_CONTAINER_VERSION), _status(TA_OK), _comment(comment) {};
-  inline Container(const char *const comment_ptr) noexcept : _version(TA_CONTAINER_VERSION), _status(TA_OK) {
+  inline Container() noexcept
+      : _version(TA_CONTAINER_VERSION), _status(TA_OK){};
+  inline Container(std::string &comment) noexcept
+      : _version(TA_CONTAINER_VERSION), _status(TA_OK), _comment(comment){};
+  inline Container(const char *const comment_ptr) noexcept
+      : _version(TA_CONTAINER_VERSION), _status(TA_OK) {
     this->update_comment(comment_ptr);
   }
   ~Container() noexcept;
@@ -29,7 +32,9 @@ public:
 
   inline int32_t get_status() const noexcept { return this->_status; }
 
-  inline const std::string &get_comment() const noexcept { return this->_comment; }
+  inline const std::string &get_comment() const noexcept {
+    return this->_comment;
+  }
 
   inline void update_comment(const char *const comment_ptr) noexcept {
     std::string comment = std::string();
@@ -44,8 +49,7 @@ public:
 
   void add_record(const std::string &tag, Record &record) noexcept;
   inline void add_record(const char *const tag, Record &record) noexcept {
-    if (tag == nullptr)
-    {
+    if (tag == nullptr) {
       this->_status = TA_EMPTY_TAG;
       return;
     }
@@ -59,8 +63,7 @@ public:
     return this->_status;
   }
   inline int32_t find_record(const char *const tag) noexcept {
-    if (tag == nullptr)
-    {
+    if (tag == nullptr) {
       this->_status = TA_EMPTY_TAG;
       return TA_CONTAINER_RECORD_NOT_FOUND;
     }
@@ -69,14 +72,14 @@ public:
 
   inline void remove_record(const std::string &tag) noexcept {
     this->find_record(tag);
-    if (this->_status != TA_OK) return;
+    if (this->_status != TA_OK)
+      return;
     delete this->_records[tag];
     this->_records.erase(tag);
     this->_status = TA_OK;
   }
   inline void remove_record(const char *const tag) noexcept {
-    if (tag == nullptr)
-    {
+    if (tag == nullptr) {
       this->_status = TA_EMPTY_TAG;
       return;
     }
@@ -85,12 +88,12 @@ public:
 
   inline Record *get_record(const std::string &tag) noexcept {
     this->find_record(tag);
-    if (this->_status != TA_OK) return nullptr;
+    if (this->_status != TA_OK)
+      return nullptr;
     return this->_records[tag];
   }
   inline Record *get_record(const char *const tag) noexcept {
-    if (tag == nullptr)
-    {
+    if (tag == nullptr) {
       this->_status = TA_EMPTY_TAG;
       return nullptr;
     }

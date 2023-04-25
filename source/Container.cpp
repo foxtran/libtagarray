@@ -4,9 +4,7 @@
 
 namespace tagarray {
 
-Container::~Container() noexcept {
-  this->_records.clear();
-}
+Container::~Container() noexcept { this->_records.clear(); }
 
 void Container::add_record(const std::string &tag, Record &record) noexcept {
   this->find_record(tag);
@@ -37,9 +35,10 @@ void Container::dump(const int32_t level) const noexcept {
   std::cout << "  Comment len = " << this->_comment.length() << std::endl;
   std::cout << "  Comment `" << this->_comment << "`" << std::endl;
   std::cout << "  Number of records: " << this->_records.size() << std::endl;
-  for (const auto& [key, value] : this->_records) {
+  for (const auto &[key, value] : this->_records) {
     std::cout << "  Record tag: `" << key << "`" << std::endl;
-    if (level > 0) value->dump(level-1);
+    if (level > 0)
+      value->dump(level - 1);
   }
 }
 
