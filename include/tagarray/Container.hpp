@@ -19,11 +19,11 @@ private:
 
 public:
   inline Container() noexcept
-      : _version(TA_CONTAINER_VERSION), _status(TA_OK){};
+      : _version(TA_CONTAINER_VERSION), _status(TA_OK), _comment(""){};
   inline Container(std::string &comment) noexcept
       : _version(TA_CONTAINER_VERSION), _status(TA_OK), _comment(comment){};
   inline Container(const char *const comment_ptr) noexcept
-      : _version(TA_CONTAINER_VERSION), _status(TA_OK) {
+      : _version(TA_CONTAINER_VERSION), _status(TA_OK), _comment("") {
     this->update_comment(comment_ptr);
   }
   ~Container() noexcept;
