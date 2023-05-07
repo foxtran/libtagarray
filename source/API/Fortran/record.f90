@@ -51,7 +51,7 @@ contains
     else
       Ccomment = to_Cstring(TA_CHAR_"")
     end if
-    this%record_ptr = TA_new_record(type_id, n_dimensions, data_ptr, data_length, dimensions_, options_, Ccomment)
+    this%record_ptr = TA_Record_new(type_id, n_dimensions, data_ptr, data_length, dimensions_, options_, Ccomment)
   end subroutine record_t_new
   subroutine record_t_reserve(this, datatype, array_size, array_shape, options, comment)
     class(record_t), intent(inout) :: this
@@ -86,19 +86,19 @@ contains
     else
       Ccomment = to_Cstring(TA_CHAR_"")
     end if
-    this%record_ptr = TA_new_record(datatype, n_dimensions, c_null_ptr, data_length, dimensions_, options_, Ccomment)
+    this%record_ptr = TA_Record_new(datatype, n_dimensions, c_null_ptr, data_length, dimensions_, options_, Ccomment)
   end subroutine record_t_reserve
   type(RecordInfo_t) function get_info(this) result(recordinfo)
     class(record_t), intent(inout) :: this
-    recordinfo = TA_get_record_info(this%record_ptr)
+    recordinfo =  TA_Record_get_record_info(this%record_ptr)
   end function get_info
   integer(c_int32_t) function get_status(this) result(status)
     class(record_t), intent(inout) :: this
-    status = TA_get_record_status(this%record_ptr)
+    status = TA_Record_get_status(this%record_ptr)
   end function get_status
   subroutine record_t_delete(this)
     class(record_t), intent(inout) :: this
-    call TA_delete_record(this%record_ptr)
+    call TA_Record_delete(this%record_ptr)
     this%record_ptr = c_null_ptr
   end subroutine record_t_delete
 end module tagarray_record

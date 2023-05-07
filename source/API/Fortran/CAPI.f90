@@ -4,28 +4,28 @@ module tagarray_CAPI
   use tagarray_recordinfo, only: C_RecordInfo_t
   implicit none
   interface
-    type(C_ptr) function TA_new_container(Ccomment) bind(C, name="new_container")
+    type(C_ptr) function TA_Container_new(Ccomment) bind(C, name="TA_Container_new")
       import
       implicit none
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
-    end function TA_new_container
-    integer(c_int32_t) function TA_get_container_status(container) bind(C, name="get_container_status")
+    end function TA_Container_new
+    integer(c_int32_t) function TA_Container_get_status(container) bind(C, name="TA_Container_get_status")
       import
       type(c_ptr),        value, intent(in) :: container
-    end function TA_get_container_status
-    subroutine TA_dump_container(container, level) bind(C, name="dump_container")
+    end function TA_Container_get_status
+    subroutine TA_Container_dump(container, level) bind(C, name="TA_Container_dump")
       import
       implicit none
       type(c_ptr),        value, intent(in) :: container
       integer(c_int32_t), value, intent(in) :: level
-    end subroutine TA_dump_container
-    subroutine TA_delete_container(container) bind(C, name="delete_container")
+    end subroutine TA_Container_dump
+    subroutine TA_Container_delete(container) bind(C, name="TA_Container_delete")
       import
       implicit none
       type(c_ptr),        value, intent(in) :: container
-    end subroutine TA_delete_container
-    type(C_ptr) function TA_new_record(type_id, n_dimensions, data, data_length, dimensions, options, Ccomment) &
-                                                                                                          bind(C, name="new_record")
+    end subroutine TA_Container_delete
+    type(C_ptr) function TA_Record_new(type_id, n_dimensions, data, data_length, dimensions, options, Ccomment) &
+                                                                                                bind(C, name="TA_Record_new")
       import
       implicit none
       integer(c_int32_t), value,     intent(in) :: type_id
@@ -35,45 +35,45 @@ module tagarray_CAPI
       integer(c_int64_t),            intent(in) :: dimensions(TA_DIMENSIONS_LENGTH)
       integer(c_int64_t),            intent(in) :: options(TA_OPTIONS_LENGTH)
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
-    end function TA_new_record
-    integer(c_int32_t) function TA_get_record_status(record) bind(C, name="get_record_status")
+    end function TA_Record_new
+    integer(c_int32_t) function TA_Record_get_status(record) bind(C, name="TA_Record_get_status")
       import
       type(c_ptr),        value, intent(in) :: record
-    end function TA_get_record_status
-    subroutine TA_dump_record(record, level) bind(C, name="dump_record")
+    end function TA_Record_get_status
+    subroutine TA_Record_dump(record, level) bind(C, name="TA_Record_dump")
       import
       implicit none
       type(c_ptr),        value, intent(in) :: record
       integer(c_int32_t), value, intent(in) :: level
-    end subroutine TA_dump_record
-    subroutine TA_delete_record(record) bind(C, name="delete_record")
+    end subroutine TA_Record_dump
+    subroutine TA_Record_delete(record) bind(C, name="TA_Record_delete")
       import
       implicit none
       type(c_ptr),        value, intent(in) :: record
-    end subroutine TA_delete_record
-    subroutine TA_add_record(container, Ctag, record) bind(C, name="add_record")
+    end subroutine TA_Record_delete
+    subroutine TA_Container_add_record(container, Ctag, record) bind(C, name="TA_Container_add_record")
       import
       implicit none
       type(c_ptr), value, intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
       type(c_ptr), value, intent(in) :: record
-    end subroutine TA_add_record
-    type(C_ptr) function TA_get_record(container, Ctag) bind(C, name="get_record")
+    end subroutine TA_Container_add_record
+    type(C_ptr) function TA_Container_get_record(container, Ctag) bind(C, name="TA_Container_get_record")
       import
       implicit none
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
-    end function TA_get_record
-    subroutine TA_container_remove_record(container, Ctag) bind(C, name="container_remove_record")
+    end function TA_Container_get_record
+    subroutine TA_Container_remove_record(container, Ctag) bind(C, name="TA_Container_remove_record")
       import
       implicit none
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
-    end subroutine TA_container_remove_record
-    type(C_RecordInfo_t) function TA_get_record_info(record) bind(C, name="get_record_info")
+    end subroutine TA_Container_remove_record
+    type(C_RecordInfo_t) function TA_Record_get_record_info(record) bind(C, name="TA_Record_get_record_info")
       import
       implicit none
       type(c_ptr), value,            intent(in) :: record
-    end function TA_get_record_info
+    end function TA_Record_get_record_info
   end interface
 end module tagarray_CAPI

@@ -32,7 +32,7 @@ contains
     else
       C_comment = to_Cstring(TA_CHAR_"")
     end if
-    ptr = TA_new_container(C_comment)
+    ptr = TA_Container_new(C_comment)
     this%container_ptr = ptr
   end subroutine container_t_new
   subroutine add_record(this, tag, record)
@@ -41,7 +41,7 @@ contains
     type(record_t), intent(in) :: record
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call TA_add_record(this%container_ptr, Ctag, record%record_ptr)
+    call TA_Container_add_record(this%container_ptr, Ctag, record%record_ptr)
   end subroutine add_record
   subroutine add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
     class(container_t), intent(inout) :: this
@@ -81,7 +81,7 @@ contains
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     type(C_ptr) :: record_ptr
     Ctag = to_Cstring(tag)
-    record_ptr = TA_get_record(this%container_ptr, Ctag)
+    record_ptr = TA_Container_get_record(this%container_ptr, Ctag)
     record%record_ptr = record_ptr
   end function get_record
   type(recordinfo_t) function get_record_info(this, tag) result(recordinfo)
@@ -105,16 +105,16 @@ contains
   end subroutine remove_record
   integer(c_int32_t) function container_t_get_status(this) result(status)
     class(container_t), intent(inout) :: this
-    status = TA_get_container_status(this%container_ptr)
+    status = TA_Container_get_status(this%container_ptr)
   end function container_t_get_status
   subroutine dump(this, level)
     class(container_t), intent(inout) :: this
     integer(c_int32_t), intent(in) :: level
-    call TA_dump_container(this%container_ptr, level)
+    call TA_Container_dump(this%container_ptr, level)
   end subroutine dump
   subroutine container_t_delete(this)
     class(container_t), intent(inout) :: this
-    call TA_delete_container(this%container_ptr)
+    call TA_Container_delete(this%container_ptr)
     this%container_ptr = c_null_ptr
   end subroutine container_t_delete
 end module tagarray_container
