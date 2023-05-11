@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "tagarray/Utils.hpp"
 #include "tagarray/Record.hpp"
 #include "tagarray/defines.h"
 
@@ -37,10 +38,10 @@ public:
   }
 
   inline void update_comment(const char *const comment_ptr) noexcept {
-    std::string comment = std::string();
-    if (comment_ptr != nullptr)
-      comment = std::string(comment_ptr);
-    this->update_comment(comment);
+    this->_status = utils::check_ptr(comment_ptr);
+    if (this->_status != TA_OK)
+      return;
+    this->update_comment(std::string(comment_ptr));
   }
   inline void update_comment(const std::string &comment) noexcept {
     this->_comment = comment;
@@ -49,10 +50,9 @@ public:
 
   void add_record(const std::string &tag, Record &record) noexcept;
   inline void add_record(const char *const tag, Record &record) noexcept {
-    if (tag == nullptr) {
-      this->_status = TA_EMPTY_TAG;
+    this->_status = utils::check_ptr(tag);
+    if (this->_status != TA_OK)
       return;
-    }
     this->add_record(std::string(tag), record);
   }
 
@@ -63,10 +63,9 @@ public:
     return this->_status;
   }
   inline int32_t find_record(const char *const tag) noexcept {
-    if (tag == nullptr) {
-      this->_status = TA_EMPTY_TAG;
-      return TA_CONTAINER_RECORD_NOT_FOUND;
-    }
+    this->_status = utils::check_ptr(tag);
+    if (this->_status != TA_OK)
+      return this->_status;
     return this->find_record(std::string(tag));
   }
 
@@ -79,10 +78,9 @@ public:
     this->_status = TA_OK;
   }
   inline void remove_record(const char *const tag) noexcept {
-    if (tag == nullptr) {
-      this->_status = TA_EMPTY_TAG;
+    this->_status = utils::check_ptr(tag);
+    if (this->_status != TA_OK)
       return;
-    }
     this->remove_record(std::string(tag));
   }
 
@@ -93,44 +91,39 @@ public:
     return this->_records[tag];
   }
   inline Record *get_record(const char *const tag) noexcept {
-    if (tag == nullptr) {
-      this->_status = TA_EMPTY_TAG;
+    this->_status = utils::check_ptr(tag);
+    if (this->_status != TA_OK)
       return nullptr;
-    }
     return this->get_record(std::string(tag));
   }
 
   void save(const std::string &filename) noexcept;
   void save(const std::u32string &filename) noexcept;
   inline void save(const char *const filename_ptr) noexcept {
-    if (filename_ptr == nullptr) {
-      this->_status = TA_FILENAME_NULLPTR;
+    this->_status = utils::check_ptr(filename_ptr);
+    if (this->_status != TA_OK)
       return;
-    }
     this->save(std::string(filename_ptr));
   }
   inline void save(const char32_t *const filename_ptr) noexcept {
-    if (filename_ptr == nullptr) {
-      this->_status = TA_FILENAME_NULLPTR;
+    this->_status = utils::check_ptr(filename_ptr);
+    if (this->_status != TA_OK)
       return;
-    }
     this->save(std::u32string(filename_ptr));
   }
 
   void load(const std::string &filename) noexcept;
   void load(const std::u32string &filename) noexcept;
   inline void load(const char *const filename_ptr) noexcept {
-    if (filename_ptr == nullptr) {
-      this->_status = TA_FILENAME_NULLPTR;
+    this->_status = utils::check_ptr(filename_ptr);
+    if (this->_status != TA_OK)
       return;
-    }
     this->load(std::string(filename_ptr));
   }
   inline void load(const char32_t *const filename_ptr) noexcept {
-    if (filename_ptr == nullptr) {
-      this->_status = TA_FILENAME_NULLPTR;
+    this->_status = utils::check_ptr(filename_ptr);
+    if (this->_status != TA_OK)
       return;
-    }
     this->load(std::u32string(filename_ptr));
   }
 
