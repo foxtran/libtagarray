@@ -73,6 +73,14 @@ public:
     return this->find_record(std::string(tag));
   }
 
+  inline int32_t find_records(const std::vector<std::string> &tags) noexcept {
+    for (const auto &tag : tags) {
+      if (find_record(tag) != TA_OK)
+        return this->_status;
+    }
+    return TA_OK;
+  }
+
   inline void remove_record(const std::string &tag) noexcept {
     this->_status = utils::check_tag(tag);
     if (this->_status != TA_OK)
