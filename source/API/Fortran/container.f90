@@ -14,6 +14,7 @@ module tagarray_container
     procedure, public  :: add_record
     procedure, public  :: add_record_data
     procedure, public  :: reserve_data
+    procedure, public  :: find_record
     procedure, public  :: get_record
     procedure, public  :: get_record_info
     procedure, public  :: remove_record
@@ -75,6 +76,13 @@ contains
     call record%reserve(datatype, array_size, array_shape, options, comment)
     call this%add_record(Ctag, record)
   end subroutine reserve_data
+  integer(c_int32_t) function find_record(this, tag) result(status)
+    class(container_t),                   intent(inout) :: this
+    character(kind=TA_CHAR, len=*), intent(in)    :: tag
+    character(kind=TA_CHAR, len=:), allocatable   :: Ctag
+    Ctag = to_Cstring(tag)
+    status = TA_Container_find_record(this%container_ptr, Ctag)
+  end function find_record
   type(record_t) function get_record(this, tag) result(record)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag

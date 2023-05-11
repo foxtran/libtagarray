@@ -48,6 +48,9 @@ void TA_Record_delete(void *const record) TA_NOEXCEPT;
 void TA_Container_add_record(void *const container, const char *const tag,
                              void *const record) TA_NOEXCEPT;
 
+int32_t TA_Container_find_record(void *const container,
+                                 const char *const tag) TA_NOEXCEPT;
+
 void *TA_Container_get_record(void *const container,
                               const char *const tag) TA_NOEXCEPT;
 

@@ -61,6 +61,11 @@ extern "C" void TA_Container_add_record(void *const container, const char *const
       tag, *static_cast<Record *>(record));
 }
 
+extern "C" int32_t TA_Container_find_record(void *const container,
+                            const char *const tag) noexcept {
+  return static_cast<Container *>(container)->find_record(tag);
+}
+
 extern "C" void *TA_Container_get_record(void *const container,
                             const char *const tag) noexcept {
   return static_cast<Container *>(container)->get_record(tag);
