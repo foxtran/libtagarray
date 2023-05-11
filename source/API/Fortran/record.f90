@@ -13,6 +13,7 @@ module tagarray_record
     procedure, public :: reserve => record_t_reserve
     procedure, public :: get_info
     procedure, public :: get_status
+    procedure, public :: dump
     procedure, public :: delete => record_t_delete
   end type
 contains
@@ -96,6 +97,11 @@ contains
     class(record_t), intent(inout) :: this
     status = TA_Record_get_status(this%record_ptr)
   end function get_status
+  subroutine dump(this, level)
+    class(record_t), intent(inout) :: this
+    integer(c_int32_t), intent(in) :: level
+    call TA_record_dump(this%record_ptr, level)
+  end subroutine dump
   subroutine record_t_delete(this)
     class(record_t), intent(inout) :: this
     call TA_Record_delete(this%record_ptr)
