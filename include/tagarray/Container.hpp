@@ -57,6 +57,9 @@ public:
   }
 
   inline int32_t find_record(const std::string &tag) noexcept {
+    this->_status = utils::check_tag(tag);
+    if (this->_status != TA_OK)
+      return this->_status;
     this->_status = TA_CONTAINER_RECORD_NOT_FOUND;
     if (auto search = this->_records.find(tag); search != this->_records.end())
       this->_status = TA_OK;
@@ -70,6 +73,9 @@ public:
   }
 
   inline void remove_record(const std::string &tag) noexcept {
+    this->_status = utils::check_tag(tag);
+    if (this->_status != TA_OK)
+      return;
     this->find_record(tag);
     if (this->_status != TA_OK)
       return;
@@ -85,6 +91,9 @@ public:
   }
 
   inline Record *get_record(const std::string &tag) noexcept {
+    this->_status = utils::check_tag(tag);
+    if (this->_status != TA_OK)
+      return nullptr;
     this->find_record(tag);
     if (this->_status != TA_OK)
       return nullptr;

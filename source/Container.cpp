@@ -7,6 +7,9 @@ namespace tagarray {
 Container::~Container() noexcept { this->_records.clear(); }
 
 void Container::add_record(const std::string &tag, Record &record) noexcept {
+  this->_status = utils::check_tag(tag);
+  if (this->_status != TA_OK)
+    return;
   this->find_record(tag);
   if (this->_status == TA_OK) {
     this->_status = TA_CONTAINER_RECORD_EXISTS;
