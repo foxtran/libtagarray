@@ -57,7 +57,7 @@ public:
     this->add_record(std::string(tag), record);
   }
 
-  inline int32_t find_record(const std::string &tag) noexcept {
+  inline int32_t has_record(const std::string &tag) noexcept {
     this->_status = utils::check_tag(tag);
     if (this->_status != TA_OK)
       return this->_status;
@@ -66,16 +66,16 @@ public:
       this->_status = TA_OK;
     return this->_status;
   }
-  inline int32_t find_record(const char *const tag) noexcept {
+  inline int32_t has_record(const char *const tag) noexcept {
     this->_status = utils::check_ptr(tag);
     if (this->_status != TA_OK)
       return this->_status;
-    return this->find_record(std::string(tag));
+    return this->has_record(std::string(tag));
   }
 
-  inline int32_t find_records(const std::vector<std::string> &tags) noexcept {
+  inline int32_t has_records(const std::vector<std::string> &tags) noexcept {
     for (const auto &tag : tags) {
-      if (find_record(tag) != TA_OK)
+      if (has_record(tag) != TA_OK)
         return this->_status;
     }
     return TA_OK;
@@ -85,7 +85,7 @@ public:
     this->_status = utils::check_tag(tag);
     if (this->_status != TA_OK)
       return;
-    this->find_record(tag);
+    this->has_record(tag);
     if (this->_status != TA_OK)
       return;
     delete this->_records[tag];
@@ -103,7 +103,7 @@ public:
     this->_status = utils::check_tag(tag);
     if (this->_status != TA_OK)
       return nullptr;
-    this->find_record(tag);
+    this->has_record(tag);
     if (this->_status != TA_OK)
       return nullptr;
     return this->_records[tag];

@@ -58,12 +58,12 @@ module tagarray_CAPI
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
       type(c_ptr), value, intent(in) :: record
     end subroutine TA_Container_add_record
-    integer(c_int32_t) function TA_Container_find_record(container, Ctag) bind(C, name="TA_Container_find_record")
+    integer(c_int32_t) function TA_Container_has_record(container, Ctag) bind(C, name="TA_Container_has_record")
       import
       implicit none
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
-    end function TA_Container_find_record
+    end function TA_Container_has_record
     type(C_ptr) function TA_Container_get_record(container, Ctag) bind(C, name="TA_Container_get_record")
       import
       implicit none

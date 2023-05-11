@@ -14,8 +14,8 @@ module tagarray_container
     procedure, public  :: add_record
     procedure, public  :: add_record_data
     procedure, public  :: reserve_data
-    procedure, public  :: find_record
-    procedure, public  :: find_records
+    procedure, public  :: has_record
+    procedure, public  :: has_records
     procedure, public  :: get_record
     procedure, public  :: get_record_info
     procedure, public  :: remove_record
@@ -77,24 +77,24 @@ contains
     call record%reserve(datatype, array_size, array_shape, options, comment)
     call this%add_record(Ctag, record)
   end subroutine reserve_data
-  integer(c_int32_t) function find_record(this, tag) result(status)
+  integer(c_int32_t) function has_record(this, tag) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     Ctag = to_Cstring(tag)
-    status = TA_Container_find_record(this%container_ptr, Ctag)
-  end function find_record
-  integer(c_int32_t) function find_records(this, tags) result(status)
+    status = TA_Container_has_record(this%container_ptr, Ctag)
+  end function has_record
+  integer(c_int32_t) function has_records(this, tags) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tags(:)
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     integer :: i
     do i = 1, size(tags)
       Ctag = to_Cstring(tags(i))
-      status = TA_Container_find_record(this%container_ptr, Ctag)
+      status = TA_Container_has_record(this%container_ptr, Ctag)
       if (status /= TA_OK) return
     end do
-  end function find_records
+  end function has_records
   type(record_t) function get_record(this, tag) result(record)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag
