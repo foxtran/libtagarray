@@ -2,11 +2,12 @@
 
 #include <array>
 #include <cstdint>
+#include <filesystem>
 #include <string>
 #include <unordered_map>
 
-#include "tagarray/Utils.hpp"
 #include "tagarray/Record.hpp"
+#include "tagarray/Utils.hpp"
 #include "tagarray/defines.h"
 
 namespace tagarray {
@@ -106,34 +107,26 @@ public:
     return this->get_record(std::string(tag));
   }
 
-  void save(const std::string &filename) noexcept;
-  void save(const std::u32string &filename) noexcept;
+  void save(const std::filesystem::path &filename) noexcept;
+  inline void save(const std::string &filename) noexcept {
+    this->save(std::filesystem::path(filename));
+  }
   inline void save(const char *const filename_ptr) noexcept {
     this->_status = utils::check_ptr(filename_ptr);
     if (this->_status != TA_OK)
       return;
     this->save(std::string(filename_ptr));
   }
-  inline void save(const char32_t *const filename_ptr) noexcept {
-    this->_status = utils::check_ptr(filename_ptr);
-    if (this->_status != TA_OK)
-      return;
-    this->save(std::u32string(filename_ptr));
-  }
 
-  void load(const std::string &filename) noexcept;
-  void load(const std::u32string &filename) noexcept;
+  void load(const std::filesystem::path &filename) noexcept;
+  inline void load(const std::string &filename) noexcept {
+    this->load(std::filesystem::path(filename));
+  }
   inline void load(const char *const filename_ptr) noexcept {
     this->_status = utils::check_ptr(filename_ptr);
     if (this->_status != TA_OK)
       return;
     this->load(std::string(filename_ptr));
-  }
-  inline void load(const char32_t *const filename_ptr) noexcept {
-    this->_status = utils::check_ptr(filename_ptr);
-    if (this->_status != TA_OK)
-      return;
-    this->load(std::u32string(filename_ptr));
   }
 
   void dump(const int32_t level) const noexcept;

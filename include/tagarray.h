@@ -26,13 +26,10 @@ int32_t TA_Container_get_status(const void *const container) TA_NOEXCEPT;
 void TA_Container_dump(const void *const container,
                        const int32_t level) TA_NOEXCEPT;
 
-void *TA_Container_load_c8(const char *const filename) TA_NOEXCEPT;
-void *TA_Container_load_c32(const char32_t *const filename) TA_NOEXCEPT;
+void *TA_Container_load(const char *const filename) TA_NOEXCEPT;
 
-void TA_Container_save_c8(void *const container,
-                          const char *const filename) TA_NOEXCEPT;
-void TA_Container_save_c32(void *const container,
-                           const char32_t *const filename) TA_NOEXCEPT;
+void TA_Container_save(void *const container,
+                       const char *const filename) TA_NOEXCEPT;
 
 void TA_Container_delete(void *const container) TA_NOEXCEPT;
 

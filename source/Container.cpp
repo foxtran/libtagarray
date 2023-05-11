@@ -19,17 +19,11 @@ void Container::add_record(const std::string &tag, Record &record) noexcept {
   this->_status = TA_OK;
 }
 
-void Container::save(const std::string &filename) noexcept {
-  this->_status = TA_NOT_IMPLEMENTED;
-}
-void Container::save(const std::u32string &filename) noexcept {
+void Container::save(const std::filesystem::path &filename) noexcept {
   this->_status = TA_NOT_IMPLEMENTED;
 }
 
-void Container::load(const std::string &filename) noexcept {
-  this->_status = TA_NOT_IMPLEMENTED;
-}
-void Container::load(const std::u32string &filename) noexcept {
+void Container::load(const std::filesystem::path &filename) noexcept {
   this->_status = TA_NOT_IMPLEMENTED;
 }
 

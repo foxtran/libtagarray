@@ -17,21 +17,14 @@ extern "C" void TA_Container_dump(const void *const container,
   static_cast<const Container *>(container)->dump(level);
 }
 
-extern "C" void *TA_Container_load_c8(const char *const filename) noexcept {
-  return nullptr;
+extern "C" void *TA_Container_load(const char *const filename) noexcept {
+  Container *container = new Container();
+  container->load(filename);
+  return static_cast<void *>(container);
 }
 
-extern "C" void *TA_Container_load_c32(const char32_t *const filename) noexcept {
-  return nullptr;
-}
-
-extern "C" void TA_Container_save_c8(void *const container,
+extern "C" void TA_Container_save(void *const container,
                                   const char *const filename) noexcept {
-  static_cast<Container *>(container)->save(filename);
-}
-
-extern "C" void TA_Container_save_c32(void *const container,
-                                   const char32_t *const filename) noexcept {
   static_cast<Container *>(container)->save(filename);
 }
 
