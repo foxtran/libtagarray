@@ -59,6 +59,9 @@ void TA_Container_remove_record(void *const container,
 
 RecordInfo TA_Record_get_record_info(const void *const record) TA_NOEXCEPT;
 
+const char *TA_get_status_message(const int32_t status,
+                                  const char *const tag) TA_NOEXCEPT;
+
 #ifdef __cplusplus
 }
 }

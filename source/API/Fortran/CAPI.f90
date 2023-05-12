@@ -81,5 +81,11 @@ module tagarray_CAPI
       implicit none
       type(c_ptr), value,            intent(in) :: record
     end function TA_Record_get_record_info
+    type(C_ptr) function TA_get_status_message(status, Ctag) bind(C, name="TA_get_status_message")
+      import
+      implicit none
+      integer(c_int32_t), value, intent(in) :: status
+      character(kind=TA_CHAR), intent(in) :: Ctag(*)
+    end function TA_get_status_message
   end interface
 end module tagarray_CAPI

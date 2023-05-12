@@ -3,6 +3,7 @@ module tagarray_utils
                                          c_float, c_double, c_float_complex, c_double_complex, &
                                          c_ptr, c_loc
   use tagarray_defines
+  use tagarray_CAPI, only: TA_get_status_message
   implicit none
   private
   interface to_Cstring
@@ -17,7 +18,7 @@ module tagarray_utils
     module procedure :: get_type_id_array
 #endif
   end interface get_type_id
-  public to_Cstring, from_Cstring, get_type_id, get_storage_size
+  public to_Cstring, from_Cstring, get_type_id, get_storage_size, get_status_message
 contains
   function str_to_Cstr(string) result(Cstring)
     character(kind=TA_CHAR, len=*), intent(in) :: string
@@ -120,4 +121,12 @@ contains
         size = 1
     end select
   end function get_storage_size
+  function get_status_message(status, tag) result(message)
+    integer(c_int32_t), intent(in) :: status
+    character(kind=TA_CHAR, len=*), optional, intent(in) :: tag
+    character(kind=TA_CHAR, len=:), allocatable :: Ctag, message
+    Ctag = to_Cstring("")
+    if (present(tag)) Ctag = to_Cstring(tag)
+    message = from_Cstring(TA_get_status_message(status, Ctag))
+  end function get_status_message
 end module tagarray_utils

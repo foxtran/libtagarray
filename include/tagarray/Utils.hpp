@@ -30,5 +30,16 @@ inline int32_t check_tag(const std::string &tag) noexcept {
   return TA_INCORRECT_TAG;
 }
 
+std::string
+get_status_message(const int32_t status,
+                   const std::string &info = std::string("")) noexcept;
+inline std::string get_status_message(const int32_t status,
+                                      const char *const info) noexcept {
+  if (check_ptr(info) == TA_OK) {
+    return get_status_message(status, std::string(info));
+  }
+  return get_status_message(status);
+}
+
 } // namespace utils
 } // namespace tagarray
