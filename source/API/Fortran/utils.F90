@@ -8,13 +8,16 @@ module tagarray_utils
   interface to_Cstring
     module procedure :: str_to_Cstr
   end interface to_Cstring
+  interface from_Cstring
+    module procedure :: Cstr_to_str
+  end interface from_Cstring
   interface get_type_id
     module procedure :: get_type_id_scalar
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
     module procedure :: get_type_id_array
 #endif
   end interface get_type_id
-  public to_Cstring, get_type_id, get_storage_size
+  public to_Cstring, from_Cstring, get_type_id, get_storage_size
 contains
   function str_to_Cstr(string) result(Cstring)
     character(kind=TA_CHAR, len=*), intent(in) :: string
@@ -32,6 +35,24 @@ contains
       Cstring = Cstring // char(0, kind=TA_CHAR)
     end if
   end function str_to_Cstr
+  function Cstr_to_str(Cstring) result(string)
+    use, intrinsic :: iso_c_binding, only: c_char, c_f_pointer, c_null_char
+    type(c_ptr), intent(in) :: Cstring
+    character(kind=TA_CHAR, len=:), allocatable :: string
+    character(len=1, kind=c_char), pointer :: chars(:)
+    integer :: i, n
+    call c_f_pointer(Cstring, chars, [huge(0)])
+    i = 1
+    do
+      if (chars(i) == C_NULL_CHAR) exit
+      i = i + 1
+    end do
+    n = i
+    allocate(character(len=n) :: string)
+    do i = 1, n
+      string(i:i) = chars(i)
+    end do
+  end function Cstr_to_str
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
     class(*), target, intent(in) :: values(*)
