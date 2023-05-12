@@ -32,11 +32,11 @@ inline int32_t check_tag(const std::string &tag) noexcept {
 
 std::string
 get_status_message(const int32_t status,
-                   const std::string &info = std::string("")) noexcept;
+                   const std::string &tag = std::string("")) noexcept;
 inline std::string get_status_message(const int32_t status,
-                                      const char *const info) noexcept {
-  if (check_ptr(info) == TA_OK) {
-    return get_status_message(status, std::string(info));
+                                      const char *const tag) noexcept {
+  if (check_ptr(tag) == TA_OK) {
+    return get_status_message(status, std::string(tag));
   }
   return get_status_message(status);
 }
