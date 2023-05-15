@@ -29,6 +29,8 @@ public:
     this->update_comment(comment_ptr);
   }
   ~Container() noexcept;
+  Container &operator=(const Container &) = delete;
+  Container(const Container &) = delete;
 
   inline int32_t get_version() const noexcept { return this->_version; }
 

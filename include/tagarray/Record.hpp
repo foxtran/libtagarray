@@ -36,6 +36,8 @@ public:
          const std::string &comment) noexcept;
 
   ~Record() noexcept;
+  Record &operator=(const Record &) = delete;
+  Record(const Record &) = delete;
 
   inline uint32_t get_type_id() const noexcept { return this->_type_id; }
 
