@@ -84,12 +84,15 @@ contains
     Ctag = to_Cstring(tag)
     status = TA_Container_has_record(this%container_ptr, Ctag)
   end function has_record
-  integer(c_int32_t) function has_records(this, tags) result(status)
+  integer(c_int32_t) function has_records(this, tags, id) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tags(:)
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
+    integer(c_int32_t), optional, intent(out) :: id
     integer :: i
+    id = 0
     do i = 1, size(tags)
+      if (present(id)) id = i
       Ctag = to_Cstring(tags(i))
       status = TA_Container_has_record(this%container_ptr, Ctag)
       if (status /= TA_OK) return
