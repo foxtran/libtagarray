@@ -4,9 +4,9 @@
 
 namespace tagarray {
 
-Record::Record(const uint32_t type_id, const uint32_t n_dimensions,
-               const uint8_t *data, const uint64_t data_length,
-               const uint64_t dimensions_ptr[TA_DIMENSIONS_LENGTH],
+Record::Record(const int32_t type_id, const int32_t n_dimensions,
+               const uint8_t *data, const int64_t data_length,
+               const int64_t dimensions_ptr[TA_DIMENSIONS_LENGTH],
                const int64_t options_ptr[TA_OPTIONS_LENGTH],
                const char *const comment_ptr) noexcept
     : type_id_(type_id), n_dimensions_(n_dimensions) {
@@ -31,9 +31,9 @@ Record::Record(const uint32_t type_id, const uint32_t n_dimensions,
   this->status_ = TA_OK;
 }
 
-Record::Record(const uint32_t type_id, const uint32_t n_dimensions,
-               const uint8_t *&data, const uint64_t data_length,
-               const std::array<uint64_t, TA_DIMENSIONS_LENGTH> &dimensions,
+Record::Record(const int32_t type_id, const int32_t n_dimensions,
+               const uint8_t *&data, const int64_t data_length,
+               const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions,
                const std::array<int64_t, TA_OPTIONS_LENGTH> &options,
                const std::string &comment) noexcept
     : type_id_(type_id), n_dimensions_(n_dimensions), data_length_(data_length),
@@ -58,7 +58,7 @@ Record::~Record() noexcept {
 }
 
 void Record::set_data(const int8_t *&data,
-                      const uint64_t data_length) noexcept {
+                      const int64_t data_length) noexcept {
   if (this->data_ != nullptr)
     delete[] this->data_;
   this->data_length_ = data_length;

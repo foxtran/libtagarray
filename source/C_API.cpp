@@ -34,11 +34,11 @@ extern "C" void TA_Container_delete(void *const container) noexcept {
   delete static_cast<Container *>(container);
 }
 
-extern "C" void *TA_Record_new(const uint32_t type_id,
-                               const uint32_t n_dimensions,
+extern "C" void *TA_Record_new(const int32_t type_id,
+                               const int32_t n_dimensions,
                                const uint8_t *const data,
-                               const uint64_t data_length,
-                               const uint64_t dimensions[TA_DIMENSIONS_LENGTH],
+                               const int64_t data_length,
+                               const int64_t dimensions[TA_DIMENSIONS_LENGTH],
                                const int64_t options[TA_OPTIONS_LENGTH],
                                const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Record(
