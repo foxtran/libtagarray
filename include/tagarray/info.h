@@ -25,5 +25,5 @@ typedef struct {
 
 #ifdef __cplusplus
 }
-}
+} // namespace tagarray
 #endif

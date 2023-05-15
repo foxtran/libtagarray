@@ -66,6 +66,6 @@ void TA_string_delete(void *const string_ptr) TA_NOEXCEPT;
 
 #ifdef __cplusplus
 }
-}
-}
+} // namespace CAPI
+} // namespace tagarray
 #endif
