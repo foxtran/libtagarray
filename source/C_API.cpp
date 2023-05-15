@@ -87,5 +87,13 @@ TA_Record_get_record_info(const void *const record) noexcept {
 
 extern "C" const char *TA_get_status_message(const int32_t status,
                                              const char *const tag) noexcept {
-  return tagarray::utils::get_status_message(status, tag).c_str();
+  std::string message = tagarray::utils::get_status_message(status, tag);
+  char *message_ptr = new char[message.size() + 1];
+  std::copy(message.begin(), message.end(), message_ptr);
+  message_ptr[message.size()] = '\0';
+  return message_ptr;
+}
+
+extern "C" void TA_string_delete(void *const string_ptr) noexcept {
+  delete static_cast<char *>(string_ptr);
 }

@@ -87,5 +87,10 @@ module tagarray_CAPI
       integer(c_int32_t), value, intent(in) :: status
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
     end function TA_get_status_message
+    subroutine TA_string_delete(ptr) bind(C, name="TA_string_delete")
+      import
+      implicit none
+      type(c_ptr), value,            intent(in) :: ptr
+    end subroutine TA_string_delete
   end interface
 end module tagarray_CAPI

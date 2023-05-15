@@ -125,8 +125,11 @@ contains
     integer(c_int32_t), intent(in) :: status
     character(kind=TA_CHAR, len=*), optional, intent(in) :: tag
     character(kind=TA_CHAR, len=:), allocatable :: Ctag, message
+    type(c_ptr) :: message_ptr
     Ctag = to_Cstring("")
     if (present(tag)) Ctag = to_Cstring(tag)
-    message = from_Cstring(TA_get_status_message(status, Ctag))
+    message_ptr = TA_get_status_message(status, Ctag)
+    message = from_Cstring(message_ptr)
+    call TA_string_delete(message_ptr)
   end function get_status_message
 end module tagarray_utils
