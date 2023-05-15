@@ -12,7 +12,7 @@ std::string get_status_message(const int32_t status,
     break;
   case TA_MEMORY_ALLOCATION_ERROR:
     message = "Can not allocate memory";
-    if (tag.size() == 0) {
+    if (tag.empty()) {
       message += ".";
     } else {
       message += " for tag " + tag + ".";
@@ -23,49 +23,55 @@ std::string get_status_message(const int32_t status,
     break;
   case TA_CONTAINER_RECORD_NOT_FOUND:
     message = "Record ";
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "`" + tag + "` ";
+    }
     message + "not found!";
     break;
   case TA_CONTAINER_RECORD_EXISTS:
     message = "Record ";
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "`" + tag + "` ";
+    }
     message + "already exists!";
     break;
   case TA_RECORD_OPTION_DOES_NOT_EXIST:
     message = "Option index is wrong";
-    if (tag.size() == 0) {
+    if (tag.empty()) {
       message += ".";
     } else {
       message += " for tag " + tag + ".";
     }
     break;
   case TA_DATA_ZERO_LENGTH:
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "For tag `" + tag + "`, ";
+    }
     message += "Data has zero length.";
     break;
   case TA_DATA_TOO_MANY_DIMENSIONS:
-    message += "Too many dimensions were requested.\n";
-    message += "  Maximum allowed number of dimensions is " +
+    message += "Too many dimensions were requested.\n"
+               "  Maximum allowed number of dimensions is " +
                std::to_string(TA_DIMENSIONS_LENGTH) + ".";
     break;
   case TA_DATA_INCORRECT_TYPE:
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "For tag `" + tag + "`, ";
+    }
     message += "Warning: Incompatible types in casting between internal data "
                "and user-defined data";
     break;
   case TA_DATA_INCORRECT_DIMENSIONS:
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "For tag `" + tag + "`, ";
+    }
     message += "Warning: Incompatible number of dimensions in casting between "
                "internal data and user-defined data";
     break;
   case TA_DATA_INCORRECT:
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "For tag `" + tag + "`, ";
+    }
     message += "Warning: Data error (check types and number of dimensions).";
     break;
   case TA_RECORD_NULLPTR:
@@ -75,8 +81,9 @@ std::string get_status_message(const int32_t status,
     message = "A null pointer was passed as a parameter.";
     break;
   case TA_INCORRECT_TAG:
-    if (tag.size() != 0)
+    if (!tag.empty()) {
       message += "Tag `" + tag + "` is invalid.\n";
+    }
     message +=
         "Tags can only contain Latin letters, digits, and special characters "
         "(see ASCII table). Leading and trailing white spaces are not allowed.";

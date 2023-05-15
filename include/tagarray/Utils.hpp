@@ -9,13 +9,11 @@ namespace tagarray {
 namespace utils {
 
 template <typename T> inline int32_t check_ptr(const T *const ptr) noexcept {
-  if (ptr == nullptr)
-    return TA_NULLPTR;
-  return TA_OK;
+  return ptr == nullptr ? TA_NULLPTR : TA_OK;
 }
 
 inline int32_t check_tag(const std::string &tag) noexcept {
-  if (tag.size() == 0)
+  if (tag.empty())
     return TA_INCORRECT_TAG;
   std::regex whitespace_regex("\\s");
   std::string f(tag[0], 1);
