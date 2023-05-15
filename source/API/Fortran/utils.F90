@@ -3,7 +3,7 @@ module tagarray_utils
                                          c_float, c_double, c_float_complex, c_double_complex, &
                                          c_ptr, c_loc
   use tagarray_defines
-  use tagarray_CAPI, only: TA_get_status_message
+  use tagarray_CAPI, only: TA_get_status_message, TA_string_delete
   implicit none
   private
   interface to_Cstring
