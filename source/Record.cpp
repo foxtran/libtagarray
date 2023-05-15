@@ -12,7 +12,7 @@ Record::Record(const uint32_t type_id, const uint32_t n_dimensions,
     : _type_id(type_id), _n_dimensions(n_dimensions) {
   this->_data_length = data_length;
   this->_data_size = sizeof(uint8_t) * this->_data_length;
-  this->_data = new (std::nothrow) uint8_t[this->_data_size];
+  this->_data = new (std::align_val_t(64), std::nothrow) uint8_t[this->_data_size];
   if (this->_data == nullptr) {
     this->_status = TA_MEMORY_ALLOCATION_ERROR;
     return;
@@ -39,7 +39,7 @@ Record::Record(const uint32_t type_id, const uint32_t n_dimensions,
     : _type_id(type_id), _n_dimensions(n_dimensions), _data_length(data_length),
       _dimensions(dimensions), _options(options), _comment(comment) {
   this->_data_size = sizeof(uint8_t) * this->_data_length;
-  this->_data = new (std::nothrow) uint8_t[this->_data_size];
+  this->_data = new (std::align_val_t(64), std::nothrow) uint8_t[this->_data_size];
   if (this->_data == nullptr) {
     this->_status = TA_MEMORY_ALLOCATION_ERROR;
     return;
