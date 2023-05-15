@@ -99,6 +99,11 @@ public:
     this->remove_record(std::string(tag));
   }
 
+  inline void remove_records(const std::vector<std::string> &tags) noexcept {
+    for (const auto &tag : tags)
+      remove_record(tag);
+  }
+
   inline Record *get_record(const std::string &tag) noexcept {
     this->_status = utils::check_tag(tag);
     if (this->_status != TA_OK)

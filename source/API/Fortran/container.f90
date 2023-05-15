@@ -19,6 +19,7 @@ module tagarray_container
     procedure, public  :: get_record
     procedure, public  :: get_record_info
     procedure, public  :: remove_record
+    procedure, public  :: remove_records
     procedure, public  :: dump
     procedure, public  :: get_status => container_t_get_status
     procedure, public  :: delete => container_t_delete
@@ -126,6 +127,16 @@ contains
     Ctag = to_Cstring(tag)
     call TA_container_remove_record(this%container_ptr, Ctag)
   end subroutine remove_record
+  subroutine remove_records(this, tags)
+    class(container_t),                   intent(inout) :: this
+    character(kind=TA_CHAR, len=*), intent(in)    :: tags(:)
+    character(kind=TA_CHAR, len=:), allocatable   :: Ctag
+    integer :: i
+    do i = 1, size(tags)
+      Ctag = to_Cstring(tags(i))
+      call TA_container_remove_record(this%container_ptr, Ctag)
+    end do
+  end subroutine remove_records
   integer(c_int32_t) function container_t_get_status(this) result(status)
     class(container_t), intent(inout) :: this
     status = TA_Container_get_status(this%container_ptr)
