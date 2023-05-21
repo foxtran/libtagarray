@@ -1,6 +1,5 @@
 #pragma once
 
-#include <regex>
 #include <string>
 
 #include "tagarray/defines.h"
@@ -15,17 +14,17 @@ template <typename T> inline int32_t check_ptr(const T *const ptr) noexcept {
 inline int32_t check_tag(const std::string &tag) noexcept {
   if (tag.empty())
     return TA_INCORRECT_TAG;
-  std::regex whitespace_regex("\\s");
-  std::string f(tag[0], 1);
-  std::string l(tag.back(), 1);
-  if (std::regex_match(f, whitespace_regex))
+  // detect leading whitespace(s)
+  if (tag[0] == ' ')
     return TA_INCORRECT_TAG;
-  if (std::regex_match(l, whitespace_regex))
+  // detect trailing whitespace(s)
+  if (tag.back() == ' ')
     return TA_INCORRECT_TAG;
-  std::regex tag_regex("^[ -~]+$");
-  if (std::regex_match(tag, tag_regex))
-    return TA_OK;
-  return TA_INCORRECT_TAG;
+  // all symbols should be visible and presented in ASCII table
+  for (const auto &c : tag)
+    if (c < ' ' || c > '~')
+      return TA_INCORRECT_TAG;
+  return TA_OK;
 }
 
 std::string
