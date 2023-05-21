@@ -63,7 +63,7 @@ contains
     call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
     call this%add_record(Ctag, record)
   end subroutine add_record_data
-  subroutine reserve_data(this, tag, datatype, array_size, array_shape, options, comment)
+  subroutine reserve_data(this, tag, datatype, array_size, array_shape, options, comment, override)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: datatype
@@ -71,10 +71,16 @@ contains
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
+    logical(1), optional, intent(in) :: override
     !
     type(record_t) :: record
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
+    if (present(override)) then
+      if (override) then
+        call this%remove_record(Ctag)
+      end if
+    end if
     call record%reserve(datatype, array_size, array_shape, options, comment)
     call this%add_record(Ctag, record)
   end subroutine reserve_data
