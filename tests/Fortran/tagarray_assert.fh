@@ -1,0 +1,7 @@
+#define TEST(ROUTINE) \
+  block; \
+    integer :: status; \
+    status = ROUTINE(); \
+    print "(A,A,A,I0,A)", "Test `", "ROUTINE", "` returned status ", status, "."; \
+    if (status /= 0) error stop "ROUTINE"; \
+  end block
