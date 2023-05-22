@@ -99,6 +99,7 @@ contains
     integer(c_int32_t) :: int32
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
     integer(c_int32_t), allocatable :: int32_arr(:)
+    integer(c_int32_t), pointer :: int32_arr_p(:), int32_scalar_p
 #endif
     status = -1
     if (get_type_id(string) /= TA_TYPE_CHAR8) then
@@ -116,6 +117,14 @@ contains
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
     if (get_type_id(int32_arr) /= TA_TYPE_INT32) then
       status = 4
+      return
+    end if
+    if (get_type_id(int32_arr_p) /= TA_TYPE_INT32) then
+      status = 5
+      return
+    end if
+    if (get_type_id(int32_scalar_p) /= TA_TYPE_INT32) then
+      status = 6
       return
     end if
 #endif
