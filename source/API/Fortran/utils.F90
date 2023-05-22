@@ -93,6 +93,8 @@ contains
     select case(datatype)
       case (TA_TYPE_UNKNOWN)
         size = 1
+      case (TA_TYPE_CHAR8)
+        size = 1
       case (TA_TYPE_INT8)
         size = 1
       case (TA_TYPE_INT16)
