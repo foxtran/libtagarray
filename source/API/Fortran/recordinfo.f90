@@ -21,9 +21,6 @@ module tagarray_recordinfo
     procedure, public  :: get_status
     generic,   public  :: assignment(=) => recordinfo_assign
   end type RecordInfo_t
-!  interface assignment(=)
-!    module procedure recordinfo_assign
-!  end interface assignment(=)
   public :: C_RecordInfo_t, RecordInfo_t
 contains
   subroutine recordinfo_assign(this, recordinfo)
