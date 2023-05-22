@@ -13,9 +13,10 @@ module tagarray_utils
     module procedure :: Cstr_to_str
   end interface from_Cstring
   interface get_type_id
-    module procedure :: get_type_id_scalar
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
     module procedure :: get_type_id_array
+#else
+    module procedure :: get_type_id_scalar
 #endif
   end interface get_type_id
   public to_Cstring, from_Cstring, get_type_id, get_storage_size, get_status_message
@@ -56,10 +57,41 @@ contains
   end function Cstr_to_str
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
-    class(*), target, intent(in) :: values(*)
-    class(*), pointer :: value
-    value => values(1)
-    type_id = get_type_id_scalar(value)
+    class(*), target, intent(in) :: values(..)
+    select rank (values)
+      rank (0)
+        type_id = get_type_id_scalar(values)
+      rank (1)
+        type_id = get_type_id_scalar(values(1))
+      rank (2)
+        type_id = get_type_id_scalar(values(1,1))
+      rank (3)
+        type_id = get_type_id_scalar(values(1,1,1))
+      rank (4)
+        type_id = get_type_id_scalar(values(1,1,1,1))
+      rank (5)
+        type_id = get_type_id_scalar(values(1,1,1,1,1))
+      rank (6)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1))
+      rank (7)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1))
+      rank (8)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1))
+      rank (9)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1))
+      rank (10)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1))
+      rank (11)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1,1))
+      rank (12)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1,1,1))
+      rank (13)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1,1,1,1))
+      rank (14)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+      rank (15)
+        type_id = get_type_id_scalar(values(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+    end select
   end function get_type_id_array
 #endif
   integer(c_int32_t) function get_type_id_scalar(value) result(type_id)
