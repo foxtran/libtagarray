@@ -48,7 +48,7 @@ contains
       if (chars(i) == C_NULL_CHAR) exit
       i = i + 1
     end do
-    n = i
+    n = i - 1
     allocate(character(len=n) :: string)
     do i = 1, n
       string(i:i) = chars(i)
