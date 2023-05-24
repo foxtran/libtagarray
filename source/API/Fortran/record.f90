@@ -32,10 +32,13 @@ contains
     character(kind=TA_CHAR, len=:), allocatable :: Ccomment
     if (present(array_shape)) then
       n_dimensions = size(array_shape)
+      data_length = product(array_shape)
+!      if (data_length /= array_size)
     else
       n_dimensions = 1
+      data_length = array_size
     end if
-    data_length = array_size * data_el_size ! storage_size(data, kind=8) / TA_BITS_IN_BYTE
+    data_length = data_length * data_el_size
     if (present(options)) then
       options_ = options
     else
