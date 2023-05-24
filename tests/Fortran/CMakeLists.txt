@@ -10,3 +10,9 @@ target_include_directories(test-recordinfo-f90 PRIVATE "${CMAKE_BINARY_DIR}/incl
 target_compile_options(test-recordinfo-f90 PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>)
 add_test(NAME FortranAPI::RecordInfo
          COMMAND test-recordinfo-f90)
+add_executable(test-record-f90 test-record.F90)
+target_link_libraries(test-record-f90 ${PROJECT_NAME}_f)
+target_include_directories(test-record-f90 PRIVATE "${CMAKE_BINARY_DIR}/include/tagarray")
+target_compile_options(test-record-f90 PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>)
+add_test(NAME FortranAPI::Record
+         COMMAND test-record-f90)
