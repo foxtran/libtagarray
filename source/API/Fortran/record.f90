@@ -64,33 +64,7 @@ contains
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
-    !
-    integer(c_int64_t) :: data_length, options_(TA_OPTIONS_LENGTH), dimensions_(TA_DIMENSIONS_LENGTH)
-    integer(c_int32_t) :: n_dimensions
-    character(kind=TA_CHAR, len=:), allocatable :: Ccomment
-    if (present(array_shape)) then
-      n_dimensions = size(array_shape)
-    else
-      n_dimensions = 1
-    end if
-    data_length = array_size * get_storage_size(datatype)
-    if (present(options)) then
-      options_ = options
-    else
-      options_ = TA_OPTIONS_ZERO
-    end if
-    dimensions_ = TA_DIMENSIONS_ZERO
-    if (n_dimensions > 1) then
-      dimensions_(1:n_dimensions) = array_shape
-    else
-      dimensions_(1) = array_size
-    end if
-    if (present(comment)) then
-      Ccomment = to_Cstring(comment)
-    else
-      Ccomment = to_Cstring(TA_CHAR_"")
-    end if
-    this%record_ptr = TA_Record_new(datatype, n_dimensions, c_null_ptr, data_length, dimensions_, options_, Ccomment)
+    call this%new(datatype, c_null_ptr, get_storage_size(datatype), array_size, array_shape, options, comment)
   end subroutine record_t_reserve
   type(RecordInfo_t) function get_info(this) result(recordinfo)
     class(record_t), intent(inout) :: this
