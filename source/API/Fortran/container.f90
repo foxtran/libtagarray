@@ -97,7 +97,7 @@ contains
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     integer(c_int32_t), optional, intent(out) :: id
     integer :: i
-    id = 0
+    if (present(id)) id = 0
     do i = 1, size(tags)
       if (present(id)) id = i
       Ctag = to_Cstring(tags(i))
