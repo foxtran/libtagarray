@@ -61,7 +61,7 @@
     use tagarray, only: recordinfo_t, get_type_id; \
     type(recordinfo_t) :: record_info; \
     record_info = RECORD%get_info(); \
-    STATUS = record_info%get_status(get_type_id(DATA), size(shape(DATA), c_int32_t)); \
+    STATUS = record_info%get_status(get_type_id(DATA), size(shape(DATA), kind=c_int32_t)); \
     call c_f_pointer(record_info%data, DATA, record_info%dimensions(1:size(shape(DATA)))); \
   end block
 
