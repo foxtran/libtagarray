@@ -94,6 +94,7 @@ if(ENABLE_FORTRAN)
   try_compile(assumed_size_polymorphic_objects
     SOURCE_FROM_CONTENT assumed_size_polymorphic_objects.f90 "program test\ncontains\n  subroutine UP(arr)\n    class(*) :: arr(*)\n  end subroutine UP\nend program test")
   if(assumed_size_polymorphic_objects)
+    set(MAX_TA_FORTRAN_API_VERSION_AVAILABLE 2)
     target_compile_definitions(${PN}_f PUBLIC TA_FORTRAN_API_VERSION_AVAILABLE=2)
   endif()
   if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")

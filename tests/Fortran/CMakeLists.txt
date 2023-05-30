@@ -22,3 +22,17 @@ target_include_directories(test-container-f90 PRIVATE "${CMAKE_BINARY_DIR}/inclu
 target_compile_options(test-container-f90 PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>)
 add_test(NAME FortranAPI::Container
          COMMAND test-container-f90)
+add_executable(test-header-v1-f90 test-header-v1.F90)
+target_link_libraries(test-header-v1-f90 ${PROJECT_NAME}_f)
+target_include_directories(test-header-v1-f90 PRIVATE "${CMAKE_BINARY_DIR}/include/tagarray")
+target_compile_options(test-header-v1-f90 PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>)
+add_test(NAME FortranAPI::header::v1
+         COMMAND test-header-v1-f90)
+if(MAX_TA_FORTRAN_API_VERSION_AVAILABLE GREATER_EQUAL 2)
+  add_executable(test-header-v2-f90 test-header-v2.F90)
+  target_link_libraries(test-header-v2-f90 ${PROJECT_NAME}_f)
+  target_include_directories(test-header-v2-f90 PRIVATE "${CMAKE_BINARY_DIR}/include/tagarray")
+  target_compile_options(test-header-v2-f90 PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>)
+  add_test(NAME FortranAPI::header::v2
+           COMMAND test-header-v2-f90)
+endif()
