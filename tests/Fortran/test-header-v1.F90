@@ -6,6 +6,7 @@ program test
   use tagarray
   implicit none
   TEST(check_container)
+  TEST(check_record_data)
 contains
   integer function check_container() result(status)
     use, intrinsic :: iso_c_binding, only: c_int32_t
@@ -95,17 +96,14 @@ contains
     call container%delete()
     status = 0
   end function check_container
-  integer function check_record() result(status)
+  integer function check_record_data() result(status)
     use, intrinsic :: iso_c_binding, only: c_int32_t
     type(record_t) :: record
     integer(c_int32_t) :: stat
-    integer(c_int32_t), target, allocatable :: value, array(:)
-    integer(c_int32_t), pointer :: p_value, p_array(:)
+    integer(c_int32_t), target, allocatable :: array(:)
+    integer(c_int32_t), pointer :: p_array(:)
     status = -1
-    allocate(value, source = 1_c_int32_t)
     allocate(array(10), source = 2_c_int32_t)
-#warning "FIX ME: check_record: header v1 does not support values"
-!    TA_RECORD_NEW(record, TA_TYPE_INT32, value)
     TA_RECORD_NEW(record, TA_TYPE_INT32, array)
     stat = record%get_status()
     if (stat /= TA_OK) then
@@ -127,6 +125,8 @@ contains
       return
     end if
     call record%delete()
+    deallocate(array)
+    allocate(array(10), source = 2_c_int32_t)
     TA_RECORD_NEW_OPTIONAL(record, TA_TYPE_INT32, array, comment = "INT32-array-opt")
     stat = record%get_status()
     if (stat /= TA_OK) then
@@ -148,5 +148,5 @@ contains
       return
     end if
     status = 0
-  end function check_record
+  end function check_record_data
 end program test
