@@ -1,20 +1,20 @@
 #pragma once
 
-#define TA_CONTAINER_ADD_DATA(CONTAINER, TAG, DATA, __VA_ARGS__) \
+#define TA_CONTAINER_ADD_DATA(CONTAINER, TAG, DATA, ...) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
     call CONTAINER%add_record_data(TAG, get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t) __VA_OPT__(,) __VA_ARGS__); \
   end block
 
-#define TA_CONTAINER_ADD_VALUE(CONTAINER, TAG, VALUE, __VA_ARGS__) \
+#define TA_CONTAINER_ADD_VALUE(CONTAINER, TAG, VALUE, ...) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
     call CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t __VA_OPT__(,) __VA_ARGS__); \
   end block
 
-#define TA_RECORD_NEW(RECORD, DATA, __VA_ARGS__) \
+#define TA_RECORD_NEW(RECORD, DATA, ...) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
