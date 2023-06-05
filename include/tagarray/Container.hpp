@@ -22,7 +22,7 @@ private:
 public:
   inline Container() noexcept
       : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_(""){};
-  inline Container(std::string &comment) noexcept
+  inline Container(const std::string &comment) noexcept
       : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_(comment){};
   inline Container(const char *const comment_ptr) noexcept
       : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_("") {
