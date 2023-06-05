@@ -68,7 +68,7 @@ install(TARGETS ${PN}
 
 if(ENABLE_FORTRAN)
   add_library(${PN}_f ${SOURCES_Fortran} "${CMAKE_BINARY_DIR}/defines.f90")
-  target_compile_features(${PN} PRIVATE cxx_std_17)
+  target_compile_features(${PN}_f PRIVATE cxx_std_17)
   add_dependencies(${PN}_f ${PN}_Fortran_defines)
   target_link_libraries(${PN}_f ${PN})
   target_sources(${PN}_f
