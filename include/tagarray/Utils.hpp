@@ -38,5 +38,12 @@ inline std::string get_status_message(const int32_t status,
   return get_status_message(status);
 }
 
+inline std::string to_string(const char *const str_ptr) noexcept {
+  std::string str = std::string();
+  if (str_ptr != nullptr)
+    str = std::string(str_ptr);
+  return str;
+}
+
 } // namespace utils
 } // namespace tagarray
