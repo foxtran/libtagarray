@@ -14,7 +14,6 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
   this->data_size_ = sizeof(uint8_t) * this->data_length_;
   this->data_ = new (std::align_val_t(64), std::nothrow) uint8_t[this->data_size_];
   if (this->data_ == nullptr) {
-    this->status_ = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -28,7 +27,6 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
             this->options_.begin());
   if (comment_ptr != nullptr)
     this->comment_ = std::string(comment_ptr);
-  this->status_ = TA_OK;
 }
 
 Record::Record(const int32_t type_id, const int32_t n_dimensions,
@@ -41,7 +39,6 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
   this->data_size_ = sizeof(uint8_t) * this->data_length_;
   this->data_ = new (std::align_val_t(64), std::nothrow) uint8_t[this->data_size_];
   if (this->data_ == nullptr) {
-    this->status_ = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -49,7 +46,6 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
   } else {
     std::copy(data, data + this->data_size_, this->data_);
   }
-  this->status_ = TA_OK;
 }
 
 Record::~Record() noexcept {
@@ -65,7 +61,6 @@ void Record::set_data(const int8_t *&data,
   this->data_size_ = sizeof(uint8_t) * this->data_length_;
   this->data_ = new (std::nothrow) uint8_t[this->data_size_];
   if (this->data_ == nullptr) {
-    this->status_ = TA_MEMORY_ALLOCATION_ERROR;
     return;
   }
   if (data == nullptr) {
@@ -73,7 +68,6 @@ void Record::set_data(const int8_t *&data,
   } else {
     std::copy(data, data + this->data_size_, this->data_);
   }
-  this->status_ = TA_OK;
 }
 
 void Record::dump(const int32_t level) const noexcept {

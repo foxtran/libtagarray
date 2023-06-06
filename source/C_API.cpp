@@ -45,10 +45,6 @@ extern "C" void *TA_Record_new(const int32_t type_id,
       type_id, n_dimensions, data, data_length, dimensions, options, comment));
 }
 
-extern "C" int32_t TA_Record_get_status(const void *const record) noexcept {
-  return static_cast<const Record *>(record)->get_status();
-}
-
 extern "C" void TA_Record_dump(const void *const record,
                                const int32_t level) noexcept {
   static_cast<const Record *>(record)->dump(level);

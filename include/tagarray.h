@@ -39,8 +39,6 @@ void *TA_Record_new(const int32_t type_id, const int32_t n_dimensions,
                     const int64_t options[TA_OPTIONS_LENGTH],
                     const char *const comment) TA_NOEXCEPT;
 
-int32_t TA_Record_get_status(const void *const record) TA_NOEXCEPT;
-
 void TA_Record_dump(const void *const record, const int32_t level) TA_NOEXCEPT;
 
 void TA_Record_delete(void *const record) TA_NOEXCEPT;
