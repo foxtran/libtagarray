@@ -1,5 +1,5 @@
 module tagarray_CAPI
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_int32_t, c_int64_t
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_int32_t, c_int64_t, c_bool
   use tagarray_defines, only: TA_CHAR, TA_DIMENSIONS_LENGTH
   use tagarray_recordinfo, only: C_RecordInfo_t
   implicit none
@@ -35,6 +35,11 @@ module tagarray_CAPI
       integer(c_int64_t),            intent(in) :: dimensions(TA_DIMENSIONS_LENGTH)
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
     end function TA_Record_new
+    logical(C_bool) function TA_Record_is_allocated(record) bind(C, name="TA_Record_is_allocated")
+      import
+      implicit none
+      type(c_ptr),        value, intent(in) :: record
+    end function TA_Record_is_allocated
     subroutine TA_Record_dump(record, level) bind(C, name="TA_Record_dump")
       import
       implicit none

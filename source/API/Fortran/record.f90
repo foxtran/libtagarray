@@ -1,5 +1,5 @@
 module tagarray_record
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_sizeof, c_f_pointer, c_null_ptr
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_sizeof, c_f_pointer, c_null_ptr, c_bool
   use tagarray_defines
   use tagarray_recordinfo
   use tagarray_CAPI
@@ -11,6 +11,7 @@ module tagarray_record
   contains
     procedure, public :: new => record_t_new
     procedure, public :: reserve => record_t_reserve
+    procedure, public :: is_allocated
     procedure, public :: get_info
     procedure, public :: dump
     procedure, public :: delete => record_t_delete
@@ -58,6 +59,10 @@ contains
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     call this%new(datatype, c_null_ptr, get_storage_size(datatype), array_size, array_shape, comment)
   end subroutine record_t_reserve
+  logical(c_bool) function is_allocated(this)
+    class(record_t), intent(inout) :: this
+    is_allocated = TA_Record_is_allocated(this%record_ptr)
+  end function is_allocated
   type(RecordInfo_t) function get_info(this) result(recordinfo)
     class(record_t), intent(inout) :: this
     recordinfo =  TA_Record_get_record_info(this%record_ptr)
