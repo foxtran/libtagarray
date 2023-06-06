@@ -8,6 +8,7 @@
 #define TA_NOEXCEPT noexcept
 #else
 #include <stdint.h>
+#include <stdbool.h>
 #include <uchar.h>
 #define TA_NOEXCEPT
 #endif
@@ -37,6 +38,8 @@ void *TA_Record_new(const int32_t type_id, const int32_t n_dimensions,
                     const uint8_t *data, const int64_t data_length,
                     const int64_t dimensions[TA_DIMENSIONS_LENGTH],
                     const char *const comment) TA_NOEXCEPT;
+
+bool TA_Record_is_allocated(const void *const record) TA_NOEXCEPT;
 
 void TA_Record_dump(const void *const record, const int32_t level) TA_NOEXCEPT;
 

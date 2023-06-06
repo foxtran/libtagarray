@@ -97,6 +97,10 @@ public:
               this->dimensions_.begin());
   }
 
+  inline bool is_allocated() const noexcept {
+    return this->data_ != nullptr;
+  }
+
   inline RecordInfo get_info() const noexcept {
     RecordInfo recordInfo = {this->type_id_,
                              this->n_dimensions_,
