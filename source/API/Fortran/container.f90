@@ -46,7 +46,7 @@ contains
     Ctag = to_Cstring(tag)
     call TA_Container_add_record(this%container_ptr, Ctag, record%record_ptr)
   end subroutine add_record
-  subroutine add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
+  subroutine add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, comment)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: type_id
@@ -54,22 +54,20 @@ contains
     integer(c_int64_t),                             intent(in) :: data_el_size
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
-    integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     !
     type(record_t) :: record
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, options, comment)
+    call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, comment)
     call this%add_record(Ctag, record)
   end subroutine add_record_data
-  subroutine reserve_data(this, tag, datatype, array_size, array_shape, options, comment, override)
+  subroutine reserve_data(this, tag, datatype, array_size, array_shape, comment, override)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: datatype
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
-    integer(c_int64_t),                   optional, intent(in) :: options(TA_OPTIONS_LENGTH)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     logical(1), optional, intent(in) :: override
     !
@@ -81,7 +79,7 @@ contains
         call this%remove_record(Ctag)
       end if
     end if
-    call record%reserve(datatype, array_size, array_shape, options, comment)
+    call record%reserve(datatype, array_size, array_shape, comment)
     call this%add_record(Ctag, record)
   end subroutine reserve_data
   integer(c_int32_t) function has_record(this, tag) result(status)

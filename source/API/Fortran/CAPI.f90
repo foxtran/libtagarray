@@ -1,6 +1,6 @@
 module tagarray_CAPI
   use, intrinsic :: iso_c_binding, only: c_ptr, c_int32_t, c_int64_t
-  use tagarray_defines, only: TA_CHAR, TA_DIMENSIONS_LENGTH, TA_OPTIONS_LENGTH
+  use tagarray_defines, only: TA_CHAR, TA_DIMENSIONS_LENGTH
   use tagarray_recordinfo, only: C_RecordInfo_t
   implicit none
   interface
@@ -24,7 +24,7 @@ module tagarray_CAPI
       implicit none
       type(c_ptr),        value, intent(in) :: container
     end subroutine TA_Container_delete
-    type(C_ptr) function TA_Record_new(type_id, n_dimensions, data, data_length, dimensions, options, Ccomment) &
+    type(C_ptr) function TA_Record_new(type_id, n_dimensions, data, data_length, dimensions, Ccomment) &
                                                                                                 bind(C, name="TA_Record_new")
       import
       implicit none
@@ -33,7 +33,6 @@ module tagarray_CAPI
       type(c_ptr),        value,     intent(in) :: data
       integer(c_int64_t), value,     intent(in) :: data_length
       integer(c_int64_t),            intent(in) :: dimensions(TA_DIMENSIONS_LENGTH)
-      integer(c_int64_t),            intent(in) :: options(TA_OPTIONS_LENGTH)
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
     end function TA_Record_new
     subroutine TA_Record_dump(record, level) bind(C, name="TA_Record_dump")

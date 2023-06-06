@@ -39,10 +39,9 @@ extern "C" void *TA_Record_new(const int32_t type_id,
                                const uint8_t *const data,
                                const int64_t data_length,
                                const int64_t dimensions[TA_DIMENSIONS_LENGTH],
-                               const int64_t options[TA_OPTIONS_LENGTH],
                                const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Record(
-      type_id, n_dimensions, data, data_length, dimensions, options, comment));
+      type_id, n_dimensions, data, data_length, dimensions, comment));
 }
 
 extern "C" void TA_Record_dump(const void *const record,

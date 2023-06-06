@@ -19,19 +19,16 @@ private:
   int64_t data_size_;
   uint8_t *data_;
   std::array<int64_t, TA_DIMENSIONS_LENGTH> dimensions_;
-  std::array<int64_t, TA_OPTIONS_LENGTH> options_;
   std::string comment_;
 
 public:
   Record(const int32_t type_id, const int32_t n_dimensions,
          const uint8_t *data, const int64_t data_length,
          const int64_t dimensions[TA_DIMENSIONS_LENGTH],
-         const int64_t options[TA_OPTIONS_LENGTH],
          const char *const comment) noexcept;
   Record(const int32_t type_id, const int32_t n_dimensions,
          const uint8_t *&data, const int64_t data_length,
          const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions,
-         const std::array<int64_t, TA_OPTIONS_LENGTH> &options,
          const std::string &comment) noexcept;
 
   ~Record() noexcept;
@@ -47,11 +44,6 @@ public:
   inline const std::array<int64_t, TA_DIMENSIONS_LENGTH> &
   get_dimensions() const noexcept {
     return this->dimensions_;
-  }
-
-  inline const std::array<int64_t, TA_OPTIONS_LENGTH> &
-  get_options() const noexcept {
-    return this->options_;
   }
 
   inline const std::string &get_comment() const noexcept {
@@ -103,22 +95,6 @@ public:
   set_shape(const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
     std::copy(dimensions, dimensions + this->dimensions_.size(),
               this->dimensions_.begin());
-  }
-
-  inline void set_option(const int32_t index,
-                         const int64_t option_value) noexcept {
-    if (index >= TA_OPTIONS_LENGTH) {
-      return;
-    }
-    this->options_[index] = option_value;
-  }
-  inline void
-  set_options(const std::array<int64_t, TA_OPTIONS_LENGTH> &options) noexcept {
-    this->options_ = options;
-  }
-  inline void
-  set_options(const int64_t (&options)[TA_OPTIONS_LENGTH]) noexcept {
-    std::copy(options, options + this->options_.size(), this->options_.begin());
   }
 
   inline RecordInfo get_info() const noexcept {
