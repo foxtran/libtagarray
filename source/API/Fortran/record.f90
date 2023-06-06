@@ -12,7 +12,6 @@ module tagarray_record
     procedure, public :: new => record_t_new
     procedure, public :: reserve => record_t_reserve
     procedure, public :: get_info
-    procedure, public :: get_status
     procedure, public :: dump
     procedure, public :: delete => record_t_delete
   end type
@@ -70,10 +69,6 @@ contains
     class(record_t), intent(inout) :: this
     recordinfo =  TA_Record_get_record_info(this%record_ptr)
   end function get_info
-  integer(c_int32_t) function get_status(this) result(status)
-    class(record_t), intent(inout) :: this
-    status = TA_Record_get_status(this%record_ptr)
-  end function get_status
   subroutine dump(this, level)
     class(record_t), intent(inout) :: this
     integer(c_int32_t), intent(in) :: level

@@ -36,10 +36,6 @@ module tagarray_CAPI
       integer(c_int64_t),            intent(in) :: options(TA_OPTIONS_LENGTH)
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
     end function TA_Record_new
-    integer(c_int32_t) function TA_Record_get_status(record) bind(C, name="TA_Record_get_status")
-      import
-      type(c_ptr),        value, intent(in) :: record
-    end function TA_Record_get_status
     subroutine TA_Record_dump(record, level) bind(C, name="TA_Record_dump")
       import
       implicit none
