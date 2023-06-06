@@ -36,7 +36,6 @@ void TA_Container_delete(void *const container) TA_NOEXCEPT;
 void *TA_Record_new(const int32_t type_id, const int32_t n_dimensions,
                     const uint8_t *data, const int64_t data_length,
                     const int64_t dimensions[TA_DIMENSIONS_LENGTH],
-                    const int64_t options[TA_OPTIONS_LENGTH],
                     const char *const comment) TA_NOEXCEPT;
 
 void TA_Record_dump(const void *const record, const int32_t level) TA_NOEXCEPT;

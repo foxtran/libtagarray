@@ -10,7 +10,6 @@ E
 C setup parameters
 DI TA_BITS_IN_BYTE      EQ  8
 DI TA_DIMENSIONS_LENGTH EQ 12
-DI TA_OPTIONS_LENGTH    EQ 16
 E 
 C statuses
 C general
