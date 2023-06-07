@@ -11,6 +11,8 @@
 
 namespace tagarray {
 
+using Dimensions = std::array<int64_t, TA_DIMENSIONS_LENGTH>;
+
 class Record {
 private:
   const int32_t type_id_;
@@ -18,14 +20,13 @@ private:
   int64_t data_length_;
   int64_t data_size_;
   uint8_t *data_;
-  std::array<int64_t, TA_DIMENSIONS_LENGTH> dimensions_;
+  Dimensions dimensions_;
   std::string comment_;
 
 public:
   Record(const int32_t type_id, const int32_t n_dimensions,
          const uint8_t *const &data, const int64_t data_length,
-         const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions,
-         const std::string &comment) noexcept;
+         const Dimensions &dimensions, const std::string &comment) noexcept;
 
   ~Record() noexcept;
   Record &operator=(const Record &) = delete;
@@ -37,8 +38,7 @@ public:
     return this->n_dimensions_;
   }
 
-  inline const std::array<int64_t, TA_DIMENSIONS_LENGTH> &
-  get_dimensions() const noexcept {
+  inline const Dimensions &get_dimensions() const noexcept {
     return this->dimensions_;
   }
 
@@ -55,10 +55,9 @@ public:
 
   inline uint8_t *get_data() const noexcept { return this->data_; }
 
-  inline void
-  set_data(const int8_t *const &data = nullptr, const int64_t data_length = 1,
-           const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions = { 1 }
-          ) noexcept {
+  inline void set_data(const int8_t *const &data = nullptr,
+                       const int64_t data_length = 1,
+                       const Dimensions &dimensions = {1}) noexcept {
     this->dimensions_ = dimensions;
     if (this->data_ != nullptr)
       delete[] this->data_;
@@ -81,8 +80,7 @@ public:
     this->data_ = nullptr;
   }
 
-  inline void
-  set_shape(const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions = { 1 }) noexcept {
+  inline void set_shape(const Dimensions &dimensions = {1}) noexcept {
     this->dimensions_ = dimensions;
   }
 
