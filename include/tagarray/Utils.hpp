@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <array>
+#include <algorithm>
 
 #include "tagarray/defines.h"
 
@@ -43,6 +45,20 @@ inline std::string to_string(const char *const str_ptr) noexcept {
   if (str_ptr != nullptr)
     str = std::string(str_ptr);
   return str;
+}
+
+template <size_t N, typename T>
+inline std::array<T,N> to_array(const T (&arr_in)[N]) noexcept {
+  std::array<T,N> arr_out;
+  std::copy(arr_in, arr_in + arr_out.size(), arr_out.begin());
+  return arr_out;
+}
+
+template <size_t N, typename T>
+inline std::array<T,N> to_array(const T *const &arr_in) noexcept {
+  std::array<T,N> arr_out;
+  std::copy(arr_in, arr_in + arr_out.size(), arr_out.begin());
+  return arr_out;
 }
 
 } // namespace utils
