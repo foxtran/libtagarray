@@ -46,19 +46,12 @@ public:
     return this->comment_;
   }
 
-  inline void update_comment(const std::string &comment) noexcept {
+  inline void
+  update_comment(const std::string &comment = std::string()) noexcept {
     this->comment_ = comment;
   }
-  inline void update_comment(const char *const comment_ptr) noexcept {
-    std::string comment = std::string();
-    if (comment_ptr != nullptr)
-      comment = std::string(comment_ptr);
-    update_comment(comment);
-  }
 
-  inline int64_t get_data_length() const noexcept {
-    return this->data_length_;
-  }
+  inline int64_t get_data_length() const noexcept { return this->data_length_; }
 
   inline uint8_t *get_data() const noexcept { return this->data_; }
 
@@ -93,9 +86,7 @@ public:
               this->dimensions_.begin());
   }
 
-  inline bool is_allocated() const noexcept {
-    return this->data_ != nullptr;
-  }
+  inline bool is_allocated() const noexcept { return this->data_ != nullptr; }
 
   inline RecordInfo get_info() const noexcept {
     RecordInfo recordInfo = {this->type_id_,
