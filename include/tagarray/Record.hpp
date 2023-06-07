@@ -55,19 +55,24 @@ public:
 
   inline uint8_t *get_data() const noexcept { return this->data_; }
 
-  void set_data(const int8_t *&data, const int64_t data_length) noexcept;
-  inline void set_data(
-      const int8_t *&data, const int64_t data_length,
-      const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions) noexcept {
-    this->dimensions_ = dimensions;
-    this->set_data(data, data_length);
-  }
   inline void
-  set_data(const int8_t *&data, const int64_t data_length,
-           const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    std::copy(dimensions, dimensions + this->dimensions_.size(),
-              this->dimensions_.begin());
-    set_data(data, data_length);
+  set_data(const int8_t *const &data = nullptr, const int64_t data_length = 1,
+           const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions = { 1 }
+          ) noexcept {
+    this->dimensions_ = dimensions;
+    if (this->data_ != nullptr)
+      delete[] this->data_;
+    this->data_length_ = data_length;
+    this->data_size_ = sizeof(uint8_t) * this->data_length_;
+    this->data_ = new (std::nothrow) uint8_t[this->data_size_];
+    if (this->data_ == nullptr) {
+      return;
+    }
+    if (data == nullptr) {
+      std::fill(this->data_, this->data_ + this->data_size_, 0);
+    } else {
+      std::copy(data, data + this->data_size_, this->data_);
+    }
   }
 
   inline void free_data() noexcept {
