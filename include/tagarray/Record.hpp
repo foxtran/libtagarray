@@ -81,14 +81,9 @@ public:
     this->data_ = nullptr;
   }
 
-  inline void set_shape(
-      const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions) noexcept {
-    this->dimensions_ = dimensions;
-  }
   inline void
-  set_shape(const int64_t (&dimensions)[TA_DIMENSIONS_LENGTH]) noexcept {
-    std::copy(dimensions, dimensions + this->dimensions_.size(),
-              this->dimensions_.begin());
+  set_shape(const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions = { 1 }) noexcept {
+    this->dimensions_ = dimensions;
   }
 
   inline bool is_allocated() const noexcept { return this->data_ != nullptr; }
