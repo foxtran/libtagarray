@@ -14,7 +14,7 @@ namespace tagarray {
 class Record {
 private:
   const int32_t type_id_;
-  const int32_t n_dimensions_;
+  int32_t n_dimensions_;
   int64_t data_length_;
   int64_t data_size_;
   uint8_t *data_;
