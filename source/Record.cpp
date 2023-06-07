@@ -5,7 +5,7 @@
 namespace tagarray {
 
 Record::Record(const int32_t type_id, const int32_t n_dimensions,
-               const uint8_t *data, const int64_t data_length,
+               const uint8_t *const &data, const int64_t data_length,
                const int64_t dimensions_ptr[TA_DIMENSIONS_LENGTH],
                const char *const comment_ptr) noexcept
     : type_id_(type_id), n_dimensions_(n_dimensions) {
@@ -27,7 +27,7 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
 }
 
 Record::Record(const int32_t type_id, const int32_t n_dimensions,
-               const uint8_t *&data, const int64_t data_length,
+               const uint8_t *const &data, const int64_t data_length,
                const std::array<int64_t, TA_DIMENSIONS_LENGTH> &dimensions,
                const std::string &comment) noexcept
     : type_id_(type_id), n_dimensions_(n_dimensions), data_length_(data_length),
