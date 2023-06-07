@@ -41,7 +41,9 @@ extern "C" void *TA_Record_new(const int32_t type_id,
                                const int64_t dimensions[TA_DIMENSIONS_LENGTH],
                                const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Record(
-      type_id, n_dimensions, data, data_length, dimensions, comment));
+      type_id, n_dimensions, data, data_length,
+      tagarray::utils::to_array<TA_DIMENSIONS_LENGTH>(dimensions),
+      tagarray::utils::to_string(comment)));
 }
 
 extern "C" bool TA_Record_is_allocated(const void *const record) noexcept {
