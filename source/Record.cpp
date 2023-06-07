@@ -27,23 +27,6 @@ Record::~Record() noexcept {
     delete[] this->data_;
 }
 
-void Record::set_data(const int8_t *&data,
-                      const int64_t data_length) noexcept {
-  if (this->data_ != nullptr)
-    delete[] this->data_;
-  this->data_length_ = data_length;
-  this->data_size_ = sizeof(uint8_t) * this->data_length_;
-  this->data_ = new (std::nothrow) uint8_t[this->data_size_];
-  if (this->data_ == nullptr) {
-    return;
-  }
-  if (data == nullptr) {
-    std::fill(this->data_, this->data_ + this->data_size_, 0);
-  } else {
-    std::copy(data, data + this->data_size_, this->data_);
-  }
-}
-
 void Record::dump(const int32_t level) const noexcept {
   std::cout << "    type id: " << this->type_id_ << std::endl;
   std::cout << "    Dimensions: " << this->n_dimensions_ << std::endl;
