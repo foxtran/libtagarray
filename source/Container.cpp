@@ -6,25 +6,24 @@ namespace tagarray {
 
 Container::~Container() noexcept { this->records_.clear(); }
 
-void Container::add_record(const std::string &tag, Record &record) noexcept {
-  this->status_ = utils::check_tag(tag);
-  if (this->status_ != TA_OK)
-    return;
-  this->has_record(tag);
-  if (this->status_ == TA_OK) {
-    this->status_ = TA_CONTAINER_RECORD_EXISTS;
-    return;
+int32_t Container::add_record(const std::string &tag, Record &record) noexcept {
+  int32_t status = utils::check_tag(tag);
+  if (status != TA_OK)
+    return status;
+  status = this->has_record(tag);
+  if (status == TA_OK) {
+    return TA_CONTAINER_RECORD_EXISTS;
   }
   this->records_.insert({tag, &record});
-  this->status_ = TA_OK;
+  return TA_OK;
 }
 
-void Container::save(const std::filesystem::path &filename) noexcept {
-  this->status_ = TA_NOT_IMPLEMENTED;
+int32_t Container::save(const std::filesystem::path &filename) noexcept {
+  return TA_NOT_IMPLEMENTED;
 }
 
-void Container::load(const std::filesystem::path &filename) noexcept {
-  this->status_ = TA_NOT_IMPLEMENTED;
+int32_t Container::load(const std::filesystem::path &filename) noexcept {
+  return TA_NOT_IMPLEMENTED;
 }
 
 void Container::dump(const int32_t level) const noexcept {

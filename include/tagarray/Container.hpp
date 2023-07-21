@@ -15,17 +15,15 @@ namespace tagarray {
 class Container {
 private:
   int32_t version_;
-  int32_t status_;
   std::string comment_;
   std::unordered_map<std::string, Record *> records_;
 
 public:
-  inline Container() noexcept
-      : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_(""){};
+  inline Container() noexcept : version_(TA_CONTAINER_VERSION), comment_(""){};
   inline Container(const std::string &comment) noexcept
-      : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_(comment){};
+      : version_(TA_CONTAINER_VERSION), comment_(comment){};
   inline Container(const char *const comment_ptr) noexcept
-      : version_(TA_CONTAINER_VERSION), status_(TA_OK), comment_("") {
+      : version_(TA_CONTAINER_VERSION), comment_("") {
     this->update_comment(comment_ptr);
   }
   ~Container() noexcept;
@@ -34,71 +32,66 @@ public:
 
   inline int32_t get_version() const noexcept { return this->version_; }
 
-  inline int32_t get_status() const noexcept { return this->status_; }
-
   inline const std::string &get_comment() const noexcept {
     return this->comment_;
   }
 
-  inline void update_comment(const char *const comment_ptr) noexcept {
-    this->status_ = utils::check_ptr(comment_ptr);
-    if (this->status_ != TA_OK)
-      return;
-    this->update_comment(std::string(comment_ptr));
+  inline int32_t update_comment(const char *const comment_ptr) noexcept {
+    if (utils::check_ptr(comment_ptr) != TA_OK)
+      return utils::check_ptr(comment_ptr);
+    return this->update_comment(std::string(comment_ptr));
   }
-  inline void update_comment(const std::string &comment) noexcept {
+  inline int32_t update_comment(const std::string &comment) noexcept {
     this->comment_ = comment;
-    this->status_ = TA_OK;
+    return TA_OK;
   }
 
-  void add_record(const std::string &tag, Record &record) noexcept;
-  inline void add_record(const char *const tag, Record &record) noexcept {
-    this->status_ = utils::check_ptr(tag);
-    if (this->status_ != TA_OK)
-      return;
-    this->add_record(std::string(tag), record);
+  int32_t add_record(const std::string &tag, Record &record) noexcept;
+  inline int32_t add_record(const char *const tag, Record &record) noexcept {
+    if (utils::check_ptr(tag) != TA_OK)
+      return utils::check_ptr(tag);
+    return this->add_record(std::string(tag), record);
   }
 
   inline int32_t has_record(const std::string &tag) noexcept {
-    this->status_ = utils::check_tag(tag);
-    if (this->status_ != TA_OK)
-      return this->status_;
-    this->status_ = TA_CONTAINER_RECORD_NOT_FOUND;
+    int32_t status = utils::check_tag(tag);
+    if (status != TA_OK)
+      return status;
+    status = TA_CONTAINER_RECORD_NOT_FOUND;
     if (auto search = this->records_.find(tag); search != this->records_.end())
-      this->status_ = TA_OK;
-    return this->status_;
+      status = TA_OK;
+    return status;
   }
   inline int32_t has_record(const char *const tag) noexcept {
-    this->status_ = utils::check_ptr(tag);
-    if (this->status_ != TA_OK)
-      return this->status_;
+    if (utils::check_ptr(tag) != TA_OK)
+      return utils::check_ptr(tag);
     return this->has_record(std::string(tag));
   }
 
   inline int32_t has_records(const std::vector<std::string> &tags) noexcept {
     for (const auto &tag : tags) {
-      if (has_record(tag) != TA_OK)
-        return this->status_;
+      int32_t status = has_record(tag);
+      if (status != TA_OK)
+        return status;
     }
     return TA_OK;
   }
 
-  inline void remove_record(const std::string &tag) noexcept {
-    this->status_ = utils::check_tag(tag);
-    if (this->status_ != TA_OK)
-      return;
-    this->has_record(tag);
-    if (this->status_ != TA_OK)
-      return;
+  inline int32_t remove_record(const std::string &tag) noexcept {
+    int32_t status = utils::check_tag(tag);
+    if (status != TA_OK)
+      return status;
+    status = this->has_record(tag);
+    if (status != TA_OK)
+      return status;
     delete this->records_[tag];
     this->records_.erase(tag);
-    this->status_ = TA_OK;
+    return TA_OK;
   }
-  inline void remove_record(const char *const tag) noexcept {
-    this->status_ = utils::check_ptr(tag);
-    if (this->status_ != TA_OK)
-      return;
-    this->remove_record(std::string(tag));
+  inline int32_t remove_record(const char *const tag) noexcept {
+    if (utils::check_ptr(tag) != TA_OK)
+      return utils::check_ptr(tag);
+    return this->remove_record(std::string(tag));
   }
 
   inline void remove_records(const std::vector<std::string> &tags) noexcept {
@@ -107,41 +100,37 @@ public:
   }
 
   inline Record *get_record(const std::string &tag) noexcept {
-    this->status_ = utils::check_tag(tag);
-    if (this->status_ != TA_OK)
+    if (utils::check_tag(tag) != TA_OK)
       return nullptr;
-    this->has_record(tag);
-    if (this->status_ != TA_OK)
+    if (this->has_record(tag) != TA_OK)
       return nullptr;
     return this->records_[tag];
   }
   inline Record *get_record(const char *const tag) noexcept {
-    this->status_ = utils::check_ptr(tag);
-    if (this->status_ != TA_OK)
+    if (utils::check_ptr(tag) != TA_OK)
       return nullptr;
     return this->get_record(std::string(tag));
   }
 
-  void save(const std::filesystem::path &filename) noexcept;
-  inline void save(const std::string &filename) noexcept {
-    this->save(std::filesystem::path(filename));
+  int32_t save(const std::filesystem::path &filename) noexcept;
+  inline int32_t save(const std::string &filename) noexcept {
+    return this->save(std::filesystem::path(filename));
   }
-  inline void save(const char *const filename_ptr) noexcept {
-    this->status_ = utils::check_ptr(filename_ptr);
-    if (this->status_ != TA_OK)
-      return;
-    this->save(std::string(filename_ptr));
+  inline int32_t save(const char *const filename_ptr) noexcept {
+    if (utils::check_ptr(filename_ptr) != TA_OK)
+      return TA_NULLPTR;
+    return this->save(std::string(filename_ptr));
   }
 
-  void load(const std::filesystem::path &filename) noexcept;
-  inline void load(const std::string &filename) noexcept {
-    this->load(std::filesystem::path(filename));
+  int32_t load(const std::filesystem::path &filename) noexcept;
+  inline int32_t load(const std::string &filename) noexcept {
+    return this->load(std::filesystem::path(filename));
   }
-  inline void load(const char *const filename_ptr) noexcept {
-    this->status_ = utils::check_ptr(filename_ptr);
-    if (this->status_ != TA_OK)
-      return;
-    this->load(std::string(filename_ptr));
+  inline int32_t load(const char *const filename_ptr) noexcept {
+    int32_t status = utils::check_ptr(filename_ptr);
+    if (status != TA_OK)
+      return status;
+    return this->load(std::string(filename_ptr));
   }
 
   void dump(const int32_t level) const noexcept;

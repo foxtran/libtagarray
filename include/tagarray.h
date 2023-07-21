@@ -7,8 +7,8 @@
 #include <cstdint>
 #define TA_NOEXCEPT noexcept
 #else
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <uchar.h>
 #define TA_NOEXCEPT
 #endif
@@ -27,10 +27,11 @@ int32_t TA_Container_get_status(const void *const container) TA_NOEXCEPT;
 void TA_Container_dump(const void *const container,
                        const int32_t level) TA_NOEXCEPT;
 
-void *TA_Container_load(const char *const filename) TA_NOEXCEPT;
+int32_t TA_Container_load(void *const container,
+                          const char *const filename) TA_NOEXCEPT;
 
-void TA_Container_save(void *const container,
-                       const char *const filename) TA_NOEXCEPT;
+int32_t TA_Container_save(void *const container,
+                          const char *const filename) TA_NOEXCEPT;
 
 void TA_Container_delete(void *const container) TA_NOEXCEPT;
 
@@ -45,8 +46,8 @@ void TA_Record_dump(const void *const record, const int32_t level) TA_NOEXCEPT;
 
 void TA_Record_delete(void *const record) TA_NOEXCEPT;
 
-void TA_Container_add_record(void *const container, const char *const tag,
-                             void *const record) TA_NOEXCEPT;
+int32_t TA_Container_add_record(void *const container, const char *const tag,
+                                void *const record) TA_NOEXCEPT;
 
 int32_t TA_Container_has_record(void *const container,
                                 const char *const tag) TA_NOEXCEPT;
@@ -54,8 +55,8 @@ int32_t TA_Container_has_record(void *const container,
 void *TA_Container_get_record(void *const container,
                               const char *const tag) TA_NOEXCEPT;
 
-void TA_Container_remove_record(void *const container,
-                                const char *const tag) TA_NOEXCEPT;
+int32_t TA_Container_remove_record(void *const container,
+                                   const char *const tag) TA_NOEXCEPT;
 
 RecordInfo TA_Record_get_record_info(const void *const record) TA_NOEXCEPT;
 

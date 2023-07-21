@@ -4,7 +4,7 @@
 #define TA_FORTRAN_API_VERSION 1
 #endif
 
-#if   TA_FORTRAN_API_VERSION == 1
+#if TA_FORTRAN_API_VERSION == 1
 #include "tagarray/tagarray_v1.fh"
 #elif TA_FORTRAN_API_VERSION == 2
 #include "tagarray/tagarray_v2.fh"
