@@ -9,25 +9,19 @@ extern "C" void *TA_Container_new(const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Container(comment));
 }
 
-extern "C" int32_t
-TA_Container_get_status(const void *const container) noexcept {
-  return static_cast<const Container *>(container)->get_status();
-}
-
 extern "C" void TA_Container_dump(const void *const container,
                                   const int32_t level) noexcept {
   static_cast<const Container *>(container)->dump(level);
 }
 
-extern "C" void *TA_Container_load(const char *const filename) noexcept {
-  Container *container = new (std::nothrow) Container();
-  container->load(filename);
-  return static_cast<void *>(container);
+extern "C" int32_t TA_Container_load(void *const container,
+                                     const char *const filename) noexcept {
+  return static_cast<Container *>(container)->load(filename);
 }
 
-extern "C" void TA_Container_save(void *const container,
-                                  const char *const filename) noexcept {
-  static_cast<Container *>(container)->save(filename);
+extern "C" int32_t TA_Container_save(void *const container,
+                                     const char *const filename) noexcept {
+  return static_cast<Container *>(container)->save(filename);
 }
 
 extern "C" void TA_Container_delete(void *const container) noexcept {
@@ -59,10 +53,10 @@ extern "C" void TA_Record_delete(void *const record) noexcept {
   delete static_cast<Record *>(record);
 }
 
-extern "C" void TA_Container_add_record(void *const container,
-                                        const char *const tag,
-                                        void *const record) noexcept {
-  static_cast<Container *>(container)->add_record(
+extern "C" int32_t TA_Container_add_record(void *const container,
+                                           const char *const tag,
+                                           void *const record) noexcept {
+  return static_cast<Container *>(container)->add_record(
       tag, *static_cast<Record *>(record));
 }
 
@@ -76,8 +70,8 @@ extern "C" void *TA_Container_get_record(void *const container,
   return static_cast<Container *>(container)->get_record(tag);
 }
 
-extern "C" void TA_Container_remove_record(void *const container,
-                                           const char *const tag) noexcept {
+extern "C" int32_t TA_Container_remove_record(void *const container,
+                                              const char *const tag) noexcept {
   return static_cast<Container *>(container)->remove_record(tag);
 }
 
