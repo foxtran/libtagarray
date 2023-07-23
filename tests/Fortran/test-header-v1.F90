@@ -19,27 +19,23 @@ contains
     allocate(value, source = 1_c_int32_t)
     allocate(array(10), source = 2_c_int32_t)
     call container%new()
-    if (container%get_status() /= TA_OK) then
-      status = 1
-      return
-    end if
-    TA_CONTAINER_ADD_VALUE(container, "INT32-value", TA_TYPE_INT32, value)
-    if (container%get_status() /= TA_OK) then
+    TA_CONTAINER_ADD_VALUE(stat, container, "INT32-value", TA_TYPE_INT32, value)
+    if (stat /= TA_OK) then
       status = 2
       return
     end if
-    TA_CONTAINER_ADD_DATA(container, "INT32-array", TA_TYPE_INT32, array)
-    if (container%get_status() /= TA_OK) then
+    TA_CONTAINER_ADD_DATA(stat, container, "INT32-array", TA_TYPE_INT32, array)
+    if (stat /= TA_OK) then
       status = 3
       return
     end if
-    TA_CONTAINER_ADD_VALUE_OPTIONAL(container, "INT32-value-opt", TA_TYPE_INT32, value, comment = "value")
-    if (container%get_status() /= TA_OK) then
+    TA_CONTAINER_ADD_VALUE_OPTIONAL(stat, container, "INT32-value-opt", TA_TYPE_INT32, value, comment = "value")
+    if (stat /= TA_OK) then
       status = 4
       return
     end if
-    TA_CONTAINER_ADD_DATA_OPTIONAL(container, "INT32-array-opt", TA_TYPE_INT32, array, comment = "array")
-    if (container%get_status() /= TA_OK) then
+    TA_CONTAINER_ADD_DATA_OPTIONAL(stat, container, "INT32-array-opt", TA_TYPE_INT32, array, comment = "array")
+    if (stat /= TA_OK) then
       status = 5
       return
     end if

@@ -9,10 +9,6 @@ module tagarray_CAPI
       implicit none
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
     end function TA_Container_new
-    integer(c_int32_t) function TA_Container_get_status(container) bind(C, name="TA_Container_get_status")
-      import
-      type(c_ptr),        value, intent(in) :: container
-    end function TA_Container_get_status
     subroutine TA_Container_dump(container, level) bind(C, name="TA_Container_dump")
       import
       implicit none
@@ -51,13 +47,13 @@ module tagarray_CAPI
       implicit none
       type(c_ptr),        value, intent(in) :: record
     end subroutine TA_Record_delete
-    subroutine TA_Container_add_record(container, Ctag, record) bind(C, name="TA_Container_add_record")
+    integer(c_int32_t) function TA_Container_add_record(container, Ctag, record) bind(C, name="TA_Container_add_record")
       import
       implicit none
       type(c_ptr), value, intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
       type(c_ptr), value, intent(in) :: record
-    end subroutine TA_Container_add_record
+    end function TA_Container_add_record
     integer(c_int32_t) function TA_Container_has_record(container, Ctag) bind(C, name="TA_Container_has_record")
       import
       implicit none
@@ -70,12 +66,12 @@ module tagarray_CAPI
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
     end function TA_Container_get_record
-    subroutine TA_Container_remove_record(container, Ctag) bind(C, name="TA_Container_remove_record")
+    integer(c_int32_t) function TA_Container_remove_record(container, Ctag) bind(C, name="TA_Container_remove_record")
       import
       implicit none
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
-    end subroutine TA_Container_remove_record
+    end function TA_Container_remove_record
     type(C_RecordInfo_t) function TA_Record_get_record_info(record) bind(C, name="TA_Record_get_record_info")
       import
       implicit none
