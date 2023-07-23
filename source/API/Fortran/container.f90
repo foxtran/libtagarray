@@ -17,11 +17,9 @@ module tagarray_container
     procedure, public  :: has_record
     procedure, public  :: has_records
     procedure, public  :: get_record
-    procedure, public  :: get_record_info
     procedure, public  :: remove_record
     procedure, public  :: remove_records
     procedure, public  :: dump
-    procedure, public  :: get_status => container_t_get_status
     procedure, public  :: delete => container_t_delete
   end type
 contains
@@ -38,15 +36,16 @@ contains
     ptr = TA_Container_new(C_comment)
     this%container_ptr = ptr
   end subroutine container_t_new
-  subroutine add_record(this, tag, record)
+  integer(c_int32_t) function add_record(this, tag, record) result(status)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in) :: tag
     type(record_t), intent(in) :: record
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call TA_Container_add_record(this%container_ptr, Ctag, record%record_ptr)
-  end subroutine add_record
-  subroutine add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, comment)
+    status = TA_Container_add_record(this%container_ptr, Ctag, record%record_ptr)
+  end function add_record
+  integer(c_int32_t) function add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, comment) &
+                                                                                                               result(status)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: type_id
@@ -60,9 +59,9 @@ contains
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
     call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, comment)
-    call this%add_record(Ctag, record)
-  end subroutine add_record_data
-  subroutine reserve_data(this, tag, datatype, array_size, array_shape, comment, override)
+    status = this%add_record(Ctag, record)
+  end function add_record_data
+  integer(c_int32_t) function reserve_data(this, tag, datatype, array_size, array_shape, comment, override) result(status)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: datatype
@@ -76,12 +75,12 @@ contains
     Ctag = to_Cstring(tag)
     if (present(override)) then
       if (override) then
-        call this%remove_record(Ctag)
+        status = this%remove_record(Ctag)
       end if
     end if
     call record%reserve(datatype, array_size, array_shape, comment)
-    call this%add_record(Ctag, record)
-  end subroutine reserve_data
+    status = this%add_record(Ctag, record)
+  end function reserve_data
   integer(c_int32_t) function has_record(this, tag) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag
@@ -104,47 +103,35 @@ contains
     end do
   end function has_records
   type(record_t) function get_record(this, tag) result(record)
+    use, intrinsic :: iso_c_binding, only: c_associated
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     type(C_ptr) :: record_ptr
     Ctag = to_Cstring(tag)
     record_ptr = TA_Container_get_record(this%container_ptr, Ctag)
+    print *, c_associated(record_ptr)
     record%record_ptr = record_ptr
   end function get_record
-  type(recordinfo_t) function get_record_info(this, tag) result(recordinfo)
-    class(container_t),                   intent(inout) :: this
-    character(kind=TA_CHAR, len=*), intent(in)    :: tag
-    character(kind=TA_CHAR, len=:), allocatable   :: Ctag
-    type(record_t) :: record
-    integer :: status
-    Ctag = to_Cstring(tag)
-    record = this%get_record(Ctag)
-    status = this%get_status()
-    if (status /= TA_OK) return
-    recordinfo = record%get_info()
-  end function get_record_info
-  subroutine remove_record(this, tag)
+  integer(c_int32_t) function remove_record(this, tag) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tag
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
     Ctag = to_Cstring(tag)
-    call TA_container_remove_record(this%container_ptr, Ctag)
-  end subroutine remove_record
-  subroutine remove_records(this, tags)
+    status = TA_container_remove_record(this%container_ptr, Ctag)
+  end function remove_record
+  integer(c_int32_t) function remove_records(this, tags) result(status)
     class(container_t),                   intent(inout) :: this
     character(kind=TA_CHAR, len=*), intent(in)    :: tags(:)
     character(kind=TA_CHAR, len=:), allocatable   :: Ctag
-    integer :: i
+    integer :: i, status_
+    status = TA_OK
     do i = 1, size(tags)
       Ctag = to_Cstring(tags(i))
-      call TA_container_remove_record(this%container_ptr, Ctag)
+      status_ = TA_container_remove_record(this%container_ptr, Ctag)
+      if (status_ /= TA_OK) status = status_
     end do
-  end subroutine remove_records
-  integer(c_int32_t) function container_t_get_status(this) result(status)
-    class(container_t), intent(inout) :: this
-    status = TA_Container_get_status(this%container_ptr)
-  end function container_t_get_status
+  end function remove_records
   subroutine dump(this, level)
     class(container_t), intent(inout) :: this
     integer(c_int32_t), intent(in) :: level

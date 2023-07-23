@@ -1,41 +1,43 @@
 #pragma once
 
-#define TA_CONTAINER_ADD_VALUE(CONTAINER, TAG, TYPE, VALUE) \
+#define TA_CONTAINER_ADD_VALUE(STATUS, CONTAINER, TAG, TYPE, VALUE) \
   block; \
     use tagarray, only: TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t); \
+    STATUS = CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t); \
   end block
 
-#define TA_CONTAINER_ADD_VALUE_OPTIONAL(CONTAINER, TAG, TYPE, VALUE, __VA_ARGS__) \
+#define TA_CONTAINER_ADD_VALUE_OPTIONAL(STATUS, CONTAINER, TAG, TYPE, VALUE, __VA_ARGS__) \
   block; \
     use tagarray, only: TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
+    STATUS = CONTAINER%add_record_data(TAG, TYPE, c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
   end block
 
-#define TA_CONTAINER_ADD_DATA(CONTAINER, TAG, TYPE, DATA) \
+#define TA_CONTAINER_ADD_DATA(STATUS, CONTAINER, TAG, TYPE, DATA) \
   block; \
     use tagarray, only: TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+    STATUS = CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
   end block
 
-#define TA_CONTAINER_ADD_DATA_OPTIONAL(CONTAINER, TAG, TYPE, DATA, __VA_ARGS__) \
+#define TA_CONTAINER_ADD_DATA_OPTIONAL(STATUS, CONTAINER, TAG, TYPE, DATA, __VA_ARGS__) \
   block; \
     use tagarray, only: TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+    STATUS = CONTAINER%add_record_data(TAG, TYPE, c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
   end block
 
 #define TA_CONTAINER_GET_VALUE(CONTAINER, TAG, TYPE, VALUE, STATUS) \
   block; \
     use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
-    use tagarray, only: recordinfo_t, TA_OK; \
+    use tagarray, only: record_t, recordinfo_t, TA_OK, TA_CONTAINER_RECORD_NOT_FOUND; \
+    type(record_t) :: record; \
     type(recordinfo_t) :: record_info; \
-    record_info = CONTAINER%get_record_info(TAG); \
-    STATUS = CONTAINER%get_status(); \
-    if (STATUS == TA_OK) then; \
+    STATUS = TA_CONTAINER_RECORD_NOT_FOUND; \
+    record = CONTAINER%get_record(TAG); \
+    if (record%is_allocated()) then; \
+      record_info = record%get_info(); \
       STATUS = record_info%get_status(TYPE, 1_c_int32_t); \
       call c_f_pointer(record_info%data, VALUE); \
     end if; \
@@ -44,11 +46,13 @@
 #define TA_CONTAINER_GET_DATA(CONTAINER, TAG, TYPE, DATA, STATUS) \
   block; \
     use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
-    use tagarray, only: recordinfo_t, TA_OK; \
+    use tagarray, only: record_t, recordinfo_t, TA_OK, TA_CONTAINER_RECORD_NOT_FOUND; \
+    type(record_t) :: record; \
     type(recordinfo_t) :: record_info; \
-    record_info = CONTAINER%get_record_info(TAG); \
-    STATUS = CONTAINER%get_status(); \
-    if (STATUS == TA_OK) then; \
+    STATUS = TA_CONTAINER_RECORD_NOT_FOUND; \
+    record = CONTAINER%get_record(TAG); \
+    if (record%is_allocated()) then; \
+      record_info = record%get_info(); \
       STATUS = record_info%get_status(TYPE, size(shape(DATA), kind=c_int32_t)); \
       call c_f_pointer(record_info%data, DATA, record_info%dimensions(1:size(shape(DATA)))); \
     end if; \
