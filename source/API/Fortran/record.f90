@@ -12,6 +12,7 @@ module tagarray_record
     procedure, public :: new => record_t_new
     procedure, public :: reserve => record_t_reserve
     procedure, public :: is_allocated
+    procedure, public :: is_associated
     procedure, public :: get_info
     procedure, public :: dump
     procedure, public :: delete => record_t_delete
@@ -59,6 +60,11 @@ contains
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     call this%new(datatype, c_null_ptr, get_storage_size(datatype), array_size, array_shape, comment)
   end subroutine record_t_reserve
+  logical(c_bool) function is_associated(this)
+    use, intrinsic :: iso_c_binding, only: c_associated
+    class(record_t), intent(inout) :: this
+    is_associated = c_associated(this%record_ptr)
+  end function is_associated
   logical(c_bool) function is_allocated(this)
     class(record_t), intent(inout) :: this
     is_allocated = TA_Record_is_allocated(this%record_ptr)
