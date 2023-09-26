@@ -55,7 +55,7 @@ public:
 
   inline uint8_t *get_data() const noexcept { return this->data_; }
 
-  inline void set_data(const int8_t *const &data = nullptr,
+  inline void set_data(const uint8_t *const &data = nullptr,
                        const int64_t data_length = 1,
                        const Dimensions &dimensions = {1}) noexcept {
     this->dimensions_ = dimensions;
