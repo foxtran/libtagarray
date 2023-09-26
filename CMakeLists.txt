@@ -17,11 +17,23 @@ include(CheckIPOSupported)
 
 check_ipo_supported(RESULT IPO_AVAILABLE)
 
-
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(defines)
 include(CompilerFlagsSets)
 include(TargetCompileCheckAddFlags)
+
+
+if(NOT DEFINED ${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS)
+  set(${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS "")
+  message(WARNING "${CMAKE_CXX_COMPILER_ID} may not work properly")
+endif()
+if(ENABLE_FORTRAN)
+  if(NOT DEFINED ${CMAKE_Fortran_COMPILER_ID}_Fortran_WARNINGS)
+    set(${CMAKE_Fortran_COMPILER_ID}_Fortran_WARNINGS "")
+    message(WARNING "${CMAKE_Fortran_COMPILER_ID} may not work properly")
+  endif()
+endif()
+
 
 generate_header("C" "${CMAKE_SOURCE_DIR}/defines.csv" "${CMAKE_BINARY_DIR}/include/${PN}/defines.h")
 if(ENABLE_FORTRAN)
