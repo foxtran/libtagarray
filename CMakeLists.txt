@@ -46,6 +46,7 @@ endif()
 
 
 generate_header("C" "${CMAKE_SOURCE_DIR}/defines.csv" "${CMAKE_BINARY_DIR}/include/${PN}/defines.h")
+generate_header("CXX" "${CMAKE_SOURCE_DIR}/defines.csv" "${CMAKE_BINARY_DIR}/include/${PN}/defines.hpp")
 if(ENABLE_FORTRAN)
   generate_header("Fortran" "${CMAKE_SOURCE_DIR}/defines.csv" "${CMAKE_BINARY_DIR}/defines.f90")
 endif()
@@ -64,6 +65,7 @@ add_subdirectory(source)
 
 add_library(${PN} ${SOURCES})
 add_dependencies(${PN} ${PN}_C_defines)
+add_dependencies(${PN} ${PN}_CXX_defines)
 target_sources(${PN}
   PUBLIC
     FILE_SET HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES include/${PN}.h
