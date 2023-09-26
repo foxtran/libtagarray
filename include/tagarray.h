@@ -65,6 +65,8 @@ const char *TA_get_status_message(const int32_t status,
 
 void TA_string_delete(void *const string_ptr) TA_NOEXCEPT;
 
+int64_t TA_get_storage_size(const int32_t datatype) TA_NOEXCEPT;
+
 #ifdef __cplusplus
 }
 } // namespace CAPI

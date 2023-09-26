@@ -88,5 +88,10 @@ module tagarray_CAPI
       implicit none
       type(c_ptr), value,            intent(in) :: ptr
     end subroutine TA_string_delete
+    integer(c_int64_t) function TA_get_storage_size(datatype) bind(C, name="TA_get_storage_size")
+      import
+      implicit none
+      integer(c_int32_t), value :: datatype
+    end function TA_get_storage_size
   end interface
 end module tagarray_CAPI

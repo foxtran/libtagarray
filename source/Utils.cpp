@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include "tagarray/Utils.hpp"
 
 namespace tagarray {
@@ -99,6 +101,21 @@ std::string get_status_message(const int32_t status,
     break;
   }
   return message;
+}
+
+int64_t get_storage_size(const int32_t datatype) noexcept {
+  const std::unordered_map<int32_t, int64_t> datasize{
+      {TA_TYPE_UNKNOWN, 1}, {TA_TYPE_CHAR8, 1},   {TA_TYPE_INT8, 1},
+      {TA_TYPE_INT16, 2},   {TA_TYPE_INT32, 4},   {TA_TYPE_INT64, 8},
+      {TA_TYPE_UINT8, 1},   {TA_TYPE_UINT16, 2},  {TA_TYPE_UINT32, 4},
+      {TA_TYPE_UINT64, 8},  {TA_TYPE_REAL32, 4},  {TA_TYPE_REAL64, 8},
+      {TA_TYPE_CMPLX32, 8}, {TA_TYPE_CMPLX64, 16}};
+  auto pair_it = datasize.find(datatype);
+  if (pair_it != datasize.end()) {
+    return pair_it->second;
+  } else {
+    return 1;
+  }
 }
 
 } // namespace utils

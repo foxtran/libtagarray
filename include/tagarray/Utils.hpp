@@ -61,5 +61,7 @@ inline std::array<T, N> to_array(const T *const &arr_in) noexcept {
   return arr_out;
 }
 
+int64_t get_storage_size(const int32_t datatype) noexcept;
+
 } // namespace utils
 } // namespace tagarray

@@ -122,39 +122,9 @@ contains
     end select
   end function get_type_id_scalar
   integer(c_int64_t) function get_storage_size(datatype) result(size)
+    use tagarray_CAPI, only: TA_get_storage_size
     integer(c_int32_t) :: datatype
-    select case(datatype)
-      case (TA_TYPE_UNKNOWN)
-        size = 1
-      case (TA_TYPE_CHAR8)
-        size = 1
-      case (TA_TYPE_INT8)
-        size = 1
-      case (TA_TYPE_INT16)
-        size = 2
-      case (TA_TYPE_INT32)
-        size = 4
-      case (TA_TYPE_INT64)
-        size = 8
-      case (TA_TYPE_UINT8)
-        size = 1
-      case (TA_TYPE_UINT16)
-        size = 2
-      case (TA_TYPE_UINT32)
-        size = 4
-      case (TA_TYPE_UINT64)
-        size = 8
-      case (TA_TYPE_REAL32)
-        size = 4
-      case (TA_TYPE_REAL64)
-        size = 8
-      case (TA_TYPE_CMPLX32)
-        size = 8
-      case (TA_TYPE_CMPLX64)
-        size = 16
-      case default
-        size = 1
-    end select
+    size = TA_get_storage_size(datatype)
   end function get_storage_size
   function get_status_message(status, tag) result(message)
     integer(c_int32_t), intent(in) :: status
