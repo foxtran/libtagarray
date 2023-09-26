@@ -58,6 +58,7 @@ contains
 #if TA_FORTRAN_API_VERSION_AVAILABLE >= 2
   integer(c_int32_t) function get_type_id_array(values) result(type_id)
     class(*), target, intent(in) :: values(..)
+    type_id = TA_TYPE_UNKNOWN
     select rank (values)
       rank (0)
         type_id = get_type_id_scalar(values)
