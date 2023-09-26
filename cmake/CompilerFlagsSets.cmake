@@ -9,3 +9,6 @@ set(Intel_Fortran_WARNINGS -warn\ all)
 # Intel OneAPI LLVM-based
 set(IntelLLVM_CXX_WARNINGS     -Wall)
 set(IntelLLVM_Fortran_WARNINGS -warn\ all)
+
+# Apple Clang
+set(AppleClang_CXX_WARNINGS -Wall;-Wextra)
