@@ -4,10 +4,18 @@
 # TARGET     name of target
 # VISIBILITY PUBLIC/INTERFACE/PRIVATE
 # LANGUAGE   for which language the set of flags should be checked. Only C, C++, and Fortran are supported now
-# FLAGS      a set of flags. For example, "-Wall;-Wextra" represents two flags `-Wall` and `-Wextra`
-function(target_compile_check_add_flags TARGET VISIBILITY LANGUAGE FLAGS)
+# FLAGS      (the last argument) a set of flags. For example, "-Wall;-Wextra" represents two flags `-Wall` and `-Wextra`
+function(target_compile_check_add_flags TARGET VISIBILITY LANGUAGE) # FLAGS
   string(TOUPPER "${LANGUAGE}" _LANGUAGE)
-  set(_FLAGS ${FLAGS} ${ARGN})
+  # compute number of flags; exit, if 0
+  list(LENGTH ARGV args_N)
+  math(EXPR flags_N "${args_N} - 3")
+  if(flags_N EQUAL 0)
+    message(WARNING "No flags were passed to `target_compile_check_add_flags`")
+    return()
+  endif()
+  # fill flags with magic
+  set(_FLAGS "" ${ARGN})
 
   # Check and enable flags' checking
   if(${_LANGUAGE} STREQUAL "C")
