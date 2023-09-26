@@ -4,9 +4,19 @@ project(tagarray
   VERSION 0.0.6
   LANGUAGES CXX)
 
+
 if(ENABLE_FORTRAN)
   enable_language(Fortran)
 endif()
+
+if(ENABLE_PYTHON)
+  if(NOT ${BUILD_SHARED_LIBS})
+    message(FATAL_ERROR "ENABLE_PYTHON ON requires BUILD_SHARED_LIBS ON because only shared libraries can be dynamically loaded")
+  endif()
+  find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+  find_package(pybind11 REQUIRED)
+endif()
+
 
 set(PN ${PROJECT_NAME})
 
@@ -44,6 +54,9 @@ endif()
 set(SOURCES)
 if(ENABLE_FORTRAN)
   set(SOURCES_Fortran)
+endif()
+if(ENABLE_PYTHON)
+  set(SOURCES_Python)
 endif()
 
 add_subdirectory(source)
@@ -142,6 +155,26 @@ if(ENABLE_FORTRAN)
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_record.mod
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_recordinfo.mod
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PN})
+endif()
+
+
+if(ENABLE_PYTHON)
+  pybind11_add_module(${PN}_py MODULE ${SOURCES_Python})
+  target_compile_features(${PN}_py PRIVATE cxx_std_17)
+  target_link_libraries(${PN}_py PRIVATE ${PN})
+  target_compile_check_add_flags(${PN}_py PRIVATE CXX ${${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS})
+  set_target_properties(${PN}_py PROPERTIES OUTPUT_NAME ${PN})
+  if(IPO_AVAILABLE)
+    set_target_properties(${PN}_py PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+  endif()
+#  install(TARGETS ${PN}_py
+#          EXPORT ${PN}Targets
+#          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#          INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#          FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#  )
 endif()
 
 
