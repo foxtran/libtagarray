@@ -8,7 +8,7 @@
 
 #include "tagarray/Record.hpp"
 #include "tagarray/Utils.hpp"
-#include "tagarray/defines.h"
+#include "tagarray/defines.hpp"
 
 namespace tagarray {
 
@@ -19,11 +19,12 @@ private:
   std::unordered_map<std::string, Record *> records_;
 
 public:
-  inline Container() noexcept : version_(TA_CONTAINER_VERSION), comment_(""){};
+  inline Container() noexcept
+      : version_(defines::CONTAINER_VERSION), comment_(""){};
   inline Container(const std::string &comment) noexcept
-      : version_(TA_CONTAINER_VERSION), comment_(comment){};
+      : version_(defines::CONTAINER_VERSION), comment_(comment){};
   inline Container(const char *const comment_ptr) noexcept
-      : version_(TA_CONTAINER_VERSION), comment_("") {
+      : version_(defines::CONTAINER_VERSION), comment_("") {
     this->update_comment(comment_ptr);
   }
   ~Container() noexcept;
@@ -37,55 +38,55 @@ public:
   }
 
   inline int32_t update_comment(const char *const comment_ptr) noexcept {
-    if (int32_t status = utils::check_ptr(comment_ptr); status != TA_OK)
+    if (int32_t status = utils::check_ptr(comment_ptr); status != defines::OK)
       return status;
     return this->update_comment(std::string(comment_ptr));
   }
   inline int32_t update_comment(const std::string &comment) noexcept {
     this->comment_ = comment;
-    return TA_OK;
+    return defines::OK;
   }
 
   int32_t add_record(const std::string &tag, Record &record) noexcept;
   inline int32_t add_record(const char *const tag, Record &record) noexcept {
-    if (int32_t status = utils::check_ptr(tag); status != TA_OK)
+    if (int32_t status = utils::check_ptr(tag); status != defines::OK)
       return status;
     return this->add_record(std::string(tag), record);
   }
 
   inline int32_t has_record(const std::string &tag) noexcept {
-    if (int32_t status = utils::check_tag(tag); status != TA_OK)
+    if (int32_t status = utils::check_tag(tag); status != defines::OK)
       return status;
-    int32_t status = TA_CONTAINER_RECORD_NOT_FOUND;
+    int32_t status = defines::CONTAINER_RECORD_NOT_FOUND;
     if (auto search = this->records_.find(tag); search != this->records_.end())
-      status = TA_OK;
+      status = defines::OK;
     return status;
   }
   inline int32_t has_record(const char *const tag) noexcept {
-    if (int32_t status = utils::check_ptr(tag); status != TA_OK)
+    if (int32_t status = utils::check_ptr(tag); status != defines::OK)
       return status;
     return this->has_record(std::string(tag));
   }
 
   inline int32_t has_records(const std::vector<std::string> &tags) noexcept {
     for (const auto &tag : tags) {
-      if (int32_t status = has_record(tag); status != TA_OK)
+      if (int32_t status = has_record(tag); status != defines::OK)
         return status;
     }
-    return TA_OK;
+    return defines::OK;
   }
 
   inline int32_t remove_record(const std::string &tag) noexcept {
-    if (int32_t status = utils::check_tag(tag); status != TA_OK)
+    if (int32_t status = utils::check_tag(tag); status != defines::OK)
       return status;
-    if (int32_t status = this->has_record(tag); status != TA_OK)
+    if (int32_t status = this->has_record(tag); status != defines::OK)
       return status;
     delete this->records_[tag];
     this->records_.erase(tag);
-    return TA_OK;
+    return defines::OK;
   }
   inline int32_t remove_record(const char *const tag) noexcept {
-    if (int32_t status = utils::check_ptr(tag); status != TA_OK)
+    if (int32_t status = utils::check_ptr(tag); status != defines::OK)
       return status;
     return this->remove_record(std::string(tag));
   }
@@ -96,14 +97,14 @@ public:
   }
 
   inline Record *get_record(const std::string &tag) noexcept {
-    if (utils::check_tag(tag) != TA_OK)
+    if (utils::check_tag(tag) != defines::OK)
       return nullptr;
-    if (this->has_record(tag) != TA_OK)
+    if (this->has_record(tag) != defines::OK)
       return nullptr;
     return this->records_[tag];
   }
   inline Record *get_record(const char *const tag) noexcept {
-    if (utils::check_ptr(tag) != TA_OK)
+    if (utils::check_ptr(tag) != defines::OK)
       return nullptr;
     return this->get_record(std::string(tag));
   }
@@ -113,8 +114,8 @@ public:
     return this->save(std::filesystem::path(filename));
   }
   inline int32_t save(const char *const filename_ptr) noexcept {
-    if (utils::check_ptr(filename_ptr) != TA_OK)
-      return TA_NULLPTR;
+    if (utils::check_ptr(filename_ptr) != defines::OK)
+      return defines::NULLPTR;
     return this->save(std::string(filename_ptr));
   }
 
@@ -123,7 +124,7 @@ public:
     return this->load(std::filesystem::path(filename));
   }
   inline int32_t load(const char *const filename_ptr) noexcept {
-    if (int32_t status = utils::check_ptr(filename_ptr); status != TA_OK)
+    if (int32_t status = utils::check_ptr(filename_ptr); status != defines::OK)
       return status;
     return this->load(std::string(filename_ptr));
   }

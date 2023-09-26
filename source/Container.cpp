@@ -8,22 +8,22 @@ Container::~Container() noexcept { this->records_.clear(); }
 
 int32_t Container::add_record(const std::string &tag, Record &record) noexcept {
   int32_t status = utils::check_tag(tag);
-  if (status != TA_OK)
+  if (status != defines::OK)
     return status;
   status = this->has_record(tag);
-  if (status == TA_OK) {
-    return TA_CONTAINER_RECORD_EXISTS;
+  if (status == defines::OK) {
+    return defines::CONTAINER_RECORD_EXISTS;
   }
   this->records_.insert({tag, &record});
-  return TA_OK;
+  return defines::OK;
 }
 
 int32_t Container::save(const std::filesystem::path &filename) noexcept {
-  return TA_NOT_IMPLEMENTED;
+  return defines::NOT_IMPLEMENTED;
 }
 
 int32_t Container::load(const std::filesystem::path &filename) noexcept {
-  return TA_NOT_IMPLEMENTED;
+  return defines::NOT_IMPLEMENTED;
 }
 
 void Container::dump(const int32_t level) const noexcept {

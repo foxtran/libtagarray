@@ -41,13 +41,13 @@ void Record::dump(const int32_t level) const noexcept {
     std::cout << "    len  = " << level << std::endl;
     std::cout << "    data = ";
     switch (this->type_id_) {
-    case TA_TYPE_CHAR8:
+    case defines::TYPE_CHAR8:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(char)) && i < (size_t)level; i++) {
         std::cout << (char)(reinterpret_cast<char *>(this->data_))[i] << " ";
       }
       break;
-    case TA_TYPE_INT8:
+    case defines::TYPE_INT8:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(int8_t)) && i < (size_t)level;
            i++) {
@@ -55,7 +55,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_INT16:
+    case defines::TYPE_INT16:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(int16_t)) && i < (size_t)level;
            i++) {
@@ -63,7 +63,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_INT32:
+    case defines::TYPE_INT32:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(int32_t)) && i < (size_t)level;
            i++) {
@@ -71,7 +71,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_INT64:
+    case defines::TYPE_INT64:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(int64_t)) && i < (size_t)level;
            i++) {
@@ -79,7 +79,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_UINT8:
+    case defines::TYPE_UINT8:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(uint8_t)) && i < (size_t)level;
            i++) {
@@ -87,7 +87,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_UINT16:
+    case defines::TYPE_UINT16:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(uint16_t)) && i < (size_t)level;
            i++) {
@@ -95,7 +95,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_UINT32:
+    case defines::TYPE_UINT32:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(uint32_t)) && i < (size_t)level;
            i++) {
@@ -103,7 +103,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_UINT64:
+    case defines::TYPE_UINT64:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(uint64_t)) && i < (size_t)level;
            i++) {
@@ -111,13 +111,13 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_REAL32:
+    case defines::TYPE_REAL32:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(float)) && i < (size_t)level; i++) {
         std::cout << (float)(reinterpret_cast<float *>(this->data_))[i] << " ";
       }
       break;
-    case TA_TYPE_REAL64:
+    case defines::TYPE_REAL64:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(double)) && i < (size_t)level;
            i++) {
@@ -125,7 +125,7 @@ void Record::dump(const int32_t level) const noexcept {
                   << " ";
       }
       break;
-    case TA_TYPE_UNKNOWN:
+    case defines::TYPE_UNKNOWN:
     default:
       for (size_t i = 0;
            i < (this->data_length_ / sizeof(int8_t)) && i < (size_t)level;

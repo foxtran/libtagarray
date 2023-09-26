@@ -1,10 +1,11 @@
 #pragma once
 
-#include "tagarray/defines.h"
-
 #ifdef __cplusplus
+#include "tagarray/defines.hpp"
 #include <cstdint>
+#define TA_DIMENSIONS_LENGTH (defines::DIMENSIONS_LENGTH)
 #else
+#include "tagarray/defines.h"
 #include <stdint.h>
 #include <uchar.h>
 #endif
@@ -24,6 +25,7 @@ typedef struct {
 } RecordInfo;
 
 #ifdef __cplusplus
+#undef TA_DIMENSIONS_LENGTH
 }
 } // namespace tagarray
 #endif

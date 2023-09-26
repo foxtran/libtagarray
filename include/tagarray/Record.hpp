@@ -6,12 +6,12 @@
 #include <string>
 #include <vector>
 
-#include "tagarray/defines.h"
+#include "tagarray/defines.hpp"
 #include "tagarray/info.h"
 
 namespace tagarray {
 
-using Dimensions = std::array<int64_t, TA_DIMENSIONS_LENGTH>;
+using Dimensions = std::array<int64_t, defines::DIMENSIONS_LENGTH>;
 
 class Record {
 private:

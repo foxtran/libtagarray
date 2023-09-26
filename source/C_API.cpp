@@ -1,7 +1,4 @@
-#include "tagarray.h"
-#include "tagarray/Container.hpp"
-#include "tagarray/Record.hpp"
-#include "tagarray/Utils.hpp"
+#include "tagarray.hpp"
 
 using namespace tagarray;
 
@@ -28,15 +25,15 @@ extern "C" void TA_Container_delete(void *const container) noexcept {
   delete static_cast<Container *>(container);
 }
 
-extern "C" void *TA_Record_new(const int32_t type_id,
-                               const int32_t n_dimensions,
-                               const uint8_t *const data,
-                               const int64_t data_length,
-                               const int64_t dimensions[TA_DIMENSIONS_LENGTH],
-                               const char *const comment) noexcept {
+extern "C" void *
+TA_Record_new(const int32_t type_id, const int32_t n_dimensions,
+              const uint8_t *const data, const int64_t data_length,
+              const int64_t dimensions[tagarray::defines::DIMENSIONS_LENGTH],
+              const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Record(
       type_id, n_dimensions, data, data_length,
-      tagarray::utils::to_array<TA_DIMENSIONS_LENGTH>(dimensions),
+      tagarray::utils::to_array<tagarray::defines::DIMENSIONS_LENGTH>(
+          dimensions),
       tagarray::utils::to_string(comment)));
 }
 
