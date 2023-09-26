@@ -113,7 +113,7 @@ if(ENABLE_FORTRAN)
   set_target_properties(${PN}_f PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/include/${PN}"
                                            VERSION ${PROJECT_VERSION}
                                            SOVERSION 1)
-  if(IPO_AVAILABLE)
+  if(IPO_AVAILABLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     set_target_properties(${PN}_f PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
   endif()
   try_compile(assumed_size_polymorphic_objects
