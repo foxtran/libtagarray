@@ -1,20 +1,41 @@
+#
+# add FLAGS to TARGET with VISIBILITY
+#
+# TARGET     name of target
+# VISIBILITY PUBLIC/INTERFACE/PRIVATE
+# LANGUAGE   for which language the set of flags should be checked. Only C, C++, and Fortran are supported now
+# FLAGS      a set of flags. For example, "-Wall;-Wextra" represents two flags `-Wall` and `-Wextra`
 function(target_compile_check_add_flags TARGET VISIBILITY LANGUAGE FLAGS)
   string(TOUPPER "${LANGUAGE}" _LANGUAGE)
   set(_FLAGS ${FLAGS} ${ARGN})
-  include(CheckCCompilerFlag)
-  include(CheckCXXCompilerFlag)
-  include(CheckFortranCompilerFlag)
+
+  # Check and enable flags' checking
+  if(${_LANGUAGE} STREQUAL "C")
+    include(CheckCCompilerFlag)
+  elseif(${_LANGUAGE} STREQUAL "CXX")
+    include(CheckCXXCompilerFlag)
+  elseif(${_LANGUAGE} STREQUAL "FORTRAN")
+    include(CheckFortranCompilerFlag)
+  else()
+    message(FATAL_ERROR "Unsupported LANGUAGE: ${LANGUAGE}!")
+  endif()
+
+  # check all flags
   foreach(FLAG ${_FLAGS})
+    # create a name for flag for a resulting variable from check_{lang}_compiler_flag
+    # otherwise, FLAG_AVAILABLE... will not be reset
     string(REGEX REPLACE "[^A-Za-z0-9_]" "" FLAG_SHORTNAME "${FLAG}")
+
+    # check flag
     if(${_LANGUAGE} STREQUAL "C")
       check_c_compiler_flag("${FLAG}" FLAG_AVAILABLE_${_LANGUAGE}_${FLAG_SHORTNAME})
     elseif(${_LANGUAGE} STREQUAL "CXX")
       check_cxx_compiler_flag("${FLAG}" FLAG_AVAILABLE_${_LANGUAGE}_${FLAG_SHORTNAME})
     elseif(${_LANGUAGE} STREQUAL "FORTRAN")
       check_fortran_compiler_flag("${FLAG}" FLAG_AVAILABLE_${_LANGUAGE}_${FLAG_SHORTNAME})
-    else()
-      message(FATAL_ERROR "Unsupported LANGUAGE: ${LANGUAGE}!")
     endif()
+
+    # attach flag to target if possible
     if(FLAG_AVAILABLE_${_LANGUAGE}_${FLAG_SHORTNAME})
       separate_arguments(FLAG UNIX_COMMAND "${FLAG}")
       target_compile_options(${TARGET} ${VISIBILITY}
@@ -23,5 +44,6 @@ function(target_compile_check_add_flags TARGET VISIBILITY LANGUAGE FLAGS)
     else()
       message(STATUS "Unsupported flag for ${LANGUAGE}: `${FLAG}`")
     endif()
+
   endforeach()
 endfunction()
