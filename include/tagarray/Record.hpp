@@ -84,8 +84,20 @@ public:
 
   inline const Dimensions &get_shape() noexcept { return this->dimensions_; }
 
-  inline void set_shape(const Dimensions &dimensions = {1}) noexcept {
+  inline int32_t set_shape(const std::vector<int64_t> &dimensions) noexcept {
+    if (dimensions.size() > defines::DIMENSIONS_LENGTH) return defines::DATA_TOO_MANY_DIMENSIONS;
+    Dimensions dims{1};
+    for(int32_t i = 0; i < static_cast<int32_t>(dimensions.size()); i++)
+      dims[i] = dimensions[i];
+    return set_shape(dims);
+  }
+
+  inline int32_t set_shape(const Dimensions &dimensions = {1}) noexcept {
+    int64_t new_size = 1;
+    for(const auto &dim : dimensions) new_size *= dim;
+    if (new_size != this->data_size_) return defines::DATA_INSUFFICIENT_SIZE;
     this->dimensions_ = dimensions;
+    return defines::OK;
   }
 
   inline bool is_allocated() const noexcept { return this->data_ != nullptr; }
