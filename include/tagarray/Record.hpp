@@ -53,6 +53,8 @@ public:
 
   inline int64_t get_data_length() const noexcept { return this->data_length_; }
 
+  inline int64_t get_data_size() const noexcept { return this->data_size_; }
+
   inline uint8_t *get_data() const noexcept { return this->data_; }
 
   inline void set_data(const uint8_t *const &data = nullptr,
@@ -79,6 +81,8 @@ public:
       delete[] this->data_;
     this->data_ = nullptr;
   }
+
+  inline const Dimensions &get_shape() noexcept { return this->dimensions_; }
 
   inline void set_shape(const Dimensions &dimensions = {1}) noexcept {
     this->dimensions_ = dimensions;
