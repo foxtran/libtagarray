@@ -82,7 +82,7 @@ public:
     this->data_ = nullptr;
   }
 
-  inline const Dimensions &get_shape() noexcept { return this->dimensions_; }
+  inline const Dimensions &get_shape() const noexcept { return this->dimensions_; }
 
   inline int32_t set_shape(const std::vector<int64_t> &dimensions) noexcept {
     if (dimensions.size() > defines::DIMENSIONS_LENGTH) return defines::DATA_TOO_MANY_DIMENSIONS;
