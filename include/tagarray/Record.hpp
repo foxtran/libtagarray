@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <memory>
 #include <numeric>
 #include <string>
 #include <vector>
@@ -18,7 +19,7 @@ private:
   int64_t count_;          // number of elements
   int64_t n_dimensions_;
   std::vector<int64_t> dimensions_;
-  uint8_t *data_;
+  std::shared_ptr<uint8_t[]> data_;
   std::string description_;
 
 public:
@@ -51,32 +52,33 @@ public:
     return this->count_ * this->itemsize_;
   }
 
-  inline uint8_t *data() const noexcept { return this->data_; }
+  template <typename T> inline auto raw_data() const noexcept {
+    return reinterpret_cast<T>(this->data_.get());
+  }
 
   inline void set_data(const uint8_t *const &data = nullptr,
                        const std::vector<int64_t> &dimensions =
                            std::vector<int64_t>(1, 1)) noexcept {
     this->dimensions_ = dimensions;
-    if (this->data_ != nullptr)
-      delete[] this->data_;
+    this->free_data();
     this->count_ = std::accumulate(dimensions.begin(), dimensions.end(), 1,
                                    std::multiplies<int64_t>());
-    this->data_ =
-        new (std::align_val_t(64), std::nothrow) uint8_t[this->byte_count()];
-    if (this->data_ == nullptr) {
+    std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
+                                       uint8_t[this->byte_count()],
+                                   std::default_delete<uint8_t[]>());
+    this->data_ = tmp;
+    if (this->data_.get() == nullptr) {
       return;
     }
     if (data == nullptr) {
-      std::fill(this->data_, this->data_ + this->byte_count(), 0);
+      std::fill(this->data_.get(), this->data_.get() + this->byte_count(), 0);
     } else {
-      std::copy(data, data + this->byte_count(), this->data_);
+      std::copy(data, data + this->byte_count(), this->data_.get());
     }
   }
 
   inline void free_data() noexcept {
-    if (this->data_ != nullptr)
-      delete[] this->data_;
-    this->data_ = nullptr;
+    this->data_.reset();
   }
 
   inline const std::vector<int64_t> &shape() const noexcept {
@@ -96,9 +98,12 @@ public:
   inline bool is_allocated() const noexcept { return this->data_ != nullptr; }
 
   inline RecordInfo info() const noexcept {
-    RecordInfo recordInfo = {
-        this->type_id_, this->itemsize_, this->count_, this->n_dimensions_, {1},
-        this->data_};
+    RecordInfo recordInfo = {this->type_id_,
+                             this->itemsize_,
+                             this->count_,
+                             this->n_dimensions_,
+                             {1},
+                             this->data_.get()};
     std::copy(std::begin(this->dimensions_), std::end(this->dimensions_),
               std::begin(recordInfo.dimensions));
     return recordInfo;

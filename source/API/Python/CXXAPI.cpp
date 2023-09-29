@@ -102,7 +102,7 @@ std::optional<py::object> get_numpy_array(const Record &rec) {
     using T = std::variant_alternative_t<I, V>;
     if (std::type_index(typeid(T)) == py_utils::get_type(rec.type_id())) {
       return py::cast(new py::array_t<T, py::array::f_style>(
-          rec.shape(), reinterpret_cast<T *>(rec.data())));
+          rec.shape(), rec.raw_data<T *>()));
     }
 
     return get_numpy_array<V, I + 1>(rec);

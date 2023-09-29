@@ -12,20 +12,27 @@ Record::Record(const int32_t type_id, const int32_t n_dimensions,
     : type_id_(type_id), itemsize_(utils::get_storage_size(type_id)),
       count_(count), n_dimensions_(n_dimensions), dimensions_(dimensions),
       description_(description) {
-  this->data_ = new (std::align_val_t(64), std::nothrow) uint8_t[byte_count()];
-  if (this->data_ == nullptr) {
+  std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
+                                     uint8_t[this->byte_count()],
+                                 std::default_delete<uint8_t[]>());
+  this->data_ = tmp;
+  if (this->data_.get() == nullptr) {
     return;
   }
   if (data == nullptr) {
-    std::fill(this->data_, this->data_ + this->byte_count(), 0);
+    std::fill(this->data_.get(), this->data_.get() + this->byte_count(), 0);
   } else {
-    std::copy(data, data + this->byte_count(), this->data_);
+    std::copy(data, data + this->byte_count(), this->data_.get());
   }
 }
 
-Record::~Record() noexcept {
-  if (this->data_ != nullptr)
-    delete[] this->data_;
+Record::~Record() noexcept { this->free_data(); }
+
+template <typename T> void dump_helper(const Record &rec, const int32_t level) {
+  for (size_t i = 0; i < static_cast<size_t>(rec.count()) && i < (size_t)level;
+       i++) {
+    std::cout << (T)rec.raw_data<T *>()[i] << " ";
+  }
 }
 
 void Record::dump(const int32_t level) const noexcept {
@@ -43,87 +50,42 @@ void Record::dump(const int32_t level) const noexcept {
     std::cout << "    data = ";
     switch (this->type_id_) {
     case defines::TYPE_CHAR8:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (char)(reinterpret_cast<char *>(this->data_))[i] << " ";
-      }
+      dump_helper<char>(*this, level);
       break;
     case defines::TYPE_INT8:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (int8_t)(reinterpret_cast<int8_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<int8_t>(*this, level);
       break;
     case defines::TYPE_INT16:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (int16_t)(reinterpret_cast<int16_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<int16_t>(*this, level);
       break;
     case defines::TYPE_INT32:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (int32_t)(reinterpret_cast<int32_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<int32_t>(*this, level);
       break;
     case defines::TYPE_INT64:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (int64_t)(reinterpret_cast<int64_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<int64_t>(*this, level);
       break;
     case defines::TYPE_UINT8:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (uint8_t)(reinterpret_cast<uint8_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<uint8_t>(*this, level);
       break;
     case defines::TYPE_UINT16:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (uint16_t)(reinterpret_cast<uint16_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<uint16_t>(*this, level);
       break;
     case defines::TYPE_UINT32:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (uint32_t)(reinterpret_cast<uint32_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<uint32_t>(*this, level);
       break;
     case defines::TYPE_UINT64:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (uint64_t)(reinterpret_cast<uint64_t *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<uint64_t>(*this, level);
       break;
     case defines::TYPE_REAL32:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (float)(reinterpret_cast<float *>(this->data_))[i] << " ";
-      }
+      dump_helper<float>(*this, level);
       break;
     case defines::TYPE_REAL64:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << (double)(reinterpret_cast<double *>(this->data_))[i]
-                  << " ";
-      }
+      dump_helper<double>(*this, level);
       break;
     case defines::TYPE_UNKNOWN:
     default:
-      for (size_t i = 0;
-           i < static_cast<size_t>(this->count_) && i < (size_t)level; i++) {
-        std::cout << std::hex
-                  << (int)reinterpret_cast<uint8_t *>(this->data_)[i] << " ";
-      }
+      std::cout << std::hex;
+      dump_helper<int8_t>(*this, level);
       std::cout << std::dec;
       break;
     }
