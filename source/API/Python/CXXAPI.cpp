@@ -6,6 +6,7 @@
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 using namespace tagarray;
 namespace py = pybind11;
@@ -135,4 +136,81 @@ PYBIND11_MODULE(tagarray, m) {
   m.attr("__version_major__") = defines::VERSION_MAJOR;
   m.attr("__version_minor__") = defines::VERSION_MINOR;
   m.attr("__version_patch__") = defines::VERSION_PATCH;
+
+  py::class_<Record>(m, "Record", py::buffer_protocol())
+      .def(py::init([](py::buffer b, const std::string &description) {
+             py::buffer_info info = b.request();
+             if (info.ndim > defines::DIMENSIONS_LENGTH)
+               throw std::runtime_error("Too many dimensions");
+             int32_t type = py_utils::get_type_from_pyformat(info.format);
+             int64_t data_length = info.itemsize * info.size;
+             Dimensions dims{1};
+             for (auto i = 0; i < info.ndim; i++) {
+               dims[i] = static_cast<int64_t>(info.shape[i]);
+             }
+             return new Record(type, static_cast<int32_t>(info.ndim),
+                               static_cast<uint8_t *>(info.ptr), data_length,
+                               dims, description);
+           }),
+           py::arg("buf"), py::arg("description") = std::string(""))
+      .def_property(
+          "description", &Record::get_comment,
+          py::overload_cast<const std::string &>(&Record::update_comment))
+      .def_property_readonly("typeid", &Record::get_type_id)
+      .def_property_readonly("ndim", &Record::get_n_dimensions)
+      .def_property_readonly("size", &Record::get_data_size)
+      .def_property_readonly(
+          "itemsize",
+          [](const Record &rec) { return utils::get_storage_size(rec.get_type_id()); })
+      .def_property(
+          "shape",
+          [](const Record &rec) {
+            Dimensions dims_arr = rec.get_shape();
+            std::vector<int64_t> dims(rec.get_n_dimensions(), 0);
+            for (decltype(dims.size()) i = 0; i < dims.size(); i++) {
+              dims[i] = dims_arr[i];
+            }
+            return dims;
+          },
+          [](Record &rec, const std::vector<int64_t> &dims) {
+            int32_t status = rec.set_shape(dims);
+            switch (status) {
+            case defines::OK:
+              break;
+            case defines::DATA_TOO_MANY_DIMENSIONS:
+              throw std::runtime_error("Too many dimensions");
+              break;
+            case defines::DATA_INSUFFICIENT_SIZE:
+              throw std::runtime_error("New size is not the same as previous");
+              break;
+            default:
+              throw std::runtime_error("Unknown error");
+              break;
+            }
+          })
+      .def_property_readonly("allocated", &Record::is_allocated)
+      .def_property(
+          "data",
+          [](Record &rec) {
+            auto numpy_array =
+                py_utils::get_numpy_array<py_utils::supported_types>(rec);
+            if (numpy_array)
+              return *numpy_array;
+            throw std::runtime_error("Type is not supported");
+          },
+          [](Record &rec, py::buffer b) {
+            py::buffer_info info = b.request();
+            if (std::string(info.format) !=
+                py_utils::type_format(rec.get_type_id()))
+              throw std::runtime_error("Types are different");
+            if (info.ndim > defines::DIMENSIONS_LENGTH)
+              throw std::runtime_error("Too many dimensions");
+            int64_t data_length = info.itemsize * info.size;
+            Dimensions dims{1};
+            for (auto i = 0; i < info.ndim; i++) {
+              dims[i] = static_cast<int64_t>(info.shape[i]);
+            }
+            rec.set_data(static_cast<uint8_t *>(info.ptr), data_length, dims);
+          })
+      .def("free_data", &Record::free_data);
 }
