@@ -145,31 +145,33 @@ PYBIND11_MODULE(tagarray, m) {
                                static_cast<uint8_t *>(info.ptr), info.size,
                                dims, description);
            }),
-           py::arg("buf"), py::arg("description") = std::string(""))
+           py::arg("buf"), py::arg("description") = std::string(""),
+           py::return_value_policy::take_ownership)
       .def_property("description", &Record::description,
-                    &Record::set_description)
+                    &Record::set_description, py::return_value_policy::copy)
       .def_property_readonly("typeid", &Record::type_id)
       .def_property_readonly("ndim", &Record::ndim)
       .def_property_readonly("size", &Record::count)
       .def_property_readonly("itemsize", &Record::itemsize)
-      .def_property("shape", &Record::shape,
-                    [](Record &rec, const std::vector<int64_t> &dims) {
-                      int32_t status = rec.set_shape(dims);
-                      switch (status) {
-                      case defines::OK:
-                        break;
-                      case defines::DATA_TOO_MANY_DIMENSIONS:
-                        throw std::runtime_error("Too many dimensions");
-                        break;
-                      case defines::DATA_INSUFFICIENT_SIZE:
-                        throw std::runtime_error(
-                            "New size is not the same as previous");
-                        break;
-                      default:
-                        throw std::runtime_error("Unknown error");
-                        break;
-                      }
-                    })
+      .def_property(
+          "shape", &Record::shape,
+          [](Record &rec, const std::vector<int64_t> &dims) {
+            int32_t status = rec.set_shape(dims);
+            switch (status) {
+            case defines::OK:
+              break;
+            case defines::DATA_TOO_MANY_DIMENSIONS:
+              throw std::runtime_error("Too many dimensions");
+              break;
+            case defines::DATA_INSUFFICIENT_SIZE:
+              throw std::runtime_error("New size is not the same as previous");
+              break;
+            default:
+              throw std::runtime_error("Unknown error");
+              break;
+            }
+          },
+          py::return_value_policy::copy)
       .def_property_readonly("allocated", &Record::is_allocated)
       .def_property(
           "data",
@@ -191,6 +193,7 @@ PYBIND11_MODULE(tagarray, m) {
             for (const auto &val : info.shape)
               dims.push_back(static_cast<int64_t>(val));
             rec.set_data(static_cast<uint8_t *>(info.ptr), dims);
-          })
+          },
+          py::return_value_policy::reference)
       .def("free_data", &Record::free_data);
 }
