@@ -74,7 +74,7 @@ extern "C" int32_t TA_Container_remove_record(void *const container,
 
 extern "C" RecordInfo
 TA_Record_get_record_info(const void *const record) noexcept {
-  return static_cast<const Record *>(record)->get_info();
+  return static_cast<const Record *>(record)->info();
 }
 
 extern "C" const char *TA_get_status_message(const int32_t status,

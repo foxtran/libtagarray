@@ -100,9 +100,9 @@ template <typename V, std::size_t I = 0>
 std::optional<py::object> get_numpy_array(const Record &rec) {
   if constexpr (I < std::variant_size_v<V>) {
     using T = std::variant_alternative_t<I, V>;
-    if (std::type_index(typeid(T)) == py_utils::get_type(rec.get_type_id())) {
+    if (std::type_index(typeid(T)) == py_utils::get_type(rec.type_id())) {
       return py::cast(new py::array_t<T, py::array::f_style>(
-          rec.get_shape(), reinterpret_cast<T *>(rec.get_data())));
+          rec.shape(), reinterpret_cast<T *>(rec.data())));
     }
 
     return get_numpy_array<V, I + 1>(rec);
@@ -150,14 +150,13 @@ PYBIND11_MODULE(tagarray, m) {
                                dims, description);
            }),
            py::arg("buf"), py::arg("description") = std::string(""))
-      .def_property(
-          "description", &Record::get_comment,
-          py::overload_cast<const std::string &>(&Record::update_comment))
-      .def_property_readonly("typeid", &Record::get_type_id)
-      .def_property_readonly("ndim", &Record::get_n_dimensions)
-      .def_property_readonly("size", &Record::get_count)
-      .def_property_readonly("itemsize", &Record::get_itemsize)
-      .def_property("shape", &Record::get_shape,
+      .def_property("description", &Record::description,
+                    &Record::set_description)
+      .def_property_readonly("typeid", &Record::type_id)
+      .def_property_readonly("ndim", &Record::ndim)
+      .def_property_readonly("size", &Record::count)
+      .def_property_readonly("itemsize", &Record::itemsize)
+      .def_property("shape", &Record::shape,
                     [](Record &rec, const std::vector<int64_t> &dims) {
                       int32_t status = rec.set_shape(dims);
                       switch (status) {
@@ -188,7 +187,7 @@ PYBIND11_MODULE(tagarray, m) {
           [](Record &rec, py::buffer b) {
             py::buffer_info info = b.request();
             if (std::string(info.format) !=
-                py_utils::type_format(rec.get_type_id()))
+                py_utils::type_format(rec.type_id()))
               throw std::runtime_error("Types are different");
             if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
               throw std::runtime_error("Too many dimensions");

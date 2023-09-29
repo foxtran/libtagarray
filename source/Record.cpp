@@ -8,19 +8,18 @@ namespace tagarray {
 Record::Record(const int32_t type_id, const int32_t n_dimensions,
                const uint8_t *const &data, const int64_t count,
                const std::vector<int64_t> &dimensions,
-               const std::string &comment) noexcept
+               const std::string &description) noexcept
     : type_id_(type_id), itemsize_(utils::get_storage_size(type_id)),
       count_(count), n_dimensions_(n_dimensions), dimensions_(dimensions),
-      comment_(comment) {
-  this->data_ = new (std::align_val_t(64), std::nothrow)
-      uint8_t[this->itemsize_ * this->count_];
+      description_(description) {
+  this->data_ = new (std::align_val_t(64), std::nothrow) uint8_t[byte_count()];
   if (this->data_ == nullptr) {
     return;
   }
   if (data == nullptr) {
-    std::fill(this->data_, this->data_ + this->itemsize_ * this->count_, 0);
+    std::fill(this->data_, this->data_ + this->byte_count(), 0);
   } else {
-    std::copy(data, data + this->itemsize_ * this->count_, this->data_);
+    std::copy(data, data + this->byte_count(), this->data_);
   }
 }
 
@@ -34,7 +33,7 @@ void Record::dump(const int32_t level) const noexcept {
   std::cout << "    Dimensions: " << this->n_dimensions_ << std::endl;
   std::cout << "    Data length: " << this->itemsize_ * this->count_
             << std::endl;
-  std::cout << "    Comment len = " << this->comment_.length();
+  std::cout << "    Comment len = " << this->description_.length();
   std::cout << std::endl << "    dims = ";
   for (const auto &d : this->dimensions_)
     std::cout << d << " ";
