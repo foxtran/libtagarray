@@ -8,14 +8,14 @@ module tagarray_recordinfo
     integer(c_int32_t) :: n_dimensions
     type(c_ptr)        :: data
     integer(c_int64_t) :: data_length
-    integer(c_int64_t) :: dimensions(TA_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: dimensions(TA_MAX_DIMENSIONS_LENGTH)
   end type C_RecordInfo_t
   type :: RecordInfo_t
     integer(c_int32_t) :: type_id
     integer(c_int32_t) :: n_dimensions
     type(c_ptr)        :: data
     integer(c_int64_t) :: data_length
-    integer(c_int64_t) :: dimensions(TA_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: dimensions(TA_MAX_DIMENSIONS_LENGTH)
   contains
     procedure, private :: recordinfo_assign
     procedure, public  :: get_status
@@ -37,7 +37,7 @@ contains
     integer(c_int32_t), intent(in) :: ext_type_id, ext_ndim
     integer(c_int32_t), parameter :: WRONG_TYPE_ID     =   1
     integer(c_int32_t), parameter :: WRONG_DIMENSIONS  =  10
-    if (ext_ndim > TA_DIMENSIONS_LENGTH) then
+    if (ext_ndim > TA_MAX_DIMENSIONS_LENGTH) then
       status = TA_DATA_TOO_MANY_DIMENSIONS
       return
     end if

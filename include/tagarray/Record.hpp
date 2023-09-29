@@ -11,7 +11,7 @@
 
 namespace tagarray {
 
-using Dimensions = std::array<int64_t, defines::DIMENSIONS_LENGTH>;
+using Dimensions = std::array<int64_t, defines::MAX_DIMENSIONS_LENGTH>;
 
 class Record {
 private:
@@ -85,7 +85,7 @@ public:
   inline const Dimensions &get_shape() const noexcept { return this->dimensions_; }
 
   inline int32_t set_shape(const std::vector<int64_t> &dimensions) noexcept {
-    if (dimensions.size() > defines::DIMENSIONS_LENGTH) return defines::DATA_TOO_MANY_DIMENSIONS;
+    if (dimensions.size() > defines::MAX_DIMENSIONS_LENGTH) return defines::DATA_TOO_MANY_DIMENSIONS;
     Dimensions dims{1};
     for(int32_t i = 0; i < static_cast<int32_t>(dimensions.size()); i++)
       dims[i] = dimensions[i];

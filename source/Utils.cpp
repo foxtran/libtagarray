@@ -54,7 +54,7 @@ std::string get_status_message(const int32_t status,
   case defines::DATA_TOO_MANY_DIMENSIONS:
     message += "Too many dimensions were requested.\n"
                "  Maximum allowed number of dimensions is " +
-               std::to_string(defines::DIMENSIONS_LENGTH) + ".";
+               std::to_string(defines::MAX_DIMENSIONS_LENGTH) + ".";
     break;
   case defines::DATA_INCORRECT_TYPE:
     if (!tag.empty()) {

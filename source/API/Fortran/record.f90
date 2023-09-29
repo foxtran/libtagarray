@@ -27,7 +27,7 @@ contains
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     !
-    integer(c_int64_t) :: data_length, dimensions_(TA_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: data_length, dimensions_(TA_MAX_DIMENSIONS_LENGTH)
     integer(c_int32_t) :: n_dimensions
     character(kind=TA_CHAR, len=:), allocatable :: Ccomment
     if (present(array_shape)) then

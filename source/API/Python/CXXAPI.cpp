@@ -140,7 +140,7 @@ PYBIND11_MODULE(tagarray, m) {
   py::class_<Record>(m, "Record", py::buffer_protocol())
       .def(py::init([](py::buffer b, const std::string &description) {
              py::buffer_info info = b.request();
-             if (info.ndim > defines::DIMENSIONS_LENGTH)
+             if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
                throw std::runtime_error("Too many dimensions");
              int32_t type = py_utils::get_type_from_pyformat(info.format);
              int64_t data_length = info.itemsize * info.size;
@@ -203,7 +203,7 @@ PYBIND11_MODULE(tagarray, m) {
             if (std::string(info.format) !=
                 py_utils::type_format(rec.get_type_id()))
               throw std::runtime_error("Types are different");
-            if (info.ndim > defines::DIMENSIONS_LENGTH)
+            if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
               throw std::runtime_error("Too many dimensions");
             int64_t data_length = info.itemsize * info.size;
             Dimensions dims{1};
