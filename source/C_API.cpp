@@ -25,15 +25,15 @@ extern "C" void TA_Container_delete(void *const container) noexcept {
   delete static_cast<Container *>(container);
 }
 
-extern "C" void *
-TA_Record_new(const int32_t type_id, const int32_t n_dimensions,
-              const uint8_t *const data, const int64_t data_length,
-              const int64_t dimensions[tagarray::defines::MAX_DIMENSIONS_LENGTH],
-              const char *const comment) noexcept {
+extern "C" void *TA_Record_new(
+    const int32_t type_id, const int32_t n_dimensions,
+    const uint8_t *const data, const int64_t data_length,
+    const int64_t dimensions[tagarray::defines::MAX_DIMENSIONS_LENGTH],
+    const char *const comment) noexcept {
   return static_cast<void *>(new (std::nothrow) Record(
       type_id, n_dimensions, data, data_length,
-      tagarray::utils::to_array<tagarray::defines::MAX_DIMENSIONS_LENGTH>(
-          dimensions),
+      std::vector<int64_t>(
+          dimensions, dimensions + tagarray::defines::MAX_DIMENSIONS_LENGTH),
       tagarray::utils::to_string(comment)));
 }
 
