@@ -92,10 +92,6 @@ const std::string &type_format(const int32_t type_id) {
   throw std::runtime_error("Type not found");
 }
 
-template <typename T, typename O> struct static_cast_TO {
-  T operator()(O o) const { return static_cast<T>(o); }
-};
-
 template <typename V, std::size_t I = 0>
 std::optional<py::object> get_numpy_array(const Record &rec) {
   if constexpr (I < std::variant_size_v<V>) {
@@ -143,8 +139,8 @@ PYBIND11_MODULE(tagarray, m) {
                throw std::runtime_error("Too many dimensions");
              int32_t type = py_utils::get_type_from_pyformat(info.format);
              std::vector<int64_t> dims;
-             transform(info.shape.begin(), info.shape.end(), dims.begin(),
-                       py_utils::static_cast_TO<int64_t, ssize_t>());
+             for (const auto &val : info.shape)
+               dims.push_back(static_cast<int64_t>(val));
              return new Record(type, static_cast<int32_t>(info.ndim),
                                static_cast<uint8_t *>(info.ptr), info.size,
                                dims, description);
@@ -192,8 +188,8 @@ PYBIND11_MODULE(tagarray, m) {
             if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
               throw std::runtime_error("Too many dimensions");
             std::vector<int64_t> dims;
-            transform(info.shape.begin(), info.shape.end(), dims.begin(),
-                      py_utils::static_cast_TO<int64_t, ssize_t>());
+            for (const auto &val : info.shape)
+              dims.push_back(static_cast<int64_t>(val));
             rec.set_data(static_cast<uint8_t *>(info.ptr), dims);
           })
       .def("free_data", &Record::free_data);
