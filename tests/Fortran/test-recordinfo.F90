@@ -25,8 +25,9 @@ contains
     status = -1
     ! assume 3-dimensional int32 array with dims [3, 2, 4], data is not provided
     recinfo%type_id = TA_TYPE_INT32
+    recinfo%itemsize = 4
+    recinfo%count = 3*2*4
     recinfo%n_dimensions = 3
-    recinfo%data_length = 1 ! invalid
     recinfo%data = c_null_ptr
     recinfo%dimensions = (/ 3, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1 /)
     ! check with hand-written type discovering

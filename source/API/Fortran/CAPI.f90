@@ -20,14 +20,14 @@ module tagarray_CAPI
       implicit none
       type(c_ptr),        value, intent(in) :: container
     end subroutine TA_Container_delete
-    type(C_ptr) function TA_Record_new(type_id, n_dimensions, data, data_length, dimensions, Ccomment) &
-                                                                                                bind(C, name="TA_Record_new")
+    type(C_ptr) function TA_Record_new(type_id, n_dimensions, data, count, dimensions, Ccomment) &
+                                                                                        bind(C, name="TA_Record_new")
       import
       implicit none
       integer(c_int32_t), value,     intent(in) :: type_id
       integer(c_int32_t), value,     intent(in) :: n_dimensions
       type(c_ptr),        value,     intent(in) :: data
-      integer(c_int64_t), value,     intent(in) :: data_length
+      integer(c_int64_t), value,     intent(in) :: count
       integer(c_int64_t),            intent(in) :: dimensions(TA_MAX_DIMENSIONS_LENGTH)
       character(kind=TA_CHAR), intent(in) :: Ccomment(*)
     end function TA_Record_new

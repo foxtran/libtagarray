@@ -4,28 +4,28 @@
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    STATUS = CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t); \
+    STATUS = CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), 1_c_int64_t); \
   end block
 
 #define TA_CONTAINER_ADD_VALUE_OPTIONAL(STATUS, CONTAINER, TAG, VALUE, __VA_ARGS__) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    STATUS = CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
+    STATUS = CONTAINER%add_record_data(TAG, get_type_id(VALUE), c_loc(VALUE), 1_c_int64_t, __VA_ARGS__); \
   end block
 
 #define TA_CONTAINER_ADD_DATA(STATUS, CONTAINER, TAG, DATA) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    STATUS = CONTAINER%add_record_data(TAG, get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+    STATUS = CONTAINER%add_record_data(TAG, get_type_id(DATA), c_loc(DATA), size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
   end block
 
 #define TA_CONTAINER_ADD_DATA_OPTIONAL(STATUS, CONTAINER, TAG, DATA, __VA_ARGS__) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    STATUS = CONTAINER%add_record_data(TAG, get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+    STATUS = CONTAINER%add_record_data(TAG, get_type_id(DATA), c_loc(DATA), size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
   end block
 
 #define TA_CONTAINER_GET_VALUE(CONTAINER, TAG, VALUE, STATUS) \
@@ -62,28 +62,28 @@
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t); \
+    call RECORD%new(get_type_id(VALUE), c_loc(VALUE), 1_c_int64_t); \
   end block
 
 #define TA_RECORD_NEW_VALUE_OPTIONAL(RECORD, VALUE, __VA_ARGS__) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(get_type_id(VALUE), c_loc(VALUE), storage_size(VALUE, kind=c_int64_t) / TA_BITS_IN_BYTE, 1_c_int64_t, __VA_ARGS__); \
+    call RECORD%new(get_type_id(VALUE), c_loc(VALUE), 1_c_int64_t, __VA_ARGS__); \
   end block
 
 #define TA_RECORD_NEW_DATA(RECORD, DATA) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
+    call RECORD%new(get_type_id(DATA), c_loc(DATA), size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t)); \
   end block
 
 #define TA_RECORD_NEW_DATA_OPTIONAL(RECORD, DATA, __VA_ARGS__) \
   block; \
     use tagarray, only: get_type_id, TA_BITS_IN_BYTE; \
     use, intrinsic :: iso_c_binding, only: c_loc, c_int64_t; \
-    call RECORD%new(get_type_id(DATA), c_loc(DATA), storage_size(DATA, kind=c_int64_t) / TA_BITS_IN_BYTE, size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
+    call RECORD%new(get_type_id(DATA), c_loc(DATA), size(DATA, kind=c_int64_t), shape(DATA, kind=c_int64_t), __VA_ARGS__); \
   end block
 
 #define TA_RECORD_GET_VALUE(RECORD, VALUE, STATUS) \

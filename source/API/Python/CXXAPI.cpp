@@ -143,13 +143,12 @@ PYBIND11_MODULE(tagarray, m) {
              if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
                throw std::runtime_error("Too many dimensions");
              int32_t type = py_utils::get_type_from_pyformat(info.format);
-             int64_t data_length = info.itemsize * info.size;
              Dimensions dims{1};
              for (auto i = 0; i < info.ndim; i++) {
                dims[i] = static_cast<int64_t>(info.shape[i]);
              }
              return new Record(type, static_cast<int32_t>(info.ndim),
-                               static_cast<uint8_t *>(info.ptr), data_length,
+                               static_cast<uint8_t *>(info.ptr), info.size,
                                dims, description);
            }),
            py::arg("buf"), py::arg("description") = std::string(""))
@@ -158,10 +157,9 @@ PYBIND11_MODULE(tagarray, m) {
           py::overload_cast<const std::string &>(&Record::update_comment))
       .def_property_readonly("typeid", &Record::get_type_id)
       .def_property_readonly("ndim", &Record::get_n_dimensions)
-      .def_property_readonly("size", &Record::get_data_size)
+      .def_property_readonly("size", &Record::get_count)
       .def_property_readonly(
-          "itemsize",
-          [](const Record &rec) { return utils::get_storage_size(rec.get_type_id()); })
+          "itemsize", &Record::get_itemsize)
       .def_property(
           "shape",
           [](const Record &rec) {

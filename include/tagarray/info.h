@@ -18,10 +18,11 @@ extern "C" {
 
 typedef struct {
   int32_t type_id;
-  int32_t n_dimensions;
-  void *data;
-  int64_t data_length;
+  int32_t itemsize;
+  int64_t count;
+  int64_t n_dimensions;
   int64_t dimensions[TA_MAX_DIMENSIONS_LENGTH];
+  void *data;
 } RecordInfo;
 
 #ifdef __cplusplus

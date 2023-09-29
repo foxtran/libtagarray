@@ -18,27 +18,26 @@ module tagarray_record
     procedure, public :: delete => record_t_delete
   end type
 contains
-  subroutine record_t_new(this, type_id, data_ptr, data_el_size, array_size, array_shape, comment)
+  subroutine record_t_new(this, type_id, data_ptr, array_size, array_shape, comment)
     class(record_t), intent(inout) :: this
     integer(c_int32_t),                             intent(in) :: type_id
     type(c_ptr),                                    intent(in) :: data_ptr
-    integer(c_int64_t),                             intent(in) :: data_el_size
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
     !
-    integer(c_int64_t) :: data_length, dimensions_(TA_MAX_DIMENSIONS_LENGTH)
+    integer(c_int64_t) :: dimensions_(TA_MAX_DIMENSIONS_LENGTH)
     integer(c_int32_t) :: n_dimensions
     character(kind=TA_CHAR, len=:), allocatable :: Ccomment
     if (present(array_shape)) then
       n_dimensions = size(array_shape)
-      data_length = product(array_shape)
-!      if (data_length /= array_size)
+      if (product(array_shape) /= array_size) then
+        this%record_ptr = c_null_ptr
+        return
+      end if
     else
       n_dimensions = 1
-      data_length = array_size
     end if
-    data_length = data_length * data_el_size
     dimensions_ = TA_DIMENSIONS_ZERO
     if (n_dimensions > 1) then
       dimensions_(1:n_dimensions) = array_shape
@@ -50,7 +49,7 @@ contains
     else
       Ccomment = to_Cstring(TA_CHAR_"")
     end if
-    this%record_ptr = TA_Record_new(type_id, n_dimensions, data_ptr, data_length, dimensions_, Ccomment)
+    this%record_ptr = TA_Record_new(type_id, n_dimensions, data_ptr, array_size, dimensions_, Ccomment)
   end subroutine record_t_new
   subroutine record_t_reserve(this, datatype, array_size, array_shape, comment)
     class(record_t), intent(inout) :: this
@@ -58,7 +57,7 @@ contains
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
-    call this%new(datatype, c_null_ptr, get_storage_size(datatype), array_size, array_shape, comment)
+    call this%new(datatype, c_null_ptr, array_size, array_shape, comment)
   end subroutine record_t_reserve
   logical(c_bool) function is_associated(this)
     use, intrinsic :: iso_c_binding, only: c_associated

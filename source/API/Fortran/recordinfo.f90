@@ -5,17 +5,19 @@ module tagarray_recordinfo
   private
   type, bind(C) :: C_RecordInfo_t
     integer(c_int32_t) :: type_id
-    integer(c_int32_t) :: n_dimensions
-    type(c_ptr)        :: data
-    integer(c_int64_t) :: data_length
+    integer(c_int32_t) :: itemsize
+    integer(c_int64_t) :: count
+    integer(c_int64_t) :: n_dimensions
     integer(c_int64_t) :: dimensions(TA_MAX_DIMENSIONS_LENGTH)
+    type(c_ptr)        :: data
   end type C_RecordInfo_t
   type :: RecordInfo_t
     integer(c_int32_t) :: type_id
-    integer(c_int32_t) :: n_dimensions
-    type(c_ptr)        :: data
-    integer(c_int64_t) :: data_length
+    integer(c_int32_t) :: itemsize
+    integer(c_int64_t) :: count
+    integer(c_int64_t) :: n_dimensions
     integer(c_int64_t) :: dimensions(TA_MAX_DIMENSIONS_LENGTH)
+    type(c_ptr)        :: data
   contains
     procedure, private :: recordinfo_assign
     procedure, public  :: get_status
@@ -27,10 +29,11 @@ contains
     class(RecordInfo_t),   intent(out) :: this
     type(C_RecordInfo_t), intent(in)  :: recordinfo
     this%type_id = recordinfo%type_id
+    this%itemsize = recordinfo%itemsize
+    this%count = recordinfo%count
     this%n_dimensions = recordinfo%n_dimensions
-    this%data = recordinfo%data
-    this%data_length = recordinfo%data_length
     this%dimensions = recordinfo%dimensions
+    this%data = recordinfo%data
   end subroutine recordinfo_assign
   integer(c_int32_t) function get_status(this, ext_type_id, ext_ndim) result(status)
     class(RecordInfo_t), intent(in) :: this

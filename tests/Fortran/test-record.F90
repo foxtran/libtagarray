@@ -24,100 +24,112 @@ contains
       end do
     end do
     status = -1
-    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), get_storage_size(TA_TYPE_INT32), size(iarr_1D, kind=c_int64_t), shape(iarr_1D, kind=c_int64_t), comment="test 1D intrinsic")
+    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), size(iarr_1D, kind=c_int64_t), shape(iarr_1D, kind=c_int64_t), comment="test 1D intrinsic")
     recordinfo = record%get_info()
     if (recordinfo%type_id /= TA_TYPE_INT32) then
       status = 101
       return
     end if
-    if (recordinfo%n_dimensions /= 1) then
+    if (recordinfo%itemsize /= c_sizeof(iarr_1D(1))) then
       status = 102
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_1D(1)) * size(iarr_1D)) then
+    if (recordinfo%n_dimensions /= 1) then
       status = 103
       return
     end if
-    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
+    if (recordinfo%count /= size(iarr_1D)) then
       status = 104
       return
     end if
-    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
       status = 105
+      return
+    end if
+    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+      status = 106
     end if
     if (.not.c_associated(recordinfo%data)) then
-      status = 106
+      status = 107
       return
     end if
     call c_f_pointer(recordinfo%data, iarr_1D_test, shape=(/ recordinfo%dimensions(1) /))
     if (any(iarr_1D /= iarr_1D_test)) then
-      status = 107
+      status = 108
       return
     end if
     call record%delete()
-    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), get_storage_size(TA_TYPE_INT32), 10_c_int64_t, (/ 10_c_int64_t /), comment="test 1D manual")
+    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), 10_c_int64_t, (/ 10_c_int64_t /), comment="test 1D manual")
     recordinfo = record%get_info()
     if (recordinfo%type_id /= TA_TYPE_INT32) then
       status = 201
       return
     end if
-    if (recordinfo%n_dimensions /= 1) then
+    if (recordinfo%itemsize /= c_sizeof(iarr_1D(1))) then
       status = 202
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_1D(1)) * size(iarr_1D)) then
+    if (recordinfo%n_dimensions /= 1) then
       status = 203
       return
     end if
-    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
+    if (recordinfo%count /= size(iarr_1D)) then
       status = 204
       return
     end if
-    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
       status = 205
+      return
+    end if
+    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+      status = 206
     end if
     if (.not.c_associated(recordinfo%data)) then
-      status = 206
+      status = 207
       return
     end if
     call c_f_pointer(recordinfo%data, iarr_1D_test, shape=(/ recordinfo%dimensions(1) /))
     if (any(iarr_1D /= iarr_1D_test)) then
-      status = 207
+      status = 208
       return
     end if
     call record%delete()
-    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), get_storage_size(TA_TYPE_INT32), 10_c_int64_t, comment="test 1D size")
+    call record%new(TA_TYPE_INT32, c_loc(iarr_1D), 10_c_int64_t, comment="test 1D size")
     recordinfo = record%get_info()
     if (recordinfo%type_id /= TA_TYPE_INT32) then
       status = 301
       return
     end if
-    if (recordinfo%n_dimensions /= 1) then
+    if (recordinfo%itemsize /= c_sizeof(iarr_1D(1))) then
       status = 302
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_1D(1)) * size(iarr_1D)) then
+    if (recordinfo%n_dimensions /= 1) then
       status = 303
       return
     end if
-    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
+    if (recordinfo%count /= size(iarr_1D)) then
       status = 304
       return
     end if
-    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+    if (recordinfo%dimensions(1) /= 10_c_int64_t) then
       status = 305
+      return
+    end if
+    if (product(recordinfo%dimensions) /= 10_c_int64_t) then
+      status = 306
     end if
     if (.not.c_associated(recordinfo%data)) then
-      status = 306
+      status = 307
       return
     end if
     call c_f_pointer(recordinfo%data, iarr_1D_test, shape=(/ recordinfo%dimensions(1) /))
     if (any(iarr_1D /= iarr_1D_test)) then
-      status = 307
+      status = 308
       return
     end if
     call record%delete()
-    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), get_storage_size(TA_TYPE_INT32), size(iarr_2D, kind=c_int64_t), shape(iarr_2D, kind=c_int64_t), comment="test 2D intrinsic")
+    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), size(iarr_2D, kind=c_int64_t), shape(iarr_2D, kind=c_int64_t), comment="test 2D intrinsic")
     recordinfo = record%get_info()
     if (recordinfo%type_id /= TA_TYPE_INT32) then
       status = 401
@@ -127,40 +139,48 @@ contains
       status = 402
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_2D(1,1)) * size(iarr_2D)) then
+    if (recordinfo%itemsize /= c_sizeof(iarr_2D(1,1))) then
       status = 403
+      return
+    end if
+    if (recordinfo%count /= size(iarr_2D)) then
+      status = 404
       return
     end if
     if ((recordinfo%dimensions(1) /= 3_c_int64_t) .or. &
         (recordinfo%dimensions(2) /= 3_c_int64_t)) then
-      status = 404
+      status = 405
       return
     end if
     if (product(recordinfo%dimensions) /= 9_c_int64_t) then
-      status = 405
+      status = 406
     end if
     if (.not.c_associated(recordinfo%data)) then
-      status = 406
+      status = 407
       return
     end if
     call c_f_pointer(recordinfo%data, iarr_2D_test, shape=(/ recordinfo%dimensions(1:2) /))
     if (any(iarr_2D /= iarr_2D_test)) then
-      status = 407
+      status = 408
       return
     end if
     call record%delete()
-    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), get_storage_size(TA_TYPE_INT32), 9_c_int64_t, (/ 3_c_int64_t, 3_c_int64_t /), comment="test 2D manual")
+    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), 9_c_int64_t, (/ 3_c_int64_t, 3_c_int64_t /), comment="test 2D manual")
     recordinfo = record%get_info()
     if (recordinfo%type_id /= TA_TYPE_INT32) then
       status = 501
       return
     end if
-    if (recordinfo%n_dimensions /= 2) then
+    if (recordinfo%itemsize /= c_sizeof(iarr_2D(1,1))) then
       status = 502
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_2D(1,1)) * size(iarr_2D)) then
+    if (recordinfo%n_dimensions /= 2) then
       status = 503
+      return
+    end if
+    if (recordinfo%count /= size(iarr_2D)) then
+      status = 504
       return
     end if
     if ((recordinfo%dimensions(1) /= 3_c_int64_t) .or. &
@@ -181,35 +201,9 @@ contains
       return
     end if
     call record%delete()
-    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), get_storage_size(TA_TYPE_INT32), 8_c_int64_t, (/ 3_c_int64_t, 3_c_int64_t /)) ! comment="test 2D wrong size
-    recordinfo = record%get_info()
-    if (recordinfo%type_id /= TA_TYPE_INT32) then
+    call record%new(TA_TYPE_INT32, c_loc(iarr_2D), 8_c_int64_t, (/ 3_c_int64_t, 3_c_int64_t /)) ! comment="test 2D wrong size"
+    if (record%is_associated()) then
       status = 601
-      return
-    end if
-    if (recordinfo%n_dimensions /= 2) then
-      status = 602
-      return
-    end if
-    if (recordinfo%data_length /= c_sizeof(iarr_2D(1,1)) * size(iarr_2D)) then
-      status = 603
-      return
-    end if
-    if ((recordinfo%dimensions(1) /= 3_c_int64_t) .or. &
-        (recordinfo%dimensions(2) /= 3_c_int64_t)) then
-      status = 604
-      return
-    end if
-    if (product(recordinfo%dimensions) /= 9_c_int64_t) then
-      status = 605
-    end if
-    if (.not.c_associated(recordinfo%data)) then
-      status = 606
-      return
-    end if
-    call c_f_pointer(recordinfo%data, iarr_2D_test, shape=(/ recordinfo%dimensions(1:2) /))
-    if (any(iarr_2D /= iarr_2D_test)) then
-      status = 607
       return
     end if
     call record%delete()
@@ -231,7 +225,7 @@ contains
       status = 102
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_1D(1)) * 10) then
+    if (recordinfo%count /= 10) then
       status = 103
       return
     end if
@@ -262,7 +256,7 @@ contains
       status = 202
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_1D(1)) * 10) then
+    if (recordinfo%count /= 10) then
       status = 203
       return
     end if
@@ -293,7 +287,7 @@ contains
       status = 302
       return
     end if
-    if (recordinfo%data_length /= c_sizeof(iarr_3D(1,1,1)) * 8) then
+    if (recordinfo%count /= 8) then
       status = 303
       return
     end if
@@ -326,7 +320,7 @@ contains
       status = 402
       return
     end if
-    if (recordinfo%data_length /= 0) then
+    if (recordinfo%count /= 0) then
       status = 403
       return
     end if

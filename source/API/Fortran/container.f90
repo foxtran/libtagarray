@@ -44,13 +44,11 @@ contains
     Ctag = to_Cstring(tag)
     status = TA_Container_add_record(this%container_ptr, Ctag, record%record_ptr)
   end function add_record
-  integer(c_int32_t) function add_record_data(this, tag, type_id, data_ptr, data_el_size, array_size, array_shape, comment) &
-                                                                                                               result(status)
+  integer(c_int32_t) function add_record_data(this, tag, type_id, data_ptr, array_size, array_shape, comment) result(status)
     class(container_t), intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in) :: tag
     integer(c_int32_t),                             intent(in) :: type_id
     type(c_ptr),                                    intent(in) :: data_ptr
-    integer(c_int64_t),                             intent(in) :: data_el_size
     integer(c_int64_t),                             intent(in) :: array_size
     integer(c_int64_t),                   optional, intent(in) :: array_shape(:)
     character(kind=TA_CHAR, len=*), optional, intent(in) :: comment
@@ -58,7 +56,7 @@ contains
     type(record_t) :: record
     character(kind=TA_CHAR, len=:), allocatable :: Ctag
     Ctag = to_Cstring(tag)
-    call record%new(type_id, data_ptr, data_el_size, array_size, array_shape, comment)
+    call record%new(type_id, data_ptr, array_size, array_shape, comment)
     status = this%add_record(Ctag, record)
   end function add_record_data
   integer(c_int32_t) function reserve_data(this, tag, datatype, array_size, array_shape, comment, override) result(status)

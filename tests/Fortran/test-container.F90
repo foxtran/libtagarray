@@ -26,7 +26,7 @@ contains
     type(record_t) :: record
     status = -1
     call container%new()
-    call record%new(TA_TYPE_INT32, c_null_ptr, 4_c_int64_t, 0_c_int64_t)
+    call record%new(TA_TYPE_INT32, c_null_ptr, 0_c_int64_t)
     status = container%add_record("EMPTY", record)
     if (status /= TA_OK) then
       status = 2
@@ -51,12 +51,12 @@ contains
     type(container_t) :: container
     status = -1
     call container%new()
-    status = container%add_record_data("TEST", TA_TYPE_INT32, c_null_ptr, 4_c_int64_t, 1_c_int64_t, (/ 1_c_int64_t, 1_c_int64_t /), comment = "comment")
+    status = container%add_record_data("TEST", TA_TYPE_INT32, c_null_ptr, 1_c_int64_t, (/ 1_c_int64_t, 1_c_int64_t /), comment = "comment")
     if (status /= TA_OK) then
       status = 2
       return
     end if
-    status = container%add_record_data("TEST", TA_TYPE_INT32, c_null_ptr, 4_c_int64_t, 1_c_int64_t, (/ 1_c_int64_t, 1_c_int64_t /))
+    status = container%add_record_data("TEST", TA_TYPE_INT32, c_null_ptr, 1_c_int64_t, (/ 1_c_int64_t, 1_c_int64_t /))
     if (status /= TA_CONTAINER_RECORD_EXISTS) then
       status = 3
       return
