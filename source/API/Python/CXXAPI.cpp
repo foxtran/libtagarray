@@ -134,7 +134,7 @@ PYBIND11_MODULE(tagarray, m) {
   m.attr("__version_minor__") = defines::VERSION_MINOR;
   m.attr("__version_patch__") = defines::VERSION_PATCH;
 
-  py::class_<Record>(m, "Record", py::buffer_protocol())
+  py::class_<Record>(m, "Record")
       .def(py::init([](py::buffer b, const std::string &description) {
              py::buffer_info info = b.request();
              if (info.ndim > defines::MAX_DIMENSIONS_LENGTH)
