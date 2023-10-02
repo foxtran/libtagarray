@@ -52,6 +52,10 @@ public:
     return this->count_ * this->itemsize_;
   }
 
+  inline auto managed_data() const noexcept {
+    return this->data_;
+  }
+
   template <typename T> inline auto raw_data() const noexcept {
     return reinterpret_cast<T>(this->data_.get());
   }
