@@ -92,13 +92,16 @@ const std::string &type_format(const int32_t type_id) {
   throw std::runtime_error("Type not found");
 }
 
+py::capsule buffer_deallocate([]() {});
+
 template <typename V, std::size_t I = 0>
 std::optional<py::object> get_numpy_array(const Record &rec) {
   if constexpr (I < std::variant_size_v<V>) {
     using T = std::variant_alternative_t<I, V>;
     if (std::type_index(typeid(T)) == py_utils::get_type(rec.type_id())) {
       return py::cast(new py::array_t<T, py::array::f_style>(
-          rec.shape(), rec.raw_data<T *>()));
+                          rec.shape(), rec.raw_data<T *>(), buffer_deallocate),
+                      py::return_value_policy::reference);
     }
 
     return get_numpy_array<V, I + 1>(rec);
