@@ -2,7 +2,7 @@
 
 #include <array>
 #include <cstdint>
-#include <filesystem>
+#include "tagarray/filesystem.hpp" // #include <filesystem> for any compiler
 #include <string>
 #include <unordered_map>
 
