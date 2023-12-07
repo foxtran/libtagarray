@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.25)
 
 project(tagarray
   VERSION 0.0.6
-  LANGUAGES CXX)
+  LANGUAGES C CXX)
+
+
+option(ENABLE_FORTRAN    "Enable Fortran bindings" OFF)
+option(ENABLE_PYTHON     "Enable Python bindings (requires BUILD_SHARED_LIBS=ON)" OFF)
+option(BUILD_SHARED_LIBS "Build as shared library" OFF)
+option(ENABLE_TESTING    "Enable tests"            OFF)
 
 
 if(ENABLE_FORTRAN)
@@ -76,7 +82,7 @@ target_sources(${PN}
     FILE_SET HEADERS BASE_DIRS ${CMAKE_BINARY_DIR}/include   FILES ${CMAKE_BINARY_DIR}/include/${PN}/defines.h
 )
 target_include_directories(${PN} PRIVATE "${CMAKE_SOURCE_DIR}/include" "${CMAKE_BINARY_DIR}/include")
-target_compile_features(${PN} PRIVATE cxx_std_17)
+target_compile_features(${PN} PUBLIC cxx_std_17)
 target_compile_check_add_flags(${PN} PRIVATE CXX     ${${CMAKE_CXX_COMPILER_ID}_CXX_WARNINGS})
 set_target_properties(${PN} PROPERTIES VERSION ${PROJECT_VERSION}
                                        SOVERSION 1)
