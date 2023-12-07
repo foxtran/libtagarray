@@ -69,9 +69,8 @@ public:
   }
 
   inline void shape(const std::vector<int64_t> &shape) noexcept {
-    int64_t new_count = std::accumulate(std::begin(shape), std::end(shape), 1,
-                                        std::multiplies<int64_t>());
-    assert(new_count == this->count_);
+    assert(this->count_ == std::accumulate(std::begin(shape), std::end(shape),
+                                           1, std::multiplies<int64_t>()));
     this->ndims_ = shape.size();
     this->dims_ = shape;
   }
