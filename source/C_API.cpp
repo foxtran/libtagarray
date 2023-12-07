@@ -89,7 +89,7 @@ extern "C" const char *TA_get_status_message(const int32_t status,
 }
 
 extern "C" void TA_string_delete(void *const string_ptr) noexcept {
-  delete static_cast<char *>(string_ptr);
+  delete[] static_cast<char *>(string_ptr);
 }
 
 extern "C" int32_t TA_get_storage_size(const int32_t datatype) noexcept {
