@@ -29,7 +29,8 @@ contains
     this%itemsize = recordinfo%itemsize
     this%count = recordinfo%count
     this%ndims = recordinfo%ndims
-    call c_f_pointer(recordinfo%dims, this%dims, [this%ndims])
+    if (c_associated(recordinfo%dims)) &
+      call c_f_pointer(recordinfo%dims, this%dims, [this%ndims])
     this%data = recordinfo%data
     this%description = from_Cstring(recordinfo%description)
   end subroutine recordinfo_assign
