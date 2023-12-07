@@ -40,7 +40,8 @@ contains
   end function is_associated
   integer(c_int32_t) function get_status(this, ext_type_id, ext_ndim) result(status)
     class(RecordInfo_t),   intent(in) :: this
-    integer(c_int32_t),    intent(in) :: ext_type_id, ext_ndim
+    integer(c_int32_t),    intent(in) :: ext_type_id
+    integer(c_int64_t),    intent(in) :: ext_ndim
     integer(c_int32_t), parameter :: WRONG_TYPE_ID     =   1
     integer(c_int32_t), parameter :: WRONG_DIMENSIONS  =  10
     if (ext_ndim > TA_MAX_DIMENSIONS_LENGTH) then

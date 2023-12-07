@@ -22,26 +22,26 @@
 
 #define TA_CONTAINER_GET_VALUE(CONTAINER, TAG, TYPE, DATA, STATUS) \
   block; \
-    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int64_t; \
     use tagarray, only: recordinfo_t, TA_CONTAINER_RECORD_NOT_FOUND; \
     type(recordinfo_t) :: record_info; \
     STATUS = TA_CONTAINER_RECORD_NOT_FOUND; \
     if (CONTAINER%contains(TAG)) then; \
       record_info = CONTAINER%get(TAG); \
-      STATUS = record_info%get_status(TYPE, 1_c_int32_t); \
+      STATUS = record_info%get_status(TYPE, 1_c_int64_t); \
       call c_f_pointer(record_info%data, DATA); \
     end if; \
   end block
 
 #define TA_CONTAINER_GET_ARRAY(CONTAINER, TAG, TYPE, DATA, STATUS) \
   block; \
-    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int32_t; \
+    use, intrinsic :: iso_c_binding, only: c_f_pointer, c_int64_t; \
     use tagarray, only: recordinfo_t, TA_CONTAINER_RECORD_NOT_FOUND; \
     type(recordinfo_t) :: record_info; \
     STATUS = TA_CONTAINER_RECORD_NOT_FOUND; \
     if (CONTAINER%contains(TAG)) then; \
       record_info = CONTAINER%get(TAG); \
-      STATUS = record_info%get_status(TYPE, size(shape(DATA), kind=c_int32_t)); \
+      STATUS = record_info%get_status(TYPE, size(shape(DATA), kind=c_int64_t)); \
       call c_f_pointer(record_info%data, DATA, record_info%dims); \
     end if; \
   end block
