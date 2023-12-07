@@ -167,7 +167,7 @@ public:
     return Container::load(std::filesystem::path(filename));
   }
 
-  void dump(const int32_t level) const noexcept;
+  void dump() const noexcept;
 };
 
 } // namespace tagarray

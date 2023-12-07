@@ -204,16 +204,13 @@ Container Container::load(const std::filesystem::path &filename) noexcept {
   return cont;
 }
 
-void Container::dump(const int32_t level) const noexcept {
+void Container::dump() const noexcept {
   std::cout << "Container" << std::endl;
-  std::cout << "  Comment len = " << this->description().length() << std::endl;
-  std::cout << "  Comment `" << this->description() << "`" << std::endl;
+  std::cout << "  Description len = " << this->description().length() << std::endl;
+  std::cout << "  Description `" << this->description() << "`" << std::endl;
   std::cout << "  Number of records: " << this->records_.size() << std::endl;
   for (const auto &[key, value] : this->records_) {
     std::cout << "  Record tag: `" << key << "`" << std::endl;
-    if (level > 0)
-      ;
-    //      value->dump(level - 1);
   }
 }
 
