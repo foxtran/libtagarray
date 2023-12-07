@@ -1,16 +1,16 @@
 #pragma once
 
 #include "tagarray/filesystem.hpp" // #include <filesystem>
-#include <array>
 #include <cassert>
 #include <cstdint>
 #include <numeric>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
+#include "tagarray/RecordInfo.h"
 #include "tagarray/Utils.hpp"
 #include "tagarray/defines.hpp"
-#include "tagarray/RecordInfo.h"
 
 namespace tagarray {
 
@@ -141,8 +141,7 @@ public:
     Container select = Container(this->description());
     for (const auto &tag : tags)
       if (this->contains(tag))
-        select.records_.insert(
-            std::make_pair(tag, this->records_[tag]));
+        select.records_.insert(std::make_pair(tag, this->records_[tag]));
     return select;
   }
 
@@ -155,9 +154,8 @@ public:
     return dselect;
   }
 
-  int32_t
-  save(const std::filesystem::path &filename,
-       const int32_t version = defines::CONTAINER_VERSION) noexcept;
+  int32_t save(const std::filesystem::path &filename,
+               const int32_t version = defines::CONTAINER_VERSION) noexcept;
   inline int32_t
   save(const std::string &filename,
        const int32_t version = defines::CONTAINER_VERSION) noexcept {
