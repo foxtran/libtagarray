@@ -115,7 +115,6 @@ if(ENABLE_FORTRAN)
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_capi.mod
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_utils.mod
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_container.mod
-#                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_record.mod
 #                                                                     ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_recordinfo.mod
   )
   set_target_properties(${PN}_f PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/include/${PN}"
@@ -160,7 +159,6 @@ if(ENABLE_FORTRAN)
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_capi.mod
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_utils.mod
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_container.mod
-          FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_record.mod
           FILES ${CMAKE_BINARY_DIR}/include/${PN}/tagarray_recordinfo.mod
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PN})
 endif()
