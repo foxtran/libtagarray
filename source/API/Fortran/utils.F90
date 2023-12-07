@@ -22,10 +22,14 @@ module tagarray_utils
   public to_Cstring, from_Cstring, get_type_id, get_storage_size, get_status_message
 contains
   function str_to_Cstr(string) result(Cstring)
-    character(kind=TA_CHAR, len=*), intent(in) :: string
+    character(kind=TA_CHAR, len=*), optional, intent(in) :: string
     character(kind=TA_CHAR, len=:), allocatable :: Cstring
     integer :: last
-    Cstring = trim(adjustl(string))
+    if (present(string)) then
+      Cstring = trim(adjustl(string))
+    else
+      Cstring = TA_CHAR_""
+    end if
     last = len(Cstring)
     if (last == 0) then
       deallocate(Cstring)

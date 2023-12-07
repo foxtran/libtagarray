@@ -76,9 +76,9 @@ target_sources(${PN}
   PUBLIC
     FILE_SET HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES include/${PN}.h
                                                                    include/${PN}.hpp
-                                                                   include/${PN}/info.h
+                                                                   include/${PN}/RecordInfo.h
                                                                    include/${PN}/Container.hpp
-                                                                   include/${PN}/Record.hpp
+                                                                   include/${PN}/private/HRecord.hpp
     FILE_SET HEADERS BASE_DIRS ${CMAKE_BINARY_DIR}/include   FILES ${CMAKE_BINARY_DIR}/include/${PN}/defines.h
 )
 target_include_directories(${PN} PRIVATE "${CMAKE_SOURCE_DIR}/include" "${CMAKE_BINARY_DIR}/include")

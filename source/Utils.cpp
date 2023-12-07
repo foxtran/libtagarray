@@ -37,14 +37,6 @@ std::string get_status_message(const int32_t status,
     }
     message + "already exists!";
     break;
-  case defines::RECORD_OPTION_DOES_NOT_EXIST:
-    message = "Option index is wrong";
-    if (tag.empty()) {
-      message += ".";
-    } else {
-      message += " for tag " + tag + ".";
-    }
-    break;
   case defines::DATA_ZERO_LENGTH:
     if (!tag.empty()) {
       message += "For tag `" + tag + "`, ";
@@ -75,9 +67,6 @@ std::string get_status_message(const int32_t status,
       message += "For tag `" + tag + "`, ";
     }
     message += "Warning: Data error (check types and number of dimensions).";
-    break;
-  case defines::RECORD_NULLPTR:
-    message = "Record is not initialized.";
     break;
   case defines::NULLPTR:
     message = "A null pointer was passed as a parameter.";

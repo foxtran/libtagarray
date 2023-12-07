@@ -1,4 +1,3 @@
 #include "tagarray/Container.hpp"
-#include "tagarray/Record.hpp"
+#include "tagarray/RecordInfo.h"
 #include "tagarray/defines.hpp"
-#include "tagarray/info.h"

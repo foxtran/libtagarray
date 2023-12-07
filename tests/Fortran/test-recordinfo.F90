@@ -7,14 +7,15 @@ program test
   TEST(check_get_status)
 contains
   integer function check_assignment() result(status)
+    use tagarray_Crecordinfo
     type(C_recordinfo_t) :: crecinfo
-    type(C_recordinfo_t) :: recinfo
+    type(recordinfo_t) :: recinfo
     status = -1
     recinfo = crecinfo
     status = 0
   end function check_assignment
   integer function check_get_status() result(status)
-    use, intrinsic :: iso_c_binding, only: c_null_ptr, c_int32_t
+    use, intrinsic :: iso_c_binding, only: c_null_ptr, c_int32_t, c_int64_t
     type(recordinfo_t) :: recinfo
     integer(c_int32_t), pointer :: int32_2D(:,:), int32_3D(:,:,:)
     real(4), pointer :: real_2D(:,:), real_3D(:,:,:)
@@ -22,14 +23,16 @@ contains
     integer(c_int32_t), pointer :: int32_13D(:,:,:,:,:, :,:,:,:,:, :,:,:)
     integer(c_int32_t), pointer :: int32_14D(:,:,:,:,:, :,:,:,:,:, :,:,:,:)
     integer(c_int32_t), pointer :: int32_15D(:,:,:,:,:, :,:,:,:,:, :,:,:,:,:)
+    integer(c_int64_t), target :: dims(3) = (/ 3_8, 2_8, 4_8 /)
     status = -1
     ! assume 3-dimensional int32 array with dims [3, 2, 4], data is not provided
     recinfo%type_id = TA_TYPE_INT32
     recinfo%itemsize = 4
     recinfo%count = 3*2*4
-    recinfo%n_dimensions = 3
+    recinfo%ndims = 3
+    recinfo%dims => dims
     recinfo%data = c_null_ptr
-    recinfo%dimensions = (/ 3, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1 /)
+    recinfo%description = ""
     ! check with hand-written type discovering
     if (recinfo%get_status(TA_TYPE_INT32, size(shape(int32_3D))) /= TA_OK) then
       status = 1
@@ -84,7 +87,7 @@ contains
       return
     end if
     ! check data correctness
-    recinfo%dimensions(5) = 0
+    recinfo%dims(3) = 0
     if (recinfo%get_status(TA_TYPE_INT32, size(shape(int32_3D))) /= TA_DATA_ZERO_LENGTH) then
       status = 13
       return

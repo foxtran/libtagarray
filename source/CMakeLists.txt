@@ -3,9 +3,7 @@ set(dir "${CMAKE_CURRENT_SOURCE_DIR}")
 list(APPEND SOURCES
   ${dir}/C_API.cpp
   ${dir}/Container.cpp
-  ${dir}/Record.cpp
-  ${dir}/Utils.cpp
-)
+  ${dir}/Utils.cpp)
 
 add_subdirectory(API)
 

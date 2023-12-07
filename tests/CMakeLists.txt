@@ -1,8 +1,5 @@
 add_subdirectory(Cpp)
-
-if(ENABLE_C)
-  add_subdirectory(C)
-endif()
+add_subdirectory(C)
 
 if(ENABLE_FORTRAN)
   add_subdirectory(Fortran)

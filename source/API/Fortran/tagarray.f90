@@ -3,7 +3,6 @@ module tagarray
   use tagarray_defines
   use tagarray_utils
   use tagarray_recordinfo
-  use tagarray_record
   use tagarray_container
   implicit none
   public

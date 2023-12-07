@@ -2,79 +2,81 @@
 
 using namespace tagarray;
 
-extern "C" void *TA_Container_new(const char *const comment) noexcept {
-  return static_cast<void *>(new (std::nothrow) Container(comment));
+extern "C" void *TA_Container_new(const char *const description) noexcept {
+  std::string desc("");
+  if (description != nullptr)
+    desc = std::string(description);
+  return static_cast<void *>(new (std::nothrow) Container(desc));
 }
 
-extern "C" void TA_Container_dump(const void *const container,
-                                  const int32_t level) noexcept {
-  static_cast<const Container *>(container)->dump(level);
+extern "C" void TA_Container_delete(void *const container) noexcept {
+  if (container == nullptr)
+    return;
+  delete static_cast<Container *>(container);
 }
 
-extern "C" int32_t TA_Container_load(void *const container,
-                                     const char *const filename) noexcept {
-  return static_cast<Container *>(container)->load(filename);
+extern "C" int32_t
+TA_Container_create(void *const container, const char *const ctag,
+                    const int32_t type_id, const int32_t ndims,
+                    const int64_t *const cdims, const uint8_t *const data,
+                    const char *const description) noexcept {
+  if (container == nullptr)
+    return defines::NOT_IMPLEMENTED;
+  if (ctag == nullptr)
+    return defines::NOT_IMPLEMENTED;
+  if (cdims == nullptr)
+    return defines::NOT_IMPLEMENTED;
+  std::string tag(ctag), desc("");
+  if (description != nullptr)
+    desc = std::string(description);
+  std::vector<int64_t> dims;
+  dims.assign(cdims, cdims + ndims);
+  return static_cast<Container *>(container)->create(tag, type_id, dims, data,
+                                                     desc);
+}
+
+extern "C" RecordInfo TA_Container_get(void *const container,
+                                       const char *const ctag) noexcept {
+  if (container == nullptr || ctag == nullptr)
+    return RecordInfo{
+        defines::TYPE_UNKNOWN, 1, -1, 0, nullptr, nullptr, nullptr};
+  return static_cast<Container *>(container)->get(ctag)->info();
+}
+
+extern "C" bool TA_Container_contains(void *const container,
+                                      const char *const ctag) noexcept {
+  if (container == nullptr || ctag == nullptr)
+    return false;
+  return static_cast<Container *>(container)->contains(ctag);
+}
+
+extern "C" void TA_Container_clear(void *const container) noexcept {
+  if (container == nullptr)
+    return;
+  static_cast<Container *>(container)->clear();
+}
+
+extern "C" void TA_Container_erase(void *const container,
+                                   const char *const ctag) noexcept {
+  if (container == nullptr || ctag == nullptr)
+    return;
+  static_cast<Container *>(container)->erase(ctag);
+}
+
+extern "C" void *TA_Container_load(const char *const filename) noexcept {
+  if (filename == nullptr)
+    return nullptr;
+  std::string path(filename);
+  return static_cast<void *>(new (std::nothrow)
+                                 Container(Container::load(path)));
 }
 
 extern "C" int32_t TA_Container_save(void *const container,
                                      const char *const filename) noexcept {
-  return static_cast<Container *>(container)->save(filename);
-}
-
-extern "C" void TA_Container_delete(void *const container) noexcept {
-  delete static_cast<Container *>(container);
-}
-
-extern "C" void *TA_Record_new(
-    const int32_t type_id, const int32_t n_dimensions,
-    const uint8_t *const data, const int64_t data_length,
-    const int64_t dimensions[tagarray::defines::MAX_DIMENSIONS_LENGTH],
-    const char *const comment) noexcept {
-  return static_cast<void *>(new (std::nothrow) Record(
-      type_id, n_dimensions, data, data_length,
-      std::vector<int64_t>(
-          dimensions, dimensions + tagarray::defines::MAX_DIMENSIONS_LENGTH),
-      tagarray::utils::to_string(comment)));
-}
-
-extern "C" bool TA_Record_is_allocated(const void *const record) noexcept {
-  return static_cast<const Record *>(record)->is_allocated();
-}
-
-extern "C" void TA_Record_dump(const void *const record,
-                               const int32_t level) noexcept {
-  static_cast<const Record *>(record)->dump(level);
-}
-
-extern "C" void TA_Record_delete(void *const record) noexcept {
-  delete static_cast<Record *>(record);
-}
-
-extern "C" int32_t TA_Container_add_record(void *const container,
-                                           const char *const tag,
-                                           void *const record) noexcept {
-  return static_cast<Container *>(container)->add_record(
-      tag, *static_cast<Record *>(record));
-}
-
-extern "C" int32_t TA_Container_has_record(void *const container,
-                                           const char *const tag) noexcept {
-  return static_cast<Container *>(container)->has_record(tag);
-}
-
-extern "C" void *TA_Container_get_record(void *const container,
-                                         const char *const tag) noexcept {
-  return static_cast<Container *>(container)->get_record(tag);
-}
-
-extern "C" int32_t TA_Container_remove_record(void *const container,
-                                              const char *const tag) noexcept {
-  return static_cast<Container *>(container)->remove_record(tag);
-}
-
-extern "C" RecordInfo
-TA_Record_get_record_info(const void *const record) noexcept {
-  return static_cast<const Record *>(record)->info();
+  if (container == nullptr || filename == nullptr)
+    return defines::NOT_IMPLEMENTED;
+  std::string path(filename);
+  return static_cast<Container *>(container)->save(path);
 }
 
 extern "C" const char *TA_get_status_message(const int32_t status,
