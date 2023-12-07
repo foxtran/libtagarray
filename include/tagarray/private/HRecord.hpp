@@ -19,7 +19,7 @@ public:
         std::accumulate(std::begin(this->dims_), std::end(this->dims_), 1,
                         std::multiplies<int64_t>());
     assert(this->byte_count() != 0);
-    if (this->byte_count() < -1)
+    if (this->byte_count() <= 0)
       return;
     std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
                                        uint8_t[this->byte_count()],
@@ -113,9 +113,13 @@ public:
   }
 
   inline RecordInfo info() const noexcept {
-    RecordInfo recordInfo = {
-        this->type_id_,   this->itemsize_, this->count_, this->ndims_, const_cast<int64_t*>(this->dims_.data()),
-        this->data_.get(), const_cast<char*>(this->description_.data()) };
+    RecordInfo recordInfo = {this->type_id_,
+                             this->itemsize_,
+                             this->count_,
+                             this->ndims_,
+                             const_cast<int64_t *>(this->dims_.data()),
+                             this->data_.get(),
+                             const_cast<char *>(this->description_.data())};
     return recordInfo;
   }
 
