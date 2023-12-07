@@ -37,9 +37,11 @@ TA_Container_create(void *const container, const char *const ctag,
 
 extern "C" RecordInfo TA_Container_get(void *const container,
                                        const char *const ctag) noexcept {
+  RecordInfo none{defines::TYPE_UNKNOWN, 1, -1, 0, nullptr, nullptr, nullptr};
   if (container == nullptr || ctag == nullptr)
-    return RecordInfo{
-        defines::TYPE_UNKNOWN, 1, -1, 0, nullptr, nullptr, nullptr};
+    return none;
+  if (!static_cast<Container *>(container)->contains(ctag))
+    return none;
   return static_cast<Container *>(container)->get(ctag)->info();
 }
 
