@@ -42,11 +42,15 @@ contains
     end if
   end function str_to_Cstr
   function Cstr_to_str(Cstring) result(string)
-    use, intrinsic :: iso_c_binding, only: c_char, c_f_pointer, c_null_char
+    use, intrinsic :: iso_c_binding, only: c_char, c_f_pointer, c_null_char, c_associated
     type(c_ptr), intent(in) :: Cstring
     character(kind=TA_CHAR, len=:), allocatable :: string
     character(len=1, kind=c_char), pointer :: chars(:)
     integer :: i, n
+    if (.not.c_associated(Cstring)) then
+      allocate(character(len=0) :: string)
+      return
+    end if
     call c_f_pointer(Cstring, chars, [huge(0)])
     i = 1
     do
