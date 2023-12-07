@@ -46,7 +46,7 @@ inline std::string to_string(const char *const str_ptr) noexcept {
   return str;
 }
 
-int64_t get_storage_size(const int32_t datatype) noexcept;
+int32_t get_storage_size(const int32_t datatype) noexcept;
 
 } // namespace utils
 } // namespace tagarray

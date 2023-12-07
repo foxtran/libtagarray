@@ -125,7 +125,7 @@ contains
         type_id = TA_TYPE_UNKNOWN
     end select
   end function get_type_id_scalar
-  integer(c_int64_t) function get_storage_size(datatype) result(size)
+  integer(c_int32_t) function get_storage_size(datatype) result(size)
     use tagarray_CAPI, only: TA_get_storage_size
     integer(c_int32_t) :: datatype
     size = TA_get_storage_size(datatype)

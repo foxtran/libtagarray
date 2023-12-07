@@ -92,8 +92,8 @@ std::string get_status_message(const int32_t status,
   return message;
 }
 
-int64_t get_storage_size(const int32_t datatype) noexcept {
-  const std::unordered_map<int32_t, int64_t> datasize{
+int32_t get_storage_size(const int32_t datatype) noexcept {
+  const std::unordered_map<int32_t, int32_t> datasize{
       {defines::TYPE_UNKNOWN, 1}, {defines::TYPE_CHAR8, 1},
       {defines::TYPE_INT8, 1},    {defines::TYPE_INT16, 2},
       {defines::TYPE_INT32, 4},   {defines::TYPE_INT64, 8},
