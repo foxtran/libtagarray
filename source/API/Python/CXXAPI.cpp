@@ -117,4 +117,33 @@ PYBIND11_MODULE(tagarray, m) {
   m.attr("__version_major__") = defines::VERSION_MAJOR;
   m.attr("__version_minor__") = defines::VERSION_MINOR;
   m.attr("__version_patch__") = defines::VERSION_PATCH;
+
+  py::class_<Container>(m, "Container")
+      .def(py::init([](const std::string &description) {
+             return new Container(description);
+           }),
+           py::arg("description") = std::string(""),
+           py::return_value_policy::take_ownership)
+      .def_property_readonly(
+          "size", [](const Container &cont) { return cont.keys().size(); })
+      .def_property(
+          "description",
+          [](const Container &cont) { return cont.description(); },
+          [](Container &cont, const std::string &desc) {
+            cont.description() = desc;
+          })
+      .def("create", &Container::create) // returns some status
+      .def("keys", &Container::keys)
+      .def("clear", &Container::clear)
+      .def("contains", py::overload_cast<const std::string &>(
+                           &Container::contains, py::const_))
+      .def("contains", py::overload_cast<const std::vector<std::string> &>(
+                           &Container::contains, py::const_))
+      .def("erase", py::overload_cast<const std::string &>(&Container::erase))
+      .def("erase", py::overload_cast<const std::vector<std::string> &>(
+                        &Container::erase))
+      .def("save", py::overload_cast<const std::string &, const int32_t>(
+                       &Container::save))
+      .def_static("load",
+                  py::overload_cast<const std::string &>(&Container::load));
 }
