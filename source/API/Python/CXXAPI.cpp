@@ -145,5 +145,16 @@ PYBIND11_MODULE(tagarray, m) {
       .def("save", py::overload_cast<const std::string &, const int32_t>(
                        &Container::save))
       .def_static("load",
-                  py::overload_cast<const std::string &>(&Container::load));
+                  py::overload_cast<const std::string &>(&Container::load))
+      .def("__len__", [](const Container &cont) { return cont.keys().size(); })
+      .def("__delitem__",
+           py::overload_cast<const std::string &>(&Container::erase))
+      .def("__contains__", py::overload_cast<const std::string &>(
+                               &Container::contains, py::const_))
+      .def("copy", py::overload_cast<>(&Container::copy, py::const_))
+      .def("copy", py::overload_cast<const std::vector<std::string> &>(
+                       &Container::copy))
+      .def("deepcopy", py::overload_cast<>(&Container::deepcopy, py::const_))
+      .def("deepcopy", py::overload_cast<const std::vector<std::string> &>(
+                           &Container::deepcopy));
 }
