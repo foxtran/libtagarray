@@ -1,0 +1,12 @@
+[package]
+name = "libtagarray"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "libtagarray"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Add features "num-bigint", "rust_decimal", <- not supported in Fortran yet.
+pyo3 = { version = "0.19", features = ["abi3", "abi3-py311", "anyhow", "extension-module", "num-complex", "serde"] }
