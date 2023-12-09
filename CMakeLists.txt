@@ -77,6 +77,7 @@ target_sources(${PN}
     FILE_SET HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES include/${PN}.h
                                                                    include/${PN}.hpp
                                                                    include/${PN}/RecordInfo.h
+                                                                   include/${PN}/PyRecordInfo.hpp
                                                                    include/${PN}/Container.hpp
                                                                    include/${PN}/hidden/Record.hpp
     FILE_SET HEADERS BASE_DIRS ${CMAKE_BINARY_DIR}/include   FILES ${CMAKE_BINARY_DIR}/include/${PN}/defines.h

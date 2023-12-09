@@ -1,5 +1,3 @@
-#include "tagarray.hpp"
-
 #include <complex>
 #include <unordered_map>
 #include <variant>
@@ -7,6 +5,9 @@
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+
+#include "tagarray.hpp"
+#include "tagarray/PyRecordInfo.hpp"
 
 using namespace tagarray;
 namespace py = pybind11;
@@ -118,6 +119,12 @@ PYBIND11_MODULE(tagarray, m) {
   m.attr("__version_minor__") = defines::VERSION_MINOR;
   m.attr("__version_patch__") = defines::VERSION_PATCH;
 
+  py::class_<PyRecordInfo>(m, "RecordInfo")
+      .def(py::init([](const PyRecordInfo &pyrec) {
+             return new PyRecordInfo(pyrec);
+           }),
+           py::return_value_policy::take_ownership);
+
   py::class_<Container>(m, "Container")
       .def(py::init([](const std::string &description) {
              return new Container(description);
@@ -156,5 +163,72 @@ PYBIND11_MODULE(tagarray, m) {
                        &Container::copy))
       .def("deepcopy", py::overload_cast<>(&Container::deepcopy, py::const_))
       .def("deepcopy", py::overload_cast<const std::vector<std::string> &>(
-                           &Container::deepcopy));
+                           &Container::deepcopy))
+      .def("get",
+           [](Container &cont, const std::string &key) {
+             if (!cont.contains(key))
+               throw std::runtime_error(std::string("Key '") + key +
+                                        std::string("' does not exist!"));
+             return new PyRecordInfo(cont.get(key));
+           })
+      .def("__getitem__",
+           [](Container &cont, const std::string &key) {
+             if (!cont.contains(key))
+               throw std::runtime_error(std::string("Key '") + key +
+                                        std::string("' does not exist!"));
+             return new PyRecordInfo(cont.get(key));
+           })
+      .def("__setitem__",
+           [](Container &cont, const std::string &key, py::buffer value) {
+             if (cont.contains(key))
+               throw std::runtime_error(std::string("Key '") + key +
+                                        std::string("' already exists!"));
+             py::buffer_info info = value.request();
+             int32_t type_id = py_utils::get_type_from_pyformat(info.format);
+             std::vector<int64_t> dims;
+             for (const auto &val : info.shape)
+               dims.push_back(static_cast<int64_t>(val));
+             cont.create(key, type_id, dims, static_cast<uint8_t *>(info.ptr));
+           })
+      .def("__setitem__",
+           [](Container &cont, const std::string &key,
+              const PyRecordInfo &value) {
+             if (cont.contains(key))
+               throw std::runtime_error(std::string("Key '") + key +
+                                        std::string("' already exists!"));
+             cont[key] = value.get();
+           })
+      .def("update",
+           [](Container &cont, const std::string &key, py::buffer value) {
+             if (cont.contains(key))
+               cont.erase(key);
+             py::buffer_info info = value.request();
+             int32_t type_id = py_utils::get_type_from_pyformat(info.format);
+             std::vector<int64_t> dims;
+             for (const auto &val : info.shape)
+               dims.push_back(static_cast<int64_t>(val));
+             cont.create(key, type_id, dims, static_cast<uint8_t *>(info.ptr));
+           })
+      .def("update",
+           [](Container &cont, const std::string &key,
+              const PyRecordInfo &value) {
+             if (cont.contains(key))
+               cont.erase(key);
+             cont[key] = value.get();
+           })
+      .def("values",
+           [](Container &cont) {
+             std::vector<PyRecordInfo> values;
+             for (const auto &key : cont.keys()) {
+               values.push_back(PyRecordInfo(cont.get(key)));
+             }
+             return values;
+           })
+      .def("items", [](Container &cont) {
+        std::vector<std::pair<std::string, PyRecordInfo>> items;
+        for (const auto &key : cont.keys()) {
+          items.push_back(std::make_pair(key, PyRecordInfo(cont.get(key))));
+        }
+        return items;
+      });
 }
