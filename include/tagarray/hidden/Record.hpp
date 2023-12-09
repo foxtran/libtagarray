@@ -1,4 +1,20 @@
-class HRecord {
+#pragma once
+
+#include <algorithm>
+#include <cassert>
+#include <cstdint>
+#include <memory>
+#include <numeric>
+#include <string>
+#include <vector>
+
+#include "tagarray/RecordInfo.h"
+#include "tagarray/Utils.hpp"
+
+namespace tagarray {
+namespace hidden {
+
+class Record {
 private:
   const int32_t type_id_;
   const int32_t itemsize_; // size of one element in bytes
@@ -9,9 +25,9 @@ private:
   std::string description_;
 
 public:
-  HRecord(const int32_t type_id, std::vector<int64_t> dimensions,
-          const uint8_t *const data = nullptr,
-          const std::string &description = std::string(""))
+  Record(const int32_t type_id, std::vector<int64_t> dimensions,
+         const uint8_t *const data = nullptr,
+         const std::string &description = std::string(""))
       : type_id_(type_id), itemsize_(utils::get_storage_size(type_id)),
         ndims_(dimensions.size()), dims_(dimensions),
         description_(description) {
@@ -35,12 +51,12 @@ public:
     }
   }
 
-  HRecord(const HRecord &rec)
+  Record(const Record &rec)
       : type_id_(rec.type_id()), itemsize_(rec.itemsize()), count_(rec.count()),
         ndims_(rec.ndims()), dims_(rec.shape()), data_(rec.data_),
         description_(rec.description()) {}
 
-  ~HRecord() {}
+  ~Record() {}
 
   inline const std::string &description() const noexcept {
     return this->description_;
@@ -101,14 +117,14 @@ public:
     std::swap(this->data_, tmp);
   }
 
-  inline std::shared_ptr<HRecord> copy() const noexcept {
-    return std::make_shared<HRecord>(HRecord(*this));
+  inline std::shared_ptr<Record> copy() const noexcept {
+    return std::make_shared<Record>(Record(*this));
   }
 
-  inline std::shared_ptr<HRecord> deepcopy() const noexcept {
-    return std::make_shared<HRecord>(HRecord(this->type_id(), this->shape(),
-                                             this->data_.get(),
-                                             this->description()));
+  inline std::shared_ptr<Record> deepcopy() const noexcept {
+    return std::make_shared<Record>(Record(this->type_id(), this->shape(),
+                                           this->data_.get(),
+                                           this->description()));
   }
 
   inline RecordInfo info() const noexcept {
@@ -122,8 +138,10 @@ public:
     return recordInfo;
   }
 
-  inline static const HRecord invalid() noexcept {
-    HRecord invalid(defines::TYPE_UNKNOWN, {-1}, nullptr, "invalid");
+  inline static const Record invalid() noexcept {
+    Record invalid(defines::TYPE_UNKNOWN, {-1}, nullptr, "invalid");
     return invalid;
   }
 };
+} // namespace hidden
+} // namespace tagarray

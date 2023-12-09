@@ -1,14 +1,13 @@
 #pragma once
 
 #include "tagarray/filesystem.hpp" // #include <filesystem>
-#include <cassert>
 #include <cstdint>
 #include <memory>
-#include <numeric>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+#include "tagarray/hidden/Record.hpp"
 #include "tagarray/RecordInfo.h"
 #include "tagarray/Utils.hpp"
 #include "tagarray/defines.hpp"
@@ -17,9 +16,8 @@ namespace tagarray {
 
 class Container {
 private:
-#include "tagarray/private/HRecord.hpp"
   std::string description_;
-  std::unordered_map<std::string, std::shared_ptr<HRecord>> records_;
+  std::unordered_map<std::string, std::shared_ptr<hidden::Record>> records_;
 
 public:
   inline Container(const std::string &description = std::string("")) noexcept
@@ -46,19 +44,19 @@ public:
     if (this->contains(tag))
       return defines::CONTAINER_RECORD_EXISTS;
     this->records_.insert(std::make_pair(
-        tag, new HRecord(type_id, dimensions, data, description)));
+        tag, new hidden::Record(type_id, dimensions, data, description)));
     return defines::OK;
   }
 
-  inline std::shared_ptr<HRecord> get(const std::string &tag) noexcept {
+  inline std::shared_ptr<hidden::Record> get(const std::string &tag) noexcept {
     if (this->contains(tag))
       return this->records_[tag];
-    return std::make_shared<HRecord>(HRecord::invalid());
+    return std::make_shared<hidden::Record>(hidden::Record::invalid());
   }
 
-  inline std::shared_ptr<HRecord> &operator[](const std::string &tag) noexcept {
+  inline std::shared_ptr<hidden::Record> &operator[](const std::string &tag) noexcept {
     if (!this->contains(tag))
-      this->records_[tag] = std::make_shared<HRecord>(HRecord::invalid());
+      this->records_[tag] = std::make_shared<hidden::Record>(hidden::Record::invalid());
     return this->records_[tag];
   }
 
