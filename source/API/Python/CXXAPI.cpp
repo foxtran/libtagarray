@@ -93,6 +93,22 @@ const std::string &type_format(const int32_t type_id) {
   throw std::runtime_error("Type not found");
 }
 
+template <typename V, std::size_t I = 0>
+std::optional<py::object> get_numpy_array(const PyRecordInfo &pyrec) {
+  if constexpr (I < std::variant_size_v<V>) {
+    using T = std::variant_alternative_t<I, V>;
+    if (std::type_index(typeid(T)) ==
+        py_utils::get_type(pyrec.get()->type_id())) {
+      return py::cast(new py::array_t<T, py::array::f_style>(
+          pyrec.get()->shape(), pyrec.get()->raw_data<T *>(),
+          py::capsule(new auto(pyrec.get()->raw_data<void *>()),
+                      [](void *) { /* no deallocation */ })));
+    }
+    return get_numpy_array<V, I + 1>(pyrec);
+  }
+  return {};
+}
+
 } // namespace py_utils
 } // namespace tagarray
 
@@ -123,7 +139,14 @@ PYBIND11_MODULE(tagarray, m) {
       .def(py::init([](const PyRecordInfo &pyrec) {
              return new PyRecordInfo(pyrec);
            }),
-           py::return_value_policy::take_ownership);
+           py::return_value_policy::take_ownership)
+      .def("data", [](PyRecordInfo &pyrec) {
+        auto numpy_array =
+            py_utils::get_numpy_array<py_utils::supported_types>(pyrec);
+        if (numpy_array)
+          return *numpy_array;
+        throw std::runtime_error("Type is not supported");
+      });
 
   py::class_<Container>(m, "Container")
       .def(py::init([](const std::string &description) {
