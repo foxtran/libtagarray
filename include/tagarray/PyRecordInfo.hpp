@@ -10,15 +10,15 @@ namespace tagarray {
 
 class PyRecordInfo {
 private:
-  std::shared_ptr<hidden::Record> ptr;
+  std::shared_ptr<hidden::Record> ptr_;
 
 public:
   PyRecordInfo(const std::shared_ptr<hidden::Record> &ptr) noexcept {
-    this->ptr = ptr;
+    this->ptr_ = ptr;
   }
-  PyRecordInfo(const PyRecordInfo &pyrec) noexcept { this->ptr = pyrec.ptr; }
+  PyRecordInfo(const PyRecordInfo &pyrec) noexcept { this->ptr_ = pyrec.ptr_; }
   const std::shared_ptr<hidden::Record> &get() const noexcept {
-    return this->ptr;
+    return this->ptr_;
   }
 };
 } // namespace tagarray
