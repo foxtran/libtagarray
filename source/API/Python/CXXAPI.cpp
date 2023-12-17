@@ -205,9 +205,6 @@ PYBIND11_MODULE(tagarray, m) {
            })
       .def("__setitem__",
            [](Container &cont, const std::string &key, py::buffer value) {
-             if (cont.contains(key))
-               throw std::runtime_error(std::string("Key '") + key +
-                                        std::string("' already exists!"));
              py::buffer_info info = value.request();
              int32_t type_id = py_utils::get_type_from_pyformat(info.format);
              std::vector<int64_t> dims;
@@ -217,12 +214,7 @@ PYBIND11_MODULE(tagarray, m) {
            })
       .def("__setitem__",
            [](Container &cont, const std::string &key,
-              const PyRecordInfo &value) {
-             if (cont.contains(key))
-               throw std::runtime_error(std::string("Key '") + key +
-                                        std::string("' already exists!"));
-             cont[key] = value.get();
-           })
+              const PyRecordInfo &value) { cont[key] = value.get(); })
       .def("update",
            [](Container &cont, const std::string &key, py::buffer value) {
              if (cont.contains(key))
