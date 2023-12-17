@@ -11,6 +11,7 @@ module tagarray_container
   contains
     procedure, public  :: new => container_t_new
     procedure, public  :: delete => container_t_delete
+    procedure, public  :: is_allocated => container_t_is_allocated
     procedure, public  :: create => container_t_create
     procedure, public  :: get => container_t_get
     procedure, private :: container_t_contains_s
@@ -52,6 +53,10 @@ contains
     call TA_Container_delete(this%container_ptr)
     this%container_ptr = c_null_ptr
   end subroutine container_t_delete
+  logical(c_bool) function container_t_is_allocated(this) result(status)
+    class(container_t), intent(inout) :: this
+    status = c_associated(this%container_ptr)
+  end function container_t_is_allocated
   integer(c_int32_t) function container_t_create(this, tag, type_id, shape, data_ptr, description, override) result(status)
     class(container_t),                       intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in)    :: tag
