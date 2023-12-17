@@ -34,6 +34,10 @@ int32_t TA_Container_create(void *const container, const char *const ctag,
 RecordInfo TA_Container_get(void *const container,
                             const char *const ctag) TA_NOEXCEPT;
 
+int32_t TA_Container_append(void *const container, const char *const ctag,
+                            const int32_t ndims, const int64_t *cdims,
+                            const uint8_t *const data) TA_NOEXCEPT;
+
 bool TA_Container_contains(void *const container,
                            const char *const ctag) TA_NOEXCEPT;
 

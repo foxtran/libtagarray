@@ -45,6 +45,20 @@ extern "C" RecordInfo TA_Container_get(void *const container,
   return static_cast<Container *>(container)->get(ctag)->info();
 }
 
+extern "C" int32_t TA_Container_append(void *const container,
+                                       const char *const ctag,
+                                       const int32_t ndims,
+                                       const int64_t *cdims,
+                                       const uint8_t *const data) noexcept {
+  if (container == nullptr || ctag == nullptr || cdims == nullptr)
+    return defines::NOT_IMPLEMENTED;
+  if (!static_cast<Container *>(container)->contains(ctag))
+    return defines::NOT_IMPLEMENTED;
+  std::vector<int64_t> dims;
+  dims.assign(cdims, cdims + ndims);
+  return static_cast<Container *>(container)->get(ctag)->append(dims, data);
+}
+
 extern "C" bool TA_Container_contains(void *const container,
                                       const char *const ctag) noexcept {
   if (container == nullptr || ctag == nullptr)

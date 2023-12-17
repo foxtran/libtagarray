@@ -10,6 +10,7 @@ program test
   TEST(check_create)
   TEST(check_contains)
   TEST(check_get)
+  TEST(check_append)
   TEST(check_erase)
   TEST(check_saveload)
 contains
@@ -121,6 +122,38 @@ contains
     call container%delete()
     status = 0
   end function check_get
+  integer(c_int32_t) function check_append() result(status)
+    use, intrinsic :: iso_c_binding, only: c_null_ptr, c_int64_t, c_loc
+    type(container_t) :: container
+    type(recordinfo_t) :: record
+    integer(c_int64_t), pointer :: arr(:)
+    integer(c_int64_t), parameter :: arr_ref(3) = (/ 1_c_int64_t, 1_c_int64_t, 2_c_int64_t /)
+    integer(c_int64_t), target :: ival1(1) = 2_c_int64_t, ival2(2) = 1_c_int64_t
+    status = -1
+    ival2 = 1_c_int64_t
+    ival1 = 2_c_int64_t
+    call container%new()
+    status = container%create("TEST", TA_TYPE_INT64, shape(ival2, kind=c_int64_t), c_loc(ival2), description = "comment")
+    if (status /= TA_OK) then
+      status = 2
+      return
+    end if
+    status = container%append("TEST", shape(ival1, kind=c_int64_t), c_loc(ival1))
+    if (status /= TA_OK) then
+      status = 3
+      return
+    end if
+    record = container%get("TEST")
+    call c_f_pointer(record%data, arr, record%dims)
+    if (any(arr_ref /= arr)) then
+      print *, arr
+      print *, record%dims
+      status = 4
+      return
+    end if
+    call container%delete()
+    status = 0
+  end function check_append
   integer function check_erase() result(status)
     use, intrinsic :: iso_c_binding, only: c_int64_t
     type(container_t) :: container

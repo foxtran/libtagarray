@@ -43,6 +43,16 @@ module tagarray_CAPI
       type(c_ptr), value,            intent(in) :: container
       character(kind=TA_CHAR), intent(in) :: Ctag(*)
     end function TA_Container_get
+    integer(c_int32_t) function TA_Container_append(container, Ctag, ndims, dims, data_ptr) &
+                                              bind(C, name="TA_Container_append")
+      import
+      implicit none
+      type(c_ptr),        value, intent(in) :: container
+      character(kind=TA_CHAR),   intent(in) :: Ctag(*)
+      integer(c_int32_t), value, intent(in) :: ndims
+      integer(c_int64_t),        intent(in) :: dims(*)
+      type(c_ptr),        value, intent(in) :: data_ptr
+    end function TA_Container_append
     subroutine TA_Container_erase(container, Ctag) bind(C, name="TA_Container_erase")
       import
       implicit none

@@ -14,6 +14,7 @@ module tagarray_container
     procedure, public  :: is_allocated => container_t_is_allocated
     procedure, public  :: create => container_t_create
     procedure, public  :: get => container_t_get
+    procedure, public  :: append => container_t_append
     procedure, private :: container_t_contains_s
     procedure, private :: container_t_contains_m
     procedure, private :: container_t_erase_s
@@ -80,6 +81,19 @@ contains
       status = TA_Container_create(this%container_ptr, Ctag, type_id, size(shape, kind=4), shape, c_null_ptr, Cdesc)
     end if
   end function container_t_create
+  integer(c_int32_t) function container_t_append(this, tag, shape, data_ptr) result(status)
+    class(container_t),                       intent(inout) :: this
+    character(kind=TA_CHAR, len=*),           intent(in)    :: tag
+    integer(c_int64_t),                       intent(in)    :: shape(:)
+    type(c_ptr),                    optional, intent(in)    :: data_ptr
+    character(kind=TA_CHAR, len=:), allocatable :: Ctag
+    Ctag = to_Cstring(tag)
+    if (present(data_ptr)) then
+      status = TA_Container_append(this%container_ptr, Ctag, size(shape, kind=4), shape, data_ptr)
+    else
+      status = TA_Container_append(this%container_ptr, Ctag, size(shape, kind=4), shape, c_null_ptr)
+    end if
+  end function container_t_append
   type(RecordInfo_t) function container_t_get(this, tag) result(ri)
     class(container_t),                       intent(inout) :: this
     character(kind=TA_CHAR, len=*),           intent(in)    :: tag

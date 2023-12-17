@@ -95,26 +95,38 @@ public:
     return reinterpret_cast<T>(this->data_.get());
   }
 
-  inline void expand(const std::vector<int64_t> &shape) noexcept {
+  inline int32_t append(const std::vector<int64_t> &shape,
+                        const uint8_t *const data = nullptr) noexcept {
     assert(this->ndims_ == 1);
     assert(shape.size() == 1);
-    int64_t new_count = std::accumulate(std::begin(shape), std::end(shape), 1,
-                                        std::multiplies<int64_t>());
+    int64_t shift = std::accumulate(std::begin(shape), std::end(shape), 1,
+                                    std::multiplies<int64_t>());
+    int64_t new_count = shift + this->count_;
     if (new_count == this->count_)
-      return;
+      return defines::NOT_IMPLEMENTED;
     assert(new_count > this->count_);
     std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
                                        uint8_t[this->itemsize() * new_count],
                                    std::default_delete<uint8_t[]>());
     if (tmp.get() == nullptr) {
-      return;
+      return defines::NOT_IMPLEMENTED;
     }
     std::copy(this->data_.get(), this->data_.get() + this->byte_count(),
               tmp.get());
+    if (data == nullptr) {
+      std::fill(tmp.get() + this->byte_count(),
+                tmp.get() + new_count * this->itemsize(), 0);
+    } else {
+      std::copy(data, data + shift * this->itemsize(),
+                tmp.get() + this->byte_count());
+    }
     this->count_ = new_count;
     this->ndims_ = shape.size();
-    this->dims_ = shape;
+    for (auto i = 0; i < this->dims_.size(); i++) {
+      this->dims_[i] += shape[i];
+    }
     std::swap(this->data_, tmp);
+    return defines::OK;
   }
 
   inline std::shared_ptr<Record> copy() const noexcept {
