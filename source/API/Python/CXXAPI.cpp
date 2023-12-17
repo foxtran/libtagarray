@@ -149,8 +149,10 @@ PYBIND11_MODULE(tagarray, m) {
       .def("erase", py::overload_cast<const std::string &>(&Container::erase))
       .def("erase", py::overload_cast<const std::vector<std::string> &>(
                         &Container::erase))
-      .def("save", py::overload_cast<const std::string &, const int32_t>(
-                       &Container::save))
+      .def("save",
+           py::overload_cast<const std::string &, const int32_t>(
+               &Container::save),
+           py::arg("path"), py::arg("version") = defines::CONTAINER_VERSION)
       .def_static("load",
                   py::overload_cast<const std::string &>(&Container::load))
       .def("__len__", [](const Container &cont) { return cont.keys().size(); })
