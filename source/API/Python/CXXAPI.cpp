@@ -140,7 +140,7 @@ PYBIND11_MODULE(tagarray, m) {
              return new PyRecordInfo(pyrec);
            }),
            py::return_value_policy::take_ownership)
-      .def("data", [](PyRecordInfo &pyrec) {
+      .def_property_readonly("data", [](PyRecordInfo &pyrec) {
         auto numpy_array =
             py_utils::get_numpy_array<py_utils::supported_types>(pyrec);
         if (numpy_array)
