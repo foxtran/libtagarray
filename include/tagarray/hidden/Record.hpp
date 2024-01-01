@@ -37,9 +37,12 @@ public:
     assert(this->byte_count() != 0);
     if (this->byte_count() <= 0)
       return;
+    auto deleter = [](uint8_t *ptr) {
+      operator delete[](ptr, std::align_val_t(32));
+    };
     std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
                                        uint8_t[this->byte_count()],
-                                   std::default_delete<uint8_t[]>());
+                                   deleter);
     this->data_ = tmp;
     if (this->data_.get() == nullptr) {
       return;
@@ -105,9 +108,12 @@ public:
     if (new_count == this->count_)
       return defines::NOT_IMPLEMENTED;
     assert(new_count > this->count_);
+    auto deleter = [](uint8_t *ptr) {
+      operator delete[](ptr, std::align_val_t(64));
+    };
     std::shared_ptr<uint8_t[]> tmp(new (std::align_val_t(64), std::nothrow)
                                        uint8_t[this->itemsize() * new_count],
-                                   std::default_delete<uint8_t[]>());
+                                   deleter);
     if (tmp.get() == nullptr) {
       return defines::NOT_IMPLEMENTED;
     }
