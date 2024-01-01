@@ -128,7 +128,7 @@ public:
     }
     this->count_ = new_count;
     this->ndims_ = shape.size();
-    for (auto i = 0; i < this->dims_.size(); i++) {
+    for (size_t i = 0; i < this->dims_.size(); i++) {
       this->dims_[i] += shape[i];
     }
     std::swap(this->data_, tmp);
