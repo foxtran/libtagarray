@@ -5,10 +5,11 @@ project(tagarray
   LANGUAGES C CXX)
 
 
-option(ENABLE_FORTRAN    "Enable Fortran bindings" OFF)
+option(ENABLE_FORTRAN    "Enable Fortran bindings"        OFF)
 option(ENABLE_PYTHON     "Enable Python bindings (requires BUILD_SHARED_LIBS=ON)" OFF)
-option(BUILD_SHARED_LIBS "Build as shared library" OFF)
-option(ENABLE_TESTING    "Enable tests"            OFF)
+option(BUILD_SHARED_LIBS "Build as shared library"        OFF)
+option(ENABLE_TESTING    "Enable tests"                   OFF)
+option(ENABLE_LTO        "Enable Link-Time Optimizations" OFF)
 
 
 if(ENABLE_FORTRAN)
@@ -29,9 +30,14 @@ set(PN ${PROJECT_NAME})
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-include(CheckIPOSupported)
 
-check_ipo_supported(RESULT IPO_AVAILABLE)
+if(ENABLE_LTO)
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT IPO_AVAILABLE)
+else()
+  set(IPO_AVAILABLE OFF)
+endif()
+
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(defines)
