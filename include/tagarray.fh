@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TAGARRAY_FH
+#define _TAGARRAY_FH 1
 
 #ifndef TA_FORTRAN_API_VERSION
 #define TA_FORTRAN_API_VERSION 1
@@ -12,4 +13,6 @@
 #include "tagarray/tagarray_v3.fh"
 #else
 #error "Unsupported API version"
+#endif
+
 #endif

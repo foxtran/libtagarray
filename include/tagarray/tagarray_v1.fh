@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TAGARRAY_V1_FH
+#define _TAGARRAY_V1_FH 1
 
 #define TA_CONTAINER_CREATE(STATUS, CONTAINER, TAG, TYPE, DATA) \
   block; \
@@ -45,3 +46,5 @@
       call c_f_pointer(record_info%data, DATA, record_info%dims); \
     end if; \
   end block
+
+#endif
