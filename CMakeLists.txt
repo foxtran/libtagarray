@@ -137,17 +137,11 @@ if(ENABLE_FORTRAN)
     target_compile_definitions(${PN}_f PUBLIC TA_FORTRAN_API_VERSION_AVAILABLE=2)
   endif()
   if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
-    target_compile_options(${PN}_f PRIVATE
-      $<$<COMPILE_LANGUAGE:Fortran>:-std=f2018>
-    )
+    add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-std=f2018>)
   elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
-    target_compile_options(${PN}_f PRIVATE
-      $<$<COMPILE_LANGUAGE:Fortran>:-stand f18>
-    )
+    add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-stand f18>)
   elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "IntelLLVM")
-    target_compile_options(${PN}_f PRIVATE
-      $<$<COMPILE_LANGUAGE:Fortran>:-stand f18>
-    )
+    add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-stand f18>)
   else()
     message(FATAL_ERROR "Unknown Fortran compiler ID: ${CMAKE_Fortran_COMPILER_ID}")
   endif()
