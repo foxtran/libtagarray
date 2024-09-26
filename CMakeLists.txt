@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(tagarray
-  VERSION 0.0.6
+  VERSION 0.0.7
   LANGUAGES C CXX)
 
 
