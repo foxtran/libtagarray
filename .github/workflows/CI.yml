@@ -26,10 +26,10 @@ jobs:
         cmakeVersion: "~3.25.0"
 
     - name: Install GCC
-      run: sudo apt update && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt install g++-${{ matrix.GCC }} gfortran-${{ matrix.GCC }}
+      run: sudo apt update && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt install g++-${{ matrix.GCC }} gfortran-${{ matrix.GCC }} gcc-${{ matrix.GCC }}
 
     - name: Configure CMake
-      run: cmake -G"Ninja" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.BUILD_TYPE }} -DENABLE_FORTRAN=ON -DENABLE_TESTING=ON -DCMAKE_CXX_COMPILER=g++-${{ matrix.GCC }} -DCMAKE_Fortran_COMPILER=gfortran-${{ matrix.GCC }} -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install
+      run: cmake -G"Ninja" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.BUILD_TYPE }} -DENABLE_FORTRAN=ON -DENABLE_TESTING=ON -DCMAKE_C_COMPILER=gcc-${{ matrix.GCC }} -DCMAKE_CXX_COMPILER=g++-${{ matrix.GCC }} -DCMAKE_Fortran_COMPILER=gfortran-${{ matrix.GCC }} -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build
